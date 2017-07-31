@@ -5,10 +5,9 @@ var loaders = [
 ];
 
 module.exports = {
-  // Notebook extension
-  entry: './src/nbextension.ts',
+  entry: './src/index.ts',
   output: {
-    filename: 'extension.js',
+    filename: 'index.js',
     path: __dirname + '/../ipydatawidgets/nbextension/static',
     libraryTarget: 'amd'
   },
@@ -16,8 +15,7 @@ module.exports = {
     loaders: loaders
   },
   devtool: 'source-map',
-  //externals: ['@jupyter-widgets/base'],
-  externals: [{'@jupyter-widgets/base': "commonjs nbextensions/jupyter-js-widgets/extension"}],
+  externals: ['@jupyter-widgets/base'],
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".webpack.js", ".web.js", ".ts", ".js"]

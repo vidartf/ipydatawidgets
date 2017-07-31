@@ -143,5 +143,5 @@ $RECYCLE.BIN/
 # ----
 
 **/node_modules/
-**/static/
+ipydatawidgets/nbextension/static/index.*
 
