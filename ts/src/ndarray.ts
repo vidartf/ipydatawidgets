@@ -42,16 +42,23 @@ interface IDeserializeArray {
 }
 
 
-function JSONToArray(obj: ISerializeArray, manager?: ManagerBase<any>): ndarray.NDArray {
-    // obj is {shape: list, dtype: string, array: DataView}
-    // return an ndarray object
-    return ndarray(new typesToArray[obj.dtype](obj.buffer.buffer), obj.shape);
+export
+function JSONToArray(obj: ISerializeArray | null, manager?: ManagerBase<any>): ndarray.NDArray | null {
+  if (obj === null) {
+    return null;
+  }
+  // obj is {shape: list, dtype: string, array: DataView}
+  // return an ndarray object
+  return ndarray(new typesToArray[obj.dtype](obj.buffer.buffer), obj.shape);
 }
 
 export
-function arrayToJSON(obj: ndarray.NDArray, widget?: WidgetModel): IDeserializeArray {
-    // serialize to {shape: list, dtype: string, array: buffer}
-    return { shape: obj.shape, dtype: obj.dtype, buffer: obj.data as TypedArray };
+function arrayToJSON(obj: ndarray.NDArray | null, widget?: WidgetModel): IDeserializeArray | null {
+  if (obj === null) {
+    return null;
+  }
+  // serialize to {shape: list, dtype: string, array: buffer}
+  return { shape: obj.shape, dtype: obj.dtype, buffer: obj.data as TypedArray };
 }
 
 export

@@ -1,4 +1,4 @@
 
 export {
-  NDArrayModel
+  NDArrayModel, JSONToArray, arrayToJSON, array_serialization
 } from './ndarray';

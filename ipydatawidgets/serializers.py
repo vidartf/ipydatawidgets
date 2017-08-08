@@ -32,13 +32,20 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
+import re
+
+from ipywidgets import widget_serialization
 import numpy as np
+
+from .widgets import DataWidget
 
 # Format:
 # {'dtype': string, 'shape': tuple, 'array': memoryview}
 
 def array_to_json(value, widget):
     """Array JSON serializer."""
+    if value is None:
+        return None
     # Workaround added to deal with slices: FIXME: what's the best place to put this?
     if isinstance(value, np.ndarray) and not value.flags['C_CONTIGUOUS']:
         value = np.ascontiguousarray(value)
@@ -52,6 +59,8 @@ def array_to_json(value, widget):
 
 def array_from_json(value, widget):
     """Array JSON de-serializer."""
+    if value is None:
+        return None
     # may need to copy the array if the underlying buffer is readonly
     n = np.frombuffer(value['buffer'], dtype=value['dtype'])
     n.shape = value['shape']

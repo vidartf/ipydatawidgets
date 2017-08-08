@@ -2,10 +2,12 @@
   "name": "jupyter-datawidgets",
   "version": "1.0.0",
   "description": "A set of widgets to help facilitate reuse of large datasets across widgets",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build:nbextension": "webpack",
+    "build:lib": "tsc --project src",
+    "build": "npm run build:lib && npm run build:nbextension"
   },
   "keywords": [
     "jupyter",

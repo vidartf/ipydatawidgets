@@ -7,27 +7,33 @@ from traitlets import TraitError, Undefined
 from ..trait_types import Validators
 
 
+def validate_dtype(value, dtype):
+    try:
+        return np.asarray(value, dtype=dtype)
+    except (ValueError, TypeError) as e:
+        raise TraitError(e)
+
+
 class NDArray(Validators):
     """A numpy array trait type."""
 
     info_text = 'a numpy array'
     dtype = None
 
-    def __init__(self, default_value=Undefined, allow_none=False, dtype=None, **kwargs):
+    def __init__(self, default_value=Undefined, dtype=None, **kwargs):
         self.dtype = dtype
         if default_value is Undefined:
             default_value = np.array(0, dtype=self.dtype)
         elif default_value is not None:
             default_value = np.asarray(default_value, dtype=self.dtype)
-        super(NDArray, self).__init__(default_value=default_value, allow_none=allow_none, **kwargs)
+        super(NDArray, self).__init__(default_value=default_value, **kwargs)
 
     def validate(self, obj, value):
         if value is None and not self.allow_none:
             self.error(obj, value)
-        try:
-            value = np.asarray(value, dtype=self.dtype)
-        except (ValueError, TypeError) as e:
-            raise TraitError(e)
+        value = validate_dtype(value, self.dtype)
+        if value.dtype.hasobject:
+            raise TraitError('Object dtype not supported')
         return super(NDArray, self).validate(obj, value)
 
     def set(self, obj, value):
@@ -48,8 +54,8 @@ def shape_constraints(*args):
     """Example: shape_constraints(None,3) insists that the shape looks like (*,3)"""
 
     def validator(trait, value):
-        if trait.allow_none:
-            print(value)
+        if value in (None, Undefined):
+            return value
         if len(value.shape) != len(args):
             raise TraitError('%s shape expected to have %s components, but got %s components' % (
                 trait.name, len(args), (value, type(value))))
