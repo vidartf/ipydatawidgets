@@ -28,15 +28,14 @@ class NDArray(Validators):
 
     def __init__(self, default_value=Undefined, dtype=None, **kwargs):
         self.dtype = dtype
-        if default_value is Undefined:
-            default_value = np.array(0, dtype=self.dtype)
-        elif default_value is not None:
-            default_value = np.asarray(default_value, dtype=self.dtype)
         super(NDArray, self).__init__(default_value=default_value, **kwargs)
 
     def validate(self, obj, value):
         if value is None and not self.allow_none:
             self.error(obj, value)
+        if value is None or value is Undefined:
+            return super(NDArray, self).validate(obj, value)
+        # Note: This call also coerces to a numpy array:
         value = validate_dtype(value, self.dtype)
         if value.dtype.hasobject:
             raise TraitError('Object dtype not supported')
@@ -50,7 +49,7 @@ class NDArray(Validators):
             obj._notify_trait(self.name, old_value, new_value)
 
     def make_dynamic_default(self):
-        if self.default_value is None:
+        if self.default_value is None or self.default_value is Undefined:
             return self.default_value
         else:
             return np.copy(self.default_value)
@@ -60,7 +59,7 @@ def shape_constraints(*args):
     """Example: shape_constraints(None,3) insists that the shape looks like (*,3)"""
 
     def validator(trait, value):
-        if value in (None, Undefined):
+        if value is None or value is Undefined:
             return value
         if len(value.shape) != len(args):
             raise TraitError('%s shape expected to have %s components, but got %s components' % (
