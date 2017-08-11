@@ -32,12 +32,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import re
-
-from ipywidgets import widget_serialization
 import numpy as np
-
-from .widgets import DataWidget
 
 # Format:
 # {'dtype': string, 'shape': tuple, 'array': memoryview}
