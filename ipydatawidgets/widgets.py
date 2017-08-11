@@ -8,7 +8,7 @@
 Common base widgets for ipydatawidgets.
 """
 
-from ipywidgets import Widget, register
+from ipywidgets import Widget
 from traitlets import Unicode
 
 module_name = "jupyter-datawidgets"
