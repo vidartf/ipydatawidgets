@@ -11,7 +11,7 @@ Data widgets for numpy arrays.
 from contextlib import contextmanager
 
 from ipywidgets import register
-from traitlets import Unicode, Set
+from traitlets import Unicode, Set, Undefined
 import numpy as np
 
 from ..widgets import DataWidget
@@ -35,7 +35,7 @@ class NDArrayWidget(DataWidget):
 
     array = NDArray().tag(sync=True, **array_serialization)
 
-    def __init__(self, array, **kwargs):
+    def __init__(self, array=Undefined, **kwargs):
         super(NDArrayWidget, self).__init__(array=array, **kwargs)
 
     def notify_changed(self):
@@ -103,8 +103,8 @@ class NDArrayWidget(DataWidget):
                     self._segments_to_send.clear()
 
 
-def ConstrainedNDArrayWidget(shape_constraint):
-    """Returns a subclass of NDArrayWidget with a shape-constrained array."""
+def ConstrainedNDArrayWidget(*validators, dtype=None):
+    """Returns a subclass of NDArrayWidget with a constrained array."""
     return type('ConstrainedNDArrayWidget', (NDArrayWidget,), {
-        'array': NDArray().tag(sync=True, **array_serialization).valid(shape_constraint)
+        'array': NDArray(dtype=dtype).tag(sync=True, **array_serialization).valid(*validators)
     })

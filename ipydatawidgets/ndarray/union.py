@@ -4,8 +4,9 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-from traitlets import Union, Instance, Undefined
+from traitlets import Union, Instance, Undefined, TraitError
 
+from .serializers import data_union_serialization
 from .traits import NDArray, validate_dtype
 from .widgets import NDArrayWidget
 
@@ -33,9 +34,11 @@ class DataUnion(Union):
     def validate(self, obj, value):
         value = super(DataUnion, self).validate(obj, value)
         if isinstance(value, NDArrayWidget) and self.dtype is not None:
-            validate_dtype(value.array, self.dtype)
+            if value.array.dtype != self.dtype:
+                raise TraitError('dtypes must match exactly when passing a NDArrayWidget to '
+                                 'a dtype constrained DataUnion')
         if self.shape_constraint:
-            if value is NDArrayWidget:
+            if isinstance(value, NDArrayWidget):
                 self.shape_constraint(self, value.array)
             else:
                 self.shape_constraint(self, value)
