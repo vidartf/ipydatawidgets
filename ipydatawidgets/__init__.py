@@ -5,7 +5,6 @@
 # Distributed under the terms of the Modified BSD License.
 
 from .ndarray import *
-from .serializers import array_serialization
 from .trait_types import Validators
 from .widgets import DataWidget
 from ._version import *

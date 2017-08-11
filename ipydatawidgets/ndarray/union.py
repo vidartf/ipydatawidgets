@@ -4,13 +4,10 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-from ipython_genutils.py3compat import string_types
 from traitlets import Union, Instance, Undefined
-from ipywidgets import widget_serialization
 
 from .traits import NDArray, validate_dtype
 from .widgets import NDArrayWidget
-from ..serializers import array_to_json, array_from_json
 
 
 class DataUnion(Union):
@@ -44,18 +41,3 @@ class DataUnion(Union):
                 self.shape_constraint(self, value)
         return value
 
-
-def data_union_to_json(value, widget):
-    """Serializer for union of NDArray and NDArrayWidget"""
-    if isinstance(value, NDArrayWidget):
-        return widget_serialization['to_json'](value, widget)
-    return array_to_json(value, widget)
-
-
-def data_union_from_json(value, widget):
-    """Deserializer for union of NDArray and NDArrayWidget"""
-    if isinstance(value, string_types) and value.startswith('IPY_MODEL_'):
-        return widget_serialization['from_json'](value, widget)
-    return array_from_json(value, widget)
-
-data_union_serialization = dict(to_json=data_union_to_json, from_json=data_union_from_json)

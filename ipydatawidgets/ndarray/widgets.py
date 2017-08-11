@@ -16,7 +16,7 @@ import numpy as np
 
 from ..widgets import DataWidget
 from .traits import NDArray
-from ..serializers import array_serialization
+from .serializers import array_serialization
 
 
 @register

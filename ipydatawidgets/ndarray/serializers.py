@@ -1,7 +1,13 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+
 """
 Simple serialization for numpy arrays
 
-NB! This file copied verbatim from pythreejs:
+NB! Parts of this originally file copied verbatim from pythreejs:
 
 Copyright (c) 2013, Jason Grout
 All rights reserved.
@@ -34,6 +40,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
 
+from ipywidgets import widget_serialization, Widget
+from ipython_genutils.py3compat import string_types
+
 # Format:
 # {'dtype': string, 'shape': tuple, 'array': memoryview}
 
@@ -62,3 +71,21 @@ def array_from_json(value, widget):
     return n
 
 array_serialization = dict(to_json=array_to_json, from_json=array_from_json)
+
+
+#  Serializers for union type [ndarray | ndarraywidget]:
+
+def data_union_to_json(value, widget):
+    """Serializer for union of NDArray and NDArrayWidget"""
+    if isinstance(value, Widget):
+        return widget_serialization['to_json'](value, widget)
+    return array_to_json(value, widget)
+
+
+def data_union_from_json(value, widget):
+    """Deserializer for union of NDArray and NDArrayWidget"""
+    if isinstance(value, string_types) and value.startswith('IPY_MODEL_'):
+        return widget_serialization['from_json'](value, widget)
+    return array_from_json(value, widget)
+
+data_union_serialization = dict(to_json=data_union_to_json, from_json=data_union_from_json)
