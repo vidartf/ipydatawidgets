@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
 
 from ipython_genutils.py3compat import string_types
 from traitlets import Union, Instance, Undefined
