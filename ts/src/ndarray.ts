@@ -85,7 +85,7 @@ export
 class NDArrayModel extends WidgetModel {
   defaults() {
     return _.extend(super.defaults(), {
-      array: new ArrayBuffer(0),
+      array: ndarray([]),
     });
   }
 
