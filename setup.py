@@ -95,7 +95,7 @@ setup_args = dict(
 
 setuptools_args = {}
 install_requires = setuptools_args['install_requires'] = [
-    'ipywidgets',
+    'ipywidgets>=7.0.0b12',
 ]
 
 extras_require = setuptools_args['extras_require'] = {
