@@ -40,6 +40,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Representative files that should exist after a successful build
 jstargets = [
     os.path.join(here, name, 'nbextension', 'static', 'extension.js'),
+    os.path.join(here, name, 'jlextension', 'build', 'index.js'),
 ]
 
 version_ns = {}
@@ -50,8 +51,17 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
 cmdclass = create_cmdclass(('jsdeps',))
 cmdclass['jsdeps'] = combine_commands(
     install_npm(pjoin(here, 'ts')),
+    install_npm(pjoin(here, name, 'jlextension')),
     ensure_targets(jstargets),
 )
+
+package_data = {
+    name: [
+        'nbextension/static/*.*',
+        'jlextension/src/*.*',
+        'jlextension/package.json',
+    ]
+}
 
 
 setup_args = dict(
