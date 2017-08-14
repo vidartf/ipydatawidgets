@@ -11,7 +11,7 @@ Data widgets for numpy arrays.
 from contextlib import contextmanager
 
 from ipywidgets import register
-from traitlets import Unicode, Set, Undefined
+from traitlets import Unicode, Set, Undefined, validate
 import numpy as np
 
 from ..widgets import DataWidget
@@ -36,7 +36,21 @@ class NDArrayWidget(DataWidget):
     array = NDArray().tag(sync=True, **array_serialization)
 
     def __init__(self, array=Undefined, **kwargs):
+        self._instance_validators = set()
         super(NDArrayWidget, self).__init__(array=array, **kwargs)
+
+    @validate('array')
+    def _validate_array(self, proposal):
+        """Validate array against external validators (instance only)
+
+        This allows others to add constraints on the array of this
+        widget dynamically. Internal use is so that a constrained
+        DataUnion can validate the array of a widget set to itself.
+        """
+        value = proposal['value']
+        for validator in self._instance_validators:
+            value = validator(value)
+        return value
 
     def notify_changed(self):
         """Use this to mark that the array is changed.

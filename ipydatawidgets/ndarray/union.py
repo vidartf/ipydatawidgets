@@ -4,10 +4,12 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
+from functools import partial
+
 from traitlets import Union, Instance, Undefined, TraitError
 
 from .serializers import data_union_serialization
-from .traits import NDArray, validate_dtype
+from .traits import NDArray
 from .widgets import NDArrayWidget
 
 
@@ -31,6 +33,29 @@ class DataUnion(Union):
 
         self.tag(**data_union_serialization)
 
+        self._registered_validators = {}
+
+    def instance_init(self, inst):
+        inst.observe(self._on_instance_value_change, self.name)
+
+    def _on_instance_value_change(self, change):
+        inst = change['owner']
+        if isinstance(change['old'], NDArrayWidget):
+            f = self._registered_validators.get(inst, None)
+            if f is not None:
+                change['old']._instance_validators.remove(f)
+        if isinstance(change['new'], NDArrayWidget):
+            # We can validate directly, since our validator accepts arrays also:
+            f = partial(self._valdiate_child, inst)
+            self._registered_validators[inst] = f
+            change['new']._instance_validators.add(f)
+
+    def _valdiate_child(self, obj, value):
+        try:
+            return self.validate(obj, value)
+        except TraitError as e:
+            raise TraitError('Widget data is constrained by its use in %r.' % obj)
+
     def validate(self, obj, value):
         value = super(DataUnion, self).validate(obj, value)
         if isinstance(value, NDArrayWidget) and self.dtype is not None:
@@ -43,4 +68,3 @@ class DataUnion(Union):
             else:
                 self.shape_constraint(self, value)
         return value
-
