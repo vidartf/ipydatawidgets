@@ -7,4 +7,4 @@
 from .serializers import array_serialization, data_union_serialization
 from .traits import NDArray, shape_constraints
 from .union import DataUnion
-from .widgets import NDArrayWidget
+from .widgets import NDArrayWidget, ConstrainedNDArrayWidget

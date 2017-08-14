@@ -63,7 +63,7 @@ def shape_constraints(*args):
             return value
         if len(value.shape) != len(args):
             raise TraitError('%s shape expected to have %s components, but got %s components' % (
-                trait.name, len(args), (value, type(value))))
+                trait.name, len(args), value.shape))
         for i, constraint in enumerate(args):
             if constraint is not None:
                 if value.shape[i] != constraint:
