@@ -86,6 +86,12 @@ class NDArrayModel extends WidgetModel {
   defaults() {
     return _.extend(super.defaults(), {
       array: ndarray([]),
+      _model_name: NDArrayModel.model_name,
+      _model_module: NDArrayModel.model_module,
+      _model_module_version: NDArrayModel.model_module_version,
+      _view_name: NDArrayModel.view_name,
+      _view_module: NDArrayModel.view_module,
+      _view_module_version: NDArrayModel.view_module_version,
     });
   }
 
@@ -93,4 +99,11 @@ class NDArrayModel extends WidgetModel {
       ...WidgetModel.serializers,
       array: array_serialization,
     }
+
+  static model_name = 'NDArrayModel';
+  static model_module: 'jupyter-datawidgets';
+  static model_module_version: '1.0.0';
+  static view_name = null;
+  static view_module = null;
+  static view_module_version = '';
 }
