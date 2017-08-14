@@ -15,6 +15,13 @@ jupyter nbextension install --py [--sys-prefix|--user|--system] ipydatawidgets
 jupyter nbextension enable --py [--sys-prefix|--user|--system] ipydatawidgets
 ```
 
+Or, if you use jupyterlab:
+
+```bash
+pip install ipydatawidgets
+jupyter labextension install jupyterlab-datawidgets
+```
+
 ## Usage
 
 As a user, it should be noted that ipydatawidgets only works with packages that
