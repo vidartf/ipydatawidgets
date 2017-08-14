@@ -5,12 +5,12 @@ skip_branch_with_pr: true
 environment:
   nodejs_version: "6.9"
   matrix:
-    - PYTHON: "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5.x"
+    - PYTHON: "C:\\Miniconda36-x64"
+      PYTHON_VERSION: "3.6.x"
       PYTHON_MAJOR: 3
       PYTHON_ARCH: "64"
-    - PYTHON: "C:\\Python33"
-      PYTHON_VERSION: "3.3.x"
+    - PYTHON: "C:\\Miniconda3"
+      PYTHON_VERSION: "3.4.x"
       PYTHON_MAJOR: 3
       PYTHON_ARCH: "32"
 
@@ -24,6 +24,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # Ensure python scripts are from right version:
   - 'SET "PATH=%PYTHON%\Scripts;%PATH%"'
+  # numpy is needed for testing:
+  - 'conda install numpy'
   # Install coverage utilities:
   - 'pip install codecov'
   # Install our package:
