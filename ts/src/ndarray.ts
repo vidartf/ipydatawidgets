@@ -27,15 +27,21 @@ interface IArrayLookup {
     float64: Float64Array
 };
 
+/**
+ * The serialized representation of a received array
+ */
 export
-interface ISerializeArray {
+interface IReceivedSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
   buffer: DataView;
 }
 
+/**
+ * The serialized representation of an array for sending
+ */
 export
-interface IDeserializeArray {
+interface ISendSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
   buffer: ArrayBuffer;
@@ -43,7 +49,7 @@ interface IDeserializeArray {
 
 
 export
-function JSONToArray(obj: ISerializeArray | null, manager?: ManagerBase<any>): ndarray.NDArray | null {
+function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ndarray.NDArray | null {
   if (obj === null) {
     return null;
   }
@@ -53,7 +59,7 @@ function JSONToArray(obj: ISerializeArray | null, manager?: ManagerBase<any>): n
 }
 
 export
-function arrayToJSON(obj: ndarray.NDArray | null, widget?: WidgetModel): IDeserializeArray | null {
+function arrayToJSON(obj: ndarray.NDArray | null, widget?: WidgetModel): ISendSerializedArray | null {
   if (obj === null) {
     return null;
   }

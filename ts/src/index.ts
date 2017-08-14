@@ -1,6 +1,7 @@
 
 export {
-  NDArrayModel, JSONToArray, arrayToJSON, array_serialization
+  NDArrayModel, JSONToArray, arrayToJSON, array_serialization,
+  IReceivedSerializedArray, ISendSerializedArray
 } from './ndarray';
 
 export {

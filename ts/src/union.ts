@@ -6,7 +6,7 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  NDArrayModel, ISerializeArray, IDeserializeArray, JSONToArray, arrayToJSON
+  NDArrayModel, IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
 } from './ndarray';
 
 import * as _ from 'underscore';
@@ -15,7 +15,7 @@ import ndarray = require('ndarray');
 
 
 export
-function JSONToUnion(obj: ISerializeArray | string | null, manager?: ManagerBase<any>): Promise<ndarray.NDArray | null> {
+function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray.NDArray | null> {
   if (typeof obj === 'string') {
     var modelPromise = unpack_models(obj, manager);
     return modelPromise.then((model) => {
@@ -27,7 +27,7 @@ function JSONToUnion(obj: ISerializeArray | string | null, manager?: ManagerBase
 }
 
 export
-function unionToJSON(obj: ndarray.NDArray | WidgetModel | null, widget?: WidgetModel): IDeserializeArray | string | null {
+function unionToJSON(obj: ndarray.NDArray | WidgetModel | null, widget?: WidgetModel): ISendSerializedArray | string | null {
   if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
