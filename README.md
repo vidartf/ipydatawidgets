@@ -1,7 +1,7 @@
 
-# IPyDataWidgets
+# ipydatawidgets
 
-IPyDataWidgets is a set of widgets to help facilitate reuse of large datasets
+ipydatawidgets is a set of widgets to help facilitate reuse of large datasets
 across different widgets, and different packages.
 
 
