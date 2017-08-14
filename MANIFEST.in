@@ -17,6 +17,7 @@ graft examples
 # Javascript files
 graft ipydatawidgets/nbextension
 graft ts
+prune ts/node_modules
 prune ts/coverage
 prune ts/lib
 prune ts/test/build
