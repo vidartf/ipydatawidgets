@@ -6,10 +6,7 @@
   "typings": "build/index.d.ts",
   "dependencies": {
     "@jupyterlab/application": "~0.9.0",
-    "@jupyterlab/docregistry": "~0.9.0",
-    "@jupyterlab/notebook": "~0.9.0",
     "@phosphor/coreutils": "~1.3.0",
-    "@phosphor/disposable": "~1.1.2",
     "@jupyter-widgets/jupyterlab-manager": "~0.25.11",
     "jupyter-datawidgets": "^1.0.1"
   },
