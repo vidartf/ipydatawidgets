@@ -7,10 +7,20 @@
 import pytest
 
 import numpy as np
-from traitlets import TraitError
+from traitlets import TraitError, Undefined
 
-from ..ndarray.traits import shape_constraints, validate_dtype
+from ..ndarray.traits import shape_constraints
 from ..ndarray.widgets import NDArrayWidget, ConstrainedNDArrayWidget
+
+
+def test_datawidget_creation_blank():
+    with pytest.raises(TraitError):
+        w = NDArrayWidget()
+
+
+def test_datawidget_creation_blank_comm(mock_comm):
+    w = NDArrayWidget(comm=mock_comm)
+    assert w.array is Undefined
 
 
 def test_datawidget_creation():

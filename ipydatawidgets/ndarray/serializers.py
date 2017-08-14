@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import numpy as np
 
+from traitlets import Undefined, TraitError
 from ipywidgets import widget_serialization, Widget
 from ipython_genutils.py3compat import string_types
 
@@ -50,6 +51,8 @@ def array_to_json(value, widget):
     """Array JSON serializer."""
     if value is None:
         return None
+    if value is Undefined:
+        raise TraitError('Cannot serialize undefined array!')
     # Workaround added to deal with slices: FIXME: what's the best place to put this?
     if isinstance(value, np.ndarray) and not value.flags['C_CONTIGUOUS']:
         value = np.ascontiguousarray(value)
