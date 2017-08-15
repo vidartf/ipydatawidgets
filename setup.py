@@ -17,6 +17,7 @@ import sys
 
 v = sys.version_info
 if v[:2] < (3, 3):
+    # Note: 3.3 is untested, but we'll still allow it
     error = "ERROR: %s requires Python version 3.3 or above." % name
     print(error, file=sys.stderr)
     sys.exit(1)
@@ -84,7 +85,6 @@ setup_args = dict(
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

@@ -25,7 +25,7 @@ install:
   # Ensure python scripts are from right version:
   - 'SET "PATH=%PYTHON%\Scripts;%PATH%"'
   # numpy is needed for testing:
-  - 'conda install numpy'
+  - 'conda install numpy -y'
   # Install coverage utilities:
   - 'pip install codecov'
   # Install our package:
