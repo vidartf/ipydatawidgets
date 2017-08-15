@@ -38,6 +38,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
+import warnings
+
 import numpy as np
 
 from traitlets import Undefined, TraitError
@@ -54,8 +56,13 @@ def array_to_json(value, widget):
     if value is Undefined:
         raise TraitError('Cannot serialize undefined array!')
     # Workaround added to deal with slices: FIXME: what's the best place to put this?
-    if isinstance(value, np.ndarray) and not value.flags['C_CONTIGUOUS']:
-        value = np.ascontiguousarray(value)
+    if isinstance(value, np.ndarray):
+        if str(value.dtype) in ('int64', 'uint64'):
+            warnings.warn('Cannot serialize (u)int64 data, Javascript does not support it. '
+                          'Casting to (u)int32.')
+            value = value.astype(str(value.dtype).replace('64', '32'), order='C')
+        elif not value.flags['C_CONTIGUOUS']:
+            value = np.ascontiguousarray(value)
     return {
         'shape': value.shape,
         'dtype': str(value.dtype),
