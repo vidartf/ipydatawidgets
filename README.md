@@ -1,6 +1,10 @@
 
 # ipydatawidgets
 
+[![Build Status](https://travis-ci.org/vidartf/ipydatawidgets.svg?branch=master)](https://travis-ci.org/vidartf/ipydatawidgets)
+[![codecov](https://codecov.io/gh/vidartf/ipydatawidgets/branch/master/graph/badge.svg)](https://codecov.io/gh/vidartf/ipydatawidgets)
+
+
 ipydatawidgets is a set of widgets to help facilitate reuse of large datasets
 across different widgets, and different packages.
 
