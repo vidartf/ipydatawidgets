@@ -101,8 +101,8 @@ class NDArrayModel extends WidgetModel {
     }
 
   static model_name = 'NDArrayModel';
-  static model_module: 'jupyter-datawidgets';
-  static model_module_version: '1.0.0';
+  static model_module = 'jupyter-datawidgets';
+  static model_module_version = '1.0.0';
   static view_name = null;
   static view_module = null;
   static view_module_version = '';
