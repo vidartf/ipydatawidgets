@@ -58,6 +58,18 @@ def test_array_to_json_continuous_data():
     assert reinterpreted_data.flags['C_CONTIGUOUS']
 
 
+def test_array_to_json_int64_warning():
+    data = np.zeros((4, 3), dtype=np.uint64, order='F')
+    with pytest.warns(UserWarning) as captured_warnings:
+        json_data = array_to_json(data, None)
+        assert len(captured_warnings) == 1
+        assert 'Cannot serialize (u)int64 data' in str(captured_warnings[0])
+
+    reinterpreted_data = array_from_json(json_data, None)
+    np.testing.assert_equal(data, reinterpreted_data)
+    assert reinterpreted_data.flags['C_CONTIGUOUS']
+    assert reinterpreted_data.dtype == np.uint32
+
 
 def test_union_from_json_correct_array_data():
     raw_data = memoryview(np.zeros((4, 3), dtype=np.float32))
