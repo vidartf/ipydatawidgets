@@ -63,7 +63,7 @@ class NDArrayWidget(DataWidget):
         """
         self._notify_trait('array', self.array, self.array)
 
-    def sync_segment(self, segment):
+    def sync_segment(self, segments):
         """Sync a segments of contiguous memory.
 
         By only syncing a segment of the array, a full transmission of the
@@ -75,14 +75,13 @@ class NDArrayWidget(DataWidget):
 
         Parameters
         ----------
-        segment : two-tuple
-            A (start, stop) tuple representing the segment. Note that the step will be
-            ignored.
+        segments : iterable of two-tuples
+            An iterable collection of segments represented by (start, stop) tuples.
         """
         if self._holding_sync:
-            self._segments_to_send.add(segment)
+            self._segments_to_send.add(*segments)
         else:
-            self.send_segment(segment)
+            self.send_segment(segments)
 
     def send_segment(self, segments):
         """Send segments to the front-end.

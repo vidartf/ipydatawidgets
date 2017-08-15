@@ -75,3 +75,17 @@ def test_dataunion_widget_shape_constraints():
     w = NDArrayWidget(raw_data)
     with pytest.raises(TraitError):
         foo = Foo(bar=w)
+
+
+def test_dataunion_constricts_widget_data():
+    class Foo(HasTraits):
+        bar = DataUnion(shape_constraint=shape_constraints(None, None, 3))
+
+    ok_data = np.ones((4, 2, 3))
+    bad_data = np.ones((4, 4))
+    w = NDArrayWidget(ok_data)
+    foo = Foo(bar=w)
+    with pytest.raises(TraitError):
+        w.array = bad_data
+    foo.bar = ok_data
+    w.array = bad_data  # Should now be OK!
