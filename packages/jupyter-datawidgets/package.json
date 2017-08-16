@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "clean:lib": "rimraf lib",
-    "clean:nbextension": "rimraf ../ipydatawidgets/nbextension/static/index.js",
+    "clean:nbextension": "rimraf ../../ipydatawidgets/nbextension/static/index.js",
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "build:nbextension": "webpack",
     "build:lib": "tsc --project src",
