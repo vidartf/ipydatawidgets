@@ -14,7 +14,7 @@ import {
 } from './dummy-manager.spec';
 
 import {
-  JSONToUnion, unionToJSON, IReceivedSerializedArray, ISendSerializedArray, NDArrayModel
+  JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray, ISendSerializedArray, NDArrayModel
 } from '../../src/'
 
 
@@ -30,7 +30,7 @@ describe('Union Serializers', () => {
       dtype: 'float32',
     } as IReceivedSerializedArray;
 
-    let arrayPromise = JSONToUnion(jsonData);
+    let arrayPromise = JSONToUnionArray(jsonData);
 
     return arrayPromise.then((array) => {
       expect(array!.data).to.be.a(Float32Array);
@@ -42,7 +42,7 @@ describe('Union Serializers', () => {
   });
 
   it('should deserialize null to null', () => {
-    return JSONToUnion(null).then((output) => {
+    return JSONToUnionArray(null).then((output) => {
       expect(output).to.be(null);
     })
   });
@@ -72,7 +72,7 @@ describe('Union Serializers', () => {
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToUnion(jsonData, widget_manager)
+      return JSONToUnionArray(jsonData, widget_manager)
     }).then((array) => {
       // Ensure that the ref deseieralizes to the inner ndarray:
       expect(array!.data).to.be.a(Float32Array);
