@@ -5,6 +5,7 @@
     "clean": "lerna run clean",
     "build": "lerna run build",
     "updated": "lerna updated",
+    "test": "lerna run test",
     "publish": "npm run clean && npm run build && lerna publish -m \"Publish npm packages\""
   },
   "devDependencies": {

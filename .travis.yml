@@ -48,14 +48,13 @@ script:
     if [[ $GROUP == python ]]; then
       pushd $(mktemp -d)
       py.test -l --cov-report xml:$TRAVIS_BUILD_DIR/coverage.xml --cov=ipydatawidgets --pyargs ipydatawidgets
+      popd
     elif [[ $GROUP == js ]]; then
-      pushd ts
       npm test
     fi
 before_cache:
   # Do not cache our own package
   - |
-    popd
-    rm -rf ipydatawidgets/jlextension/node_modules/jupyter-datawidgets
+    rm -rf packages/jupyterlab-datawidgets/node_modules/jupyter-datawidgets
 after_success:
     - codecov
