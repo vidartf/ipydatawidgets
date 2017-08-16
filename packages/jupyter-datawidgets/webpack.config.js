@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
-    path: __dirname + '/../ipydatawidgets/nbextension/static',
+    path: __dirname + '/../../ipydatawidgets/nbextension/static',
     libraryTarget: 'amd'
   },
   module: {

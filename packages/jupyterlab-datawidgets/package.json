@@ -26,7 +26,6 @@
   "scripts": {
     "clean": "rimraf build",
     "build": "tsc --project src",
-    "update": "rimraf node_modules/jupyter-datawidgets && npm install ../../ts && npm run build",
     "prepublish": "npm run clean && npm run build"
   },
   "repository": {
