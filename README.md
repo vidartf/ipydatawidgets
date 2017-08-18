@@ -43,7 +43,7 @@ any number of other widgets, but with only a single sync across the network.
 
 ```python
 import numpy as np
-from ipydatawidget import NDArrayWidget
+from ipydatawidgets import NDArrayWidget
 
 raw_data = np.ones((100, 100, 3), dtype=np.float32)
 datawidget = NDArrayWidget(raw_data)
