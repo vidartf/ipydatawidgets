@@ -73,10 +73,9 @@ function getArrayFromUnion(union: DataUnion): ndarray.NDArray {
  * The callback will be called when:
  *  - The model is a widget, and its data changes
  *
- * To also want to cover these cases:
+ * Specify `allChanges` as truthy to also cover these cases:
  *  - The union changes from a widget to an array or vice-versa
  *  - The union is an array and its content changes
- * specify `allChanges` as truthy.
  *
  * To stop listening, call the return value.
  */
