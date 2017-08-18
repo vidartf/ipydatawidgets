@@ -6,7 +6,7 @@ import expect = require('expect.js');
 import ndarray = require('ndarray');
 
 import {
-  uuid
+  uuid, WidgetModel
 } from '@jupyter-widgets/base';
 
 import {
@@ -15,7 +15,7 @@ import {
 
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray, ISendSerializedArray,
-  NDArrayModel, getArrayFromUnion
+  NDArrayModel, getArrayFromUnion, listenToUnion
 } from '../../src/'
 
 
@@ -36,6 +36,23 @@ function createWidgetModel(): NDArrayModel {
   }};
   let attributes = NDArrayModel._deserialize_state(serializedState, widget_manager);
   return new NDArrayModel(attributes, modelOptions);
+}
+
+export
+interface ModelConstructor<T> {
+    new (attributes?: any, options?: any): T;
+}
+
+export
+function createTestModel<T extends WidgetModel>(constructor: ModelConstructor<T>, attributes?: any): T {
+  let id = uuid();
+  let widget_manager = new DummyManager();
+  let modelOptions = {
+      widget_manager: widget_manager,
+      model_id: id,
+  }
+
+  return new constructor(attributes, modelOptions);
 }
 
 
@@ -220,6 +237,142 @@ describe('Union Serializers', () => {
       let model = createWidgetModel();
       let output = getArrayFromUnion(model);
       expect(output).to.be(model.get('array'));
+    });
+
+   });
+
+
+   describe('listenToUnion', () => {
+
+    it('should listen to widget changes', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      parent.set('array', child);
+      let called = false;
+      let cb = function() { called = true; };
+
+      listenToUnion(parent, 'array', cb);
+      child.set('array', new Float32Array([4, 5, 6]));
+      expect(called).to.be(true);
+    });
+
+    it('should stop listening to widget changes', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      parent.set('array', child);
+      let called = false;
+      let cb = function() { called = true; };
+
+      let stop = listenToUnion(parent, 'array', cb);
+      child.set('array', new Float32Array([4, 5, 6]));
+      expect(called).to.be(true);
+      called = false;
+      stop();
+      child.set('array', new Float32Array([7, 3, 6, 6]));
+      expect(called).to.be(false);
+    });
+
+    it('should stop listening when changing to array', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      parent.set('array', child);
+      let called = false;
+      let cb = function() { called = true; };
+
+      listenToUnion(parent, 'array', cb);
+      parent.set('array', new Float32Array([4, 5, 6]));
+      child.set('array', new Float32Array([4, 5, 6]));
+      expect(called).to.be(false);
+    });
+
+    it('should start listening when changing to a widget', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let called = false;
+      let cb = function() { called = true; };
+
+      listenToUnion(parent, 'array', cb);
+      parent.set('array', child);
+      child.set('array', new Float32Array([4, 5, 6]));
+      expect(called).to.be(true);
+    });
+
+    it('should not call for array/widget changes if not allChanged', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let called = false;
+      let cb = function() { called = true; };
+
+      listenToUnion(parent, 'array', cb);
+      parent.set('array', child);
+      parent.set('array', new Float32Array([4, 5, 6]));
+      expect(called).to.be(false);
+    });
+
+    it('should call for array/widget changes if allChanged', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let numCalled = 0;
+      let cb = function() { ++numCalled; };
+
+      listenToUnion(parent, 'array', cb, true);
+      parent.set('array', child);
+      parent.set('array', new Float32Array([4, 5, 6]));
+      expect(numCalled).to.be(2);
+    });
+
+    it('should call for array/array changes if allChanged', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let numCalled = 0;
+      let cb = function() { ++numCalled; };
+
+      listenToUnion(parent, 'array', cb, true);
+      parent.set('array', new Float32Array([4, 5, 6]));
+      parent.set('array', new Float32Array([3, 2, 6]));
+      expect(numCalled).to.be(2);
+    });
+
+    it('should handle setting to/from null', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let numCalled = 0;
+      let cb = function() { ++numCalled; };
+
+      listenToUnion(parent, 'array', cb, true);
+      parent.set('array', null);
+      parent.set('array', new Float32Array([3, 2, 6]));
+      expect(numCalled).to.be(2);
+    });
+
+    it('should not call for anything after stop called', () => {
+      let parent = createWidgetModel();
+      let child = createWidgetModel();
+      // Make parent's array be a union type pointing to another widget
+      let numCalled = 0;
+      let cb = function() { ++numCalled; };
+
+      let stop = listenToUnion(parent, 'array', cb, true);
+      parent.set('array', new Float32Array([4, 5, 6]));
+      parent.set('array', new Float32Array([3, 2, 6]));
+
+      // Stop here (call count 2):
+      stop();
+      parent.set('array', child);
+      child.set('array', new Float32Array([4, 5, 6]));
+      child.set('array', new Float32Array([3, 2, 6]));
+      child.set('array', null);
+      parent.set('array', null);
+      parent.set('array', new Float32Array([3, 2, 6]));
+      expect(numCalled).to.be(2);
     });
 
    });

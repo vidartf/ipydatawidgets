@@ -5,7 +5,8 @@ export {
 } from './ndarray';
 
 export {
-  JSONToUnion, JSONToUnionArray, unionToJSON, data_union_serialization, data_union_array_serialization, getArrayFromUnion
+  JSONToUnion, JSONToUnionArray, unionToJSON, data_union_serialization,
+  data_union_array_serialization, getArrayFromUnion, listenToUnion
 } from './union';
 
 export {
