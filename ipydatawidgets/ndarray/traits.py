@@ -8,6 +8,8 @@
 Array trait types and helpers
 """
 
+import warnings
+
 import numpy as np
 from traitlets import TraitError, Undefined
 from ..trait_types import Validators
@@ -15,7 +17,13 @@ from ..trait_types import Validators
 
 def validate_dtype(value, dtype):
     try:
-        return np.asarray(value, dtype=dtype)
+        r = np.asarray(value, dtype=dtype)
+        if isinstance(value, np.ndarray) and r is not value:
+            warnings.warn('Given trait value dtype "%s" does not match required type "%s". '
+                          'A coerced copy has been created.' % (
+                              np.dtype(value.dtype).name,
+                              np.dtype(dtype).name))
+        return r
     except (ValueError, TypeError) as e:
         raise TraitError(e)
 
