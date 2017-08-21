@@ -12,7 +12,7 @@ from ipywidgets import Widget
 from traitlets import Unicode
 
 module_name = "jupyter-datawidgets"
-module_version = "1.0.0"
+module_version = "2.0.0"
 
 
 class DataWidget(Widget):
