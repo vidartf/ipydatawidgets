@@ -5,9 +5,18 @@ import {
   WidgetModel, ManagerBase
 } from '@jupyter-widgets/base';
 
+
+export {
+  JUPYTER_DATAWIDGETS_VERSION
+} from './version';
+
 import * as _ from 'underscore';
 
 import ndarray = require('ndarray');
+
+
+export
+const version = (require('../package.json') as any).version;
 
 
 export
@@ -102,7 +111,7 @@ class NDArrayModel extends WidgetModel {
 
   static model_name = 'NDArrayModel';
   static model_module = 'jupyter-datawidgets';
-  static model_module_version = '1.0.0';
+  static model_module_version = version;
   static view_name = null;
   static view_module = null;
   static view_module_version = '';
