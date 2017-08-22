@@ -34,6 +34,7 @@ class DataUnion(Union):
         self.tag(**data_union_serialization)
 
         self._registered_validators = {}
+        self._registered_observer = {}
 
     def instance_init(self, inst):
         inst.observe(self._on_instance_value_change, self.name)
@@ -41,14 +42,26 @@ class DataUnion(Union):
     def _on_instance_value_change(self, change):
         inst = change['owner']
         if isinstance(change['old'], NDArrayWidget):
-            f = self._registered_validators.get(inst, None)
+            f = self._registered_validators.pop(inst, None)
             if f is not None:
                 change['old']._instance_validators.remove(f)
+
+            f = self._registered_observer.pop(inst, None)
+            if f is not None:
+                change['old'].unobserve(f)
         if isinstance(change['new'], NDArrayWidget):
             # We can validate directly, since our validator accepts arrays also:
             f = partial(self._valdiate_child, inst)
             self._registered_validators[inst] = f
             change['new']._instance_validators.add(f)
+
+            f = partial(self._on_widget_array_change, inst)
+            self._registered_observer[inst] = f
+            change['new'].observe(f, 'array')
+
+    def _on_widget_array_change(self, union, change):
+        inst = change['owner']
+        union._notify_trait(self.name, inst, inst)
 
     def _valdiate_child(self, obj, value):
         try:
@@ -68,3 +81,9 @@ class DataUnion(Union):
             else:
                 self.shape_constraint(self, value)
         return value
+
+
+def get_union_array(union):
+    if isinstance(union, NDArrayWidget):
+        return union.array
+    return union
