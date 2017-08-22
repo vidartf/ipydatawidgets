@@ -7,10 +7,11 @@
 import pytest
 
 import numpy as np
-from traitlets import HasTraits, TraitError
+from traitlets import HasTraits, TraitError, observe
+from ipywidgets import Widget
 
 from ..ndarray.traits import shape_constraints, validate_dtype
-from ..ndarray.union import DataUnion
+from ..ndarray.union import DataUnion, get_union_array
 from ..ndarray.widgets import NDArrayWidget, ConstrainedNDArrayWidget
 
 
@@ -92,3 +93,50 @@ def test_dataunion_constricts_widget_data():
         w.array = bad_data
     foo.bar = ok_data
     w.array = bad_data  # Should now be OK!
+
+
+def test_dataunion_widget_change_notified(mock_comm):
+    counter = 0
+    class Foo(Widget):
+        bar = DataUnion().tag(sync=True)
+
+        @observe('bar')
+        def on_bar_change(self, change):
+            nonlocal counter
+            counter += 1
+
+    raw_data = np.ones((4, 4))
+    raw_data2 = np.ones((4, 4, 2))
+    w = NDArrayWidget(raw_data)
+
+    foo = Foo(bar=w)
+    foo.comm = mock_comm
+    assert counter == 1
+    w.array = raw_data2
+    assert counter == 2
+    foo.bar = raw_data
+    assert counter == 3
+    # Check that it did not send state for widget array update:
+    assert len(mock_comm.log_send) == 2
+
+    foo = Foo(bar=raw_data)
+    assert counter == 4
+    foo.bar = w
+    assert counter == 5
+
+
+def test_get_union_array_with_array():
+    class Foo(Widget):
+        bar = DataUnion()
+    raw_data = np.ones((4, 4))
+    foo = Foo(bar=raw_data)
+    assert get_union_array(foo.bar) is raw_data
+
+
+def test_get_union_array_with_widget():
+    class Foo(Widget):
+        bar = DataUnion()
+    raw_data = np.ones((4, 4))
+    foo = Foo(bar=NDArrayWidget(raw_data))
+    assert get_union_array(foo.bar) is raw_data
+

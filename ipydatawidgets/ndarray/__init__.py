@@ -6,5 +6,5 @@
 
 from .serializers import array_serialization, data_union_serialization
 from .traits import NDArray, shape_constraints
-from .union import DataUnion
+from .union import DataUnion, get_union_array
 from .widgets import NDArrayWidget, ConstrainedNDArrayWidget
