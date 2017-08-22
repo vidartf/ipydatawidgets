@@ -68,3 +68,9 @@ class DataUnion(Union):
             else:
                 self.shape_constraint(self, value)
         return value
+
+
+def get_union_array(union):
+    if isinstance(union, NDArrayWidget):
+        return union.array
+    return union
