@@ -5,18 +5,11 @@ import {
   WidgetModel, ManagerBase
 } from '@jupyter-widgets/base';
 
-
-export {
-  JUPYTER_DATAWIDGETS_VERSION
-} from './version';
-
-import * as _ from 'underscore';
+import {
+  DataModel
+} from './base';
 
 import ndarray = require('ndarray');
-
-
-export
-const version = (require('../package.json') as any).version;
 
 
 export
@@ -79,6 +72,7 @@ function arrayToJSON(obj: ndarray.NDArray | null, widget?: WidgetModel): ISendSe
 export
 const array_serialization = { deserialize: JSONToArray, serialize: arrayToJSON };
 
+export
 const typesToArray = {
     int8: Int8Array,
     int16: Int16Array,
@@ -91,28 +85,18 @@ const typesToArray = {
 }
 
 export
-class NDArrayModel extends WidgetModel {
+class NDArrayModel extends DataModel {
   defaults() {
-    return _.extend(super.defaults(), {
+    return {...super.defaults(), ...{
       array: ndarray([]),
       _model_name: NDArrayModel.model_name,
-      _model_module: NDArrayModel.model_module,
-      _model_module_version: NDArrayModel.model_module_version,
-      _view_name: NDArrayModel.view_name,
-      _view_module: NDArrayModel.view_module,
-      _view_module_version: NDArrayModel.view_module_version,
-    });
+    }} as any;
   }
 
   static serializers = {
-      ...WidgetModel.serializers,
+      ...DataModel.serializers,
       array: array_serialization,
     }
 
   static model_name = 'NDArrayModel';
-  static model_module = 'jupyter-datawidgets';
-  static model_module_version = version;
-  static view_name = null;
-  static view_module = null;
-  static view_module_version = '';
 }

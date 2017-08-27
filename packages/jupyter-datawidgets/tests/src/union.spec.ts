@@ -38,23 +38,6 @@ function createWidgetModel(): NDArrayModel {
   return new NDArrayModel(attributes, modelOptions);
 }
 
-export
-interface ModelConstructor<T> {
-    new (attributes?: any, options?: any): T;
-}
-
-export
-function createTestModel<T extends WidgetModel>(constructor: ModelConstructor<T>, attributes?: any): T {
-  let id = uuid();
-  let widget_manager = new DummyManager();
-  let modelOptions = {
-      widget_manager: widget_manager,
-      model_id: id,
-  }
-
-  return new constructor(attributes, modelOptions);
-}
-
 
 describe('Union Serializers', () => {
 

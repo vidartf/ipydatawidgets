@@ -25,8 +25,8 @@ describe('NDArray', () => {
     it('should be creatable', () => {
       let widget_manager = new DummyManager();
       let modelOptions = {
-          widget_manager: widget_manager,
-          model_id: uuid(),
+        widget_manager: widget_manager,
+        model_id: uuid(),
       }
       let serializedState = {};
       let model = new NDArrayModel(serializedState, modelOptions);

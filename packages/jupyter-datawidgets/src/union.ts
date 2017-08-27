@@ -9,8 +9,6 @@ import {
   NDArrayModel, IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
 } from './ndarray';
 
-import * as _ from 'underscore';
-
 import ndarray = require('ndarray');
 
 export type DataUnion = NDArrayModel | ndarray.NDArray
@@ -60,7 +58,7 @@ function unionToJSON(obj: DataUnion | null, widget?: WidgetModel): ISendSerializ
  * Gets the array of a union.
  */
 export
-function getArrayFromUnion(union: DataUnion): ndarray.NDArray {
+function getArrayFromUnion(union: DataUnion | null): ndarray.NDArray | null {
   if (union instanceof NDArrayModel) {
     return union.get('array') as ndarray.NDArray;
   }
@@ -90,7 +88,6 @@ function listenToUnion(model: Backbone.Model,
     if (union instanceof NDArrayModel) {
       // listen to changes in current model
       model.listenTo(union, 'change', callback);
-      model.listenTo(union, 'childchange', callback);
     }
   }
 
