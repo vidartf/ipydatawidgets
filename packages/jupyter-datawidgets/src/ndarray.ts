@@ -6,7 +6,7 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  DataModel
+  DataModel, ISerializers
 } from './base';
 
 import ndarray = require('ndarray');
@@ -96,7 +96,7 @@ class NDArrayModel extends DataModel {
   static serializers = {
       ...DataModel.serializers,
       array: array_serialization,
-    }
+    } as ISerializers;
 
   static model_name = 'NDArrayModel';
 }

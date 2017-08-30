@@ -7,6 +7,7 @@
 from .ndarray import *
 from .trait_types import Validators
 from .widgets import DataWidget
+from .scaled import ScaledArrayWidget
 from ._version import *
 
 from .nbextension import _jupyter_nbextension_paths

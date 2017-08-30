@@ -6,8 +6,17 @@ export {
 
 export {
   JSONToUnion, JSONToUnionArray, unionToJSON, data_union_serialization,
-  data_union_array_serialization, getArrayFromUnion, listenToUnion
+  data_union_array_serialization, getArrayFromUnion, listenToUnion,
+  DataUnion
 } from './union';
+
+export {
+  ScaledArrayModel
+} from './scaled';
+
+export {
+  getArray
+} from './common';
 
 export {
   JUPYTER_DATAWIDGETS_VERSION

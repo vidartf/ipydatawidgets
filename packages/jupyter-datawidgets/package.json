@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.0.1",
+    "jupyter-scales": "^1.0.1",
     "ndarray": "^1.0.18"
   }
 }
