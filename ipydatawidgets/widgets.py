@@ -11,8 +11,7 @@ Common base widgets for ipydatawidgets.
 from ipywidgets import Widget
 from traitlets import Unicode
 
-module_name = "jupyter-datawidgets"
-module_version = "2.0.0"
+from ._frontend import module_name, module_version
 
 
 class DataWidget(Widget):
