@@ -14,19 +14,17 @@ import {
 } from './dummy-manager.spec';
 
 import {
+  createTestModel
+} from './util.spec';
+
+import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray, ISendSerializedArray,
   NDArrayModel, getArrayFromUnion, listenToUnion
 } from '../../src/'
 
 
 function createWidgetModel(): NDArrayModel {
-  let id = uuid();
-  let widget_manager = new DummyManager();
-  let modelOptions = {
-      widget_manager: widget_manager,
-      model_id: id,
-  }
-
+  let manager = new DummyManager();
   let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
   let view = new DataView(raw_data.buffer);
   let serializedState = { array: {
@@ -34,8 +32,8 @@ function createWidgetModel(): NDArrayModel {
       shape: [2, 3],
       dtype: 'float32',
   }};
-  let attributes = NDArrayModel._deserialize_state(serializedState, widget_manager);
-  return new NDArrayModel(attributes, modelOptions);
+  let attributes = NDArrayModel._deserialize_state(serializedState, manager);
+  return createTestModel(NDArrayModel, attributes);
 }
 
 
@@ -208,7 +206,7 @@ describe('Union Serializers', () => {
 
   });
 
-   describe('getArrayFromUnion', () => {
+  describe('getArrayFromUnion', () => {
 
     it('should return the array when given an array', () => {
       let array = ndarray(new Float32Array([1, 2, 3, 4, 5, 10]));
@@ -222,7 +220,7 @@ describe('Union Serializers', () => {
       expect(output).to.be(model.get('array'));
     });
 
-   });
+  });
 
 
    describe('listenToUnion', () => {
