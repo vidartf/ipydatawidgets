@@ -32,7 +32,6 @@ install:
       pip install --upgrade ".[test]" -v
     elif [[ $GROUP == js ]]; then
       pip install --upgrade -e ".[test]" -v
-      npm install
     fi
 before_script:
   # Set up a virtual screen for Firefox browser testing:
