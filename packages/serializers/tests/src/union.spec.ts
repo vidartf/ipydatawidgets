@@ -11,8 +11,8 @@ import {
 
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
-  ISendSerializedArray, listenToUnion
-} from 'jupyter-dataserializers'
+  ISendSerializedArray, listenToUnion, IDataSource
+} from '../../src';
 
 import {
   DummyManager
@@ -22,22 +22,20 @@ import {
   createTestModel
 } from './util.spec';
 
-import {
-  NDArrayModel
-} from '../../src/'
 
+class TestModel extends WidgetModel implements IDataSource {
+  initialize(attributes: any, options: any) {
+    super.initialize(attributes, options);
+    this.raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
+    this.array = ndarray(this.raw_data, [2, 3]);
+  }
 
-function createWidgetModel(): NDArrayModel {
-  let manager = new DummyManager();
-  let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-  let view = new DataView(raw_data.buffer);
-  let serializedState = { array: {
-      buffer: view,
-      shape: [2, 3],
-      dtype: 'float32',
-  }};
-  let attributes = NDArrayModel._deserialize_state(serializedState, manager);
-  return createTestModel(NDArrayModel, attributes);
+  getNDArray(key?: string): ndarray {
+    return this.array;
+  }
+
+  raw_data: Float32Array;
+  array: ndarray;
 }
 
 
@@ -76,32 +74,17 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let id = uuid();
       let widget_manager = new DummyManager();
-      let modelOptions = {
-          widget_manager: widget_manager,
-          model_id: id,
-      }
 
-      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-      let view = new DataView(raw_data.buffer);
-      let serializedState = { array: {
-          buffer: view,
-          shape: [2, 3],
-          dtype: 'float32',
-      }};
-      let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
-      return attributesPromise.then((attributes) => {
-        let model = new NDArrayModel(attributes, modelOptions);
-        (widget_manager as any)._models[id] = Promise.resolve(model);
+      let model = createTestModel(TestModel, {}, widget_manager);
+      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
 
-        // Model is now set up. Try to deserialize a reference to the widget:
-        let jsonData = model.toJSON(undefined);
-        return JSONToUnionArray(jsonData, widget_manager)
-      }).then((array) => {
+      // Model is now set up. Try to deserialize a reference to the widget:
+      let jsonData = model.toJSON(undefined);
+      return JSONToUnionArray(jsonData, widget_manager).then((array) => {
         // Ensure that the ref deseriealizes to the inner ndarray:
         expect(array!.data).to.be.a(Float32Array);
-        expect((array!.data as Float32Array).buffer).to.be(raw_data.buffer);
+        expect((array!.data as Float32Array).buffer).to.be(model.raw_data.buffer);
         expect(array!.shape).to.eql([2, 3]);
         expect(array!.dtype).to.be('float32');
       });
@@ -143,35 +126,20 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let id = uuid();
       let widget_manager = new DummyManager();
-      let modelOptions = {
-          widget_manager: widget_manager,
-          model_id: id,
-      }
 
-      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-      let view = new DataView(raw_data.buffer);
-      let serializedState = { array: {
-          buffer: view,
-          shape: [2, 3],
-          dtype: 'float32',
-      }};
-      let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
-      return attributesPromise.then((attributes) => {
-        let model = new NDArrayModel(attributes, modelOptions);
-        (widget_manager as any)._models[id] = Promise.resolve(model);
+      let model = createTestModel(TestModel, {}, widget_manager);
+      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
 
-        // Model is now set up. Try to deserialize a reference to the widget:
-        let jsonData = model.toJSON(undefined);
-        return JSONToUnion(jsonData, widget_manager)
-      }).then((arrayModelRaw) => {
-        let arrayModel = arrayModelRaw as NDArrayModel;
-        // Ensure that the ref deseriealizes to a widget:
-        expect(arrayModel).to.be.a(NDArrayModel);
-        let array = arrayModel.get('array');
+      // Model is now set up. Try to deserialize a reference to the widget:
+      let jsonData = model.toJSON(undefined);
+      return JSONToUnion(jsonData, widget_manager).then((arrayModelRaw) => {
+        let arrayModel = arrayModelRaw as TestModel;
+        // Ensure that the ref deserializes to a widget:
+        expect(arrayModel).to.be.a(TestModel);
+        let array = (arrayModel as TestModel).array;
         expect(array!.data).to.be.a(Float32Array);
-        expect((array!.data as Float32Array).buffer).to.be(raw_data.buffer);
+        expect((array!.data as Float32Array).buffer).to.be(model.raw_data.buffer);
         expect(array!.shape).to.eql([2, 3]);
         expect(array!.dtype).to.be('float32');
       });
@@ -202,7 +170,7 @@ describe('Union Serializers', () => {
     });
 
     it('should serialize a widget', () => {
-      let model = createWidgetModel();
+      let model = createTestModel(TestModel);
 
       let jsonData = unionToJSON(model);
       expect(jsonData).to.be(model.toJSON(undefined));
@@ -213,8 +181,8 @@ describe('Union Serializers', () => {
   describe('listenToUnion', () => {
 
     it('should listen to widget changes', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       parent.set('array', child);
       let called = false;
@@ -226,8 +194,8 @@ describe('Union Serializers', () => {
     });
 
     it('should stop listening to widget changes', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       parent.set('array', child);
       let called = false;
@@ -243,8 +211,8 @@ describe('Union Serializers', () => {
     });
 
     it('should stop listening when changing to array', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       parent.set('array', child);
       let called = false;
@@ -257,8 +225,8 @@ describe('Union Serializers', () => {
     });
 
     it('should start listening when changing to a widget', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let called = false;
       let cb = function() { called = true; };
@@ -270,8 +238,8 @@ describe('Union Serializers', () => {
     });
 
     it('should not call for array/widget changes if not allChanged', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let called = false;
       let cb = function() { called = true; };
@@ -283,8 +251,8 @@ describe('Union Serializers', () => {
     });
 
     it('should call for array/widget changes if allChanged', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let numCalled = 0;
       let cb = function() { ++numCalled; };
@@ -296,8 +264,8 @@ describe('Union Serializers', () => {
     });
 
     it('should call for array/array changes if allChanged', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let numCalled = 0;
       let cb = function() { ++numCalled; };
@@ -309,8 +277,8 @@ describe('Union Serializers', () => {
     });
 
     it('should handle setting to/from null', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let numCalled = 0;
       let cb = function() { ++numCalled; };
@@ -322,8 +290,8 @@ describe('Union Serializers', () => {
     });
 
     it('should not call for anything after stop called', () => {
-      let parent = createWidgetModel();
-      let child = createWidgetModel();
+      let parent = createTestModel(TestModel);
+      let child = createTestModel(TestModel);
       // Make parent's array be a union type pointing to another widget
       let numCalled = 0;
       let cb = function() { ++numCalled; };

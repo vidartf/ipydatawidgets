@@ -11,14 +11,13 @@ import {
 
 import {
   ISerializers, IDataSource
-} from '../common';
+} from 'jupyter-dataserializers';
 
 import {
   version
-} from '../version';
+} from './version';
 
 import ndarray = require('ndarray');
-
 
 
 
@@ -34,7 +33,7 @@ abstract class DataModel extends WidgetModel implements IDataSource {
     }};
   }
 
-  abstract getNDArray(key?: string): ndarray.NDArray | null;
+  abstract getNDArray(key?: string): ndarray | null;
 
   static serializers: ISerializers = {
     ...WidgetModel.serializers,

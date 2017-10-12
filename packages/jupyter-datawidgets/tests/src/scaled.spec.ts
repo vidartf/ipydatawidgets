@@ -12,12 +12,12 @@ import {
 } from 'jupyter-scales';
 
 import {
-  ScaledArrayModel, JSONToArray
-} from '../../src/';
+  JSONToArray
+} from 'jupyter-dataserializers';
 
 import {
-  copyArray
-} from '../../src/widgets/scaled';
+  copyArray, ScaledArrayModel
+} from '../../src/scaled';
 
 import {
   DummyManager
@@ -114,7 +114,7 @@ describe('ScaledArrayModel', () => {
     let model = createWidgetModel();
 
     return model.initPromise.then(() => {
-      let array = model.get('array') as ndarray.NDArray;
+      let array = model.get('array') as ndarray;
       model.set('array', null);
       let triggered = false;
       let resized = false;
@@ -154,7 +154,7 @@ describe('ScaledArrayModel', () => {
     let model = createWidgetModel();
 
     return model.initPromise.then(() => {
-      let array = model.get('array') as ndarray.NDArray;
+      let array = model.get('array') as ndarray;
       model.set({array: null, scale: null});
       let triggered = false;
       model.on('change:scaledData', (options: any) => {
@@ -170,7 +170,7 @@ describe('ScaledArrayModel', () => {
     let model = createWidgetModel();
 
     return model.initPromise.then(() => {
-      let array = model.get('array') as ndarray.NDArray;
+      let array = model.get('array') as ndarray;
       array = copyArray(array);
       (array.data as Float32Array)[5] = 0;
       let triggered = false;

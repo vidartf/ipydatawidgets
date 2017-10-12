@@ -16,7 +16,7 @@ import ndarray = require('ndarray');
  */
 export
 interface IDataSource {
-  getNDArray(key?: string): ndarray.NDArray | null;
+  getNDArray(key?: string): ndarray | null;
 }
 
 
@@ -47,7 +47,7 @@ function isDataSource(data: any): data is IDataSource {
  * Gets the array of any array source.
  */
 export
-function getArray(data: DataUnion | IDataSource | null): ndarray.NDArray | null {
+function getArray(data: DataUnion | IDataSource | null): ndarray | null {
   if (isDataSource(data)) {
     return data.getNDArray();
   }

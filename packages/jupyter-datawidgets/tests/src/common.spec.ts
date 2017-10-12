@@ -1,26 +1,21 @@
 
-
-import {
-  NDArrayModel
-} from '../../src/widgets/ndarray';
-
-import {
-  DataUnion
-} from '../../src/union';
-
-import {
-  ScaledArrayModel
-} from '../../src/widgets/scaled';
-
 import {
   LinearScaleModel
 } from 'jupyter-scales';
 
-import ndarray = require('ndarray');
+import {
+  DataUnion, getArray
+} from 'jupyter-dataserializers';
 
 import {
-  getArray
-} from '../../src/common';
+  NDArrayModel
+} from '../../src/ndarray';
+
+import {
+  ScaledArrayModel
+} from '../../src/scaled';
+
+import ndarray = require('ndarray');
 
 import {
   DummyManager

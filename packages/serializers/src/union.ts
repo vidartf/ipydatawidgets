@@ -7,12 +7,12 @@ import {
 
 import {
   IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
-} from './array-serializers';
+} from './ndarray';
 
 // This is OK, as long as we only use it for type declarations
 import {
-  NDArrayModel
-} from './widgets/ndarray';
+  IDataSource
+} from './common';
 
 import ndarray = require('ndarray');
 
@@ -21,16 +21,16 @@ import ndarray = require('ndarray');
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
 export
-type DataUnion = NDArrayModel | ndarray.NDArray
+type DataUnion = IDataSource | ndarray
 
 
 /**
  * Deserializes union JSON to an ndarray or a NDArrayModel, as appropriate.
  */
 export
-function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray.NDArray | NDArrayModel | null> {
+function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | IDataSource | null> {
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<NDArrayModel>;
+    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
     return modelPromise;
   } else {
     return Promise.resolve(JSONToArray(obj, manager));
@@ -41,11 +41,11 @@ function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: Ma
  * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
  */
 export
-function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray.NDArray | null> {
+function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | null> {
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<NDArrayModel>;
+    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
     return modelPromise.then((model) => {
-      return model.get('array') as ndarray.NDArray;
+      return model.getNDArray();
     });
   } else {
     return Promise.resolve(JSONToArray(obj, manager));
@@ -60,7 +60,7 @@ function unionToJSON(obj: DataUnion | null, widget?: WidgetModel): ISendSerializ
   if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
-    return arrayToJSON(obj as ndarray.NDArray | null, widget);
+    return arrayToJSON(obj as ndarray | null, widget);
   }
 }
 

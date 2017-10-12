@@ -51,7 +51,18 @@ interface ISendSerializedArray {
 
 
 export
-function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ndarray.NDArray | null {
+function ensureSerializableDtype(dtype: ndarray.DataType): keyof IArrayLookup {
+  if (dtype === 'array' || dtype === 'buffer' || dtype === 'generic') {
+    throw new Error(`Cannot serialize ndarray with dtype: ${dtype}.`);
+  } else if (dtype === 'uint8_clamped') {
+    dtype = 'uint8';
+  }
+  return dtype;
+}
+
+
+export
+function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
   if (obj === null) {
     return null;
   }
@@ -61,12 +72,13 @@ function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase
 }
 
 export
-function arrayToJSON(obj: ndarray.NDArray | null, widget?: WidgetModel): ISendSerializedArray | null {
+function arrayToJSON(obj: ndarray | null, widget?: WidgetModel): ISendSerializedArray | null {
   if (obj === null) {
     return null;
   }
+  let dtype = ensureSerializableDtype(obj.dtype);
   // serialize to {shape: list, dtype: string, array: buffer}
-  return { shape: obj.shape, dtype: obj.dtype, buffer: obj.data as TypedArray };
+  return { shape: obj.shape, dtype, buffer: obj.data as TypedArray };
 }
 
 export
@@ -78,6 +90,7 @@ const typesToArray = {
     int16: Int16Array,
     int32: Int32Array,
     uint8: Uint8Array,
+    uint8_clamped: Uint8ClampedArray,
     uint16: Uint16Array,
     uint32: Uint32Array,
     float32: Float32Array,

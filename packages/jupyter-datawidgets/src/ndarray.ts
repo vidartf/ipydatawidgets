@@ -10,12 +10,8 @@ import {
 } from './base';
 
 import {
-  ISerializers
-} from '../common';
-
-import {
-  array_serialization
-} from '../array-serializers';
+  ISerializers, array_serialization
+} from 'jupyter-dataserializers';
 
 import ndarray = require('ndarray');
 
@@ -29,7 +25,7 @@ class NDArrayModel extends DataModel {
     }} as any;
   }
 
-  getNDArray(key='array'): ndarray.NDArray | null {
+  getNDArray(key='array'): ndarray | null {
     return this.get(key);
   }
 

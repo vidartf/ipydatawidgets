@@ -14,20 +14,14 @@ import {
 } from 'jupyter-scales';
 
 import {
-  ISerializers, getArray
-} from '../common';
+  data_union_serialization, listenToUnion,
+  TypedArray, typesToArray, IArrayLookup, TypedArrayConstructor,
+  ISerializers, getArray, ensureSerializableDtype
+} from 'jupyter-dataserializers';
 
 import {
   NDArrayModel
 } from './ndarray';
-
-import {
-  TypedArray, typesToArray, IArrayLookup
-} from '../array-serializers';
-
-import {
-  data_union_serialization, listenToUnion
-} from '../union';
 
 
 import ndarray = require('ndarray');
@@ -40,12 +34,16 @@ import ndarray = require('ndarray');
  * @returns {ndarray.NDArray}
  */
 export
-function copyArray(array: ndarray.NDArray, dtype?: keyof IArrayLookup): ndarray.NDArray {
+function copyArray(array: ndarray, dtype?: ndarray.DataType): ndarray {
   if (dtype === undefined) {
     return ndarray((array.data as TypedArray).slice(),
                    array.shape,
                    array.stride,
                    array.offset);
+  }
+  let ctor: TypedArrayConstructor;
+  if (dtype === 'buffer' || dtype === 'generic' || dtype === 'array') {
+    throw new Error(`Cannot copy ndarray of dtype "${dtype}".`);
   }
   return ndarray(new typesToArray[dtype](array.data as TypedArray),
                  array.shape,
@@ -146,7 +144,7 @@ class ScaledArrayModel extends NDArrayModel {
     this.listenTo(this.get('scale'), 'change', this.onChange);
   }
 
-  getNDArray(key='scaledData'): ndarray.NDArray | null {
+  getNDArray(key='scaledData'): ndarray | null {
     if (key === 'scaledData') {
       if (this.scaledData === null) {
         this.computeScaledData();
@@ -184,7 +182,7 @@ class ScaledArrayModel extends NDArrayModel {
       array.dtype !== this.scaledData.dtype;
   }
 
-  protected scaledDtype(): keyof IArrayLookup | undefined {
+  protected scaledDtype(): ndarray.DataType | undefined {
     let array = getArray(this.get('array'));
     if (array === null) {
       return undefined;
@@ -198,7 +196,7 @@ class ScaledArrayModel extends NDArrayModel {
    * @type {(ndarray.NDArray | null)}
    * @memberof ScaledArrayModel
    */
-  scaledData: ndarray.NDArray | null = null;
+  scaledData: ndarray<any> | null = null;
 
   /**
    * A promise that resolves once the model has finished its initialization.

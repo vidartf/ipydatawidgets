@@ -9,38 +9,12 @@ import {
 
 import {
   arrayToJSON, JSONToArray, IReceivedSerializedArray
-} from 'jupyter-dataserializers'
-
-import {
-  NDArrayModel
-} from '../../src/'
-
-import {
-  DummyManager
-} from './dummy-manager.spec';
+} from '../../src'
 
 import ndarray = require('ndarray');
 
 
-describe('NDArray', () => {
-
-  describe('NDArrayModel', () => {
-
-    it('should be creatable', () => {
-      let widget_manager = new DummyManager();
-      let modelOptions = {
-        widget_manager: widget_manager,
-        model_id: uuid(),
-      }
-      let serializedState = {};
-      let model = new NDArrayModel(serializedState, modelOptions);
-
-      expect(model).to.be.an(NDArrayModel);
-      let array = model.get('array');
-      expect(array.data.length).to.be(0);
-    });
-
-  });
+describe('ndarray', () => {
 
   describe('serializers', () => {
 
