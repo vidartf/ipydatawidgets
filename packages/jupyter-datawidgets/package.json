@@ -48,7 +48,7 @@
   "dependencies": {
     "@jupyter-widgets/base": "^1.0.1",
     "jupyter-scales": "^1.0.1",
-    "jupyter-dataserializers": "^1.0.0",
+    "jupyter-dataserializers": "^0.1.0",
     "ndarray": "^1.0.18"
   }
 }

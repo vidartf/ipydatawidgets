@@ -1,6 +1,6 @@
 {
   "name": "jupyter-dataserializers",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A set of widget utilities for array serialization",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
