@@ -59,16 +59,16 @@ class DummyManager extends widgets.ManagerBase<HTMLElement> {
             if ((widgets as any)[className]) {
                 return Promise.resolve((widgets as any)[className]);
             } else {
-                return Promise.reject(`Cannot find class ${className}`)
+                return Promise.reject(new Error(`Cannot find class ${className}`));
             }
         } else if (moduleName === 'jupyter-datawidgets') {
             if (this.testClasses[className]) {
                 return Promise.resolve(this.testClasses[className]);
             } else {
-                return Promise.reject(`Cannot find class ${className}`)
+                return Promise.reject(new Error(`Cannot find class ${className}`));
             }
         } else {
-            return Promise.reject(`Cannot find module ${moduleName}`);
+            return Promise.reject(new Error(`Cannot find class ${className}`));
         }
     }
 
