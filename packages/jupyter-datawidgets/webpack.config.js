@@ -15,7 +15,7 @@ module.exports = {
     loaders: loaders
   },
   devtool: 'source-map',
-  externals: ['@jupyter-widgets/base'],
+  externals: ['@jupyter-widgets/base', 'jupyter-scales'],
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: [".webpack.js", ".web.js", ".ts", ".js"]
