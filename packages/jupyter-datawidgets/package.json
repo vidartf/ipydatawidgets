@@ -1,6 +1,6 @@
 {
   "name": "jupyter-datawidgets",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "A set of widgets to help facilitate reuse of large datasets across widgets",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.0.1",
+    "jupyter-dataserializers": "^1.0.0",
     "jupyter-scales": "^1.0.1",
-    "jupyter-dataserializers": "^0.1.0",
     "ndarray": "^1.0.18"
   }
 }
