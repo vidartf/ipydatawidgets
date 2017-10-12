@@ -232,4 +232,68 @@ describe('ScaledArrayModel', () => {
 
   });
 
+  describe('getNDArray', () => {
+
+    const model = createWidgetModel();
+
+    it('should return the scaled array', () => {
+      expect(model.getNDArray()).to.be(model.scaledData);
+      expect(model.getNDArray('scaledData')).to.be(model.scaledData);
+    });
+
+    it('should be able to retrieve the source array', () => {
+      expect(model.getNDArray('array')).to.be(model.get('array'));
+    });
+
+    it('should fail for an incorrcet key', () => {
+      expect(model.getNDArray).withArgs('invalid_key').to.throwError();
+    });
+
+    it('should recalculate data if invalidated', () => {
+      model.scaledData = null;
+      let result = model.getNDArray();
+      expect(result).to.be(model.scaledData);
+      expect(result).to.not.be(null);
+    });
+
+  });
+
+});
+
+
+describe('copyArray', () => {
+  const raw_data = new Float32Array([1.4, 2.6, 3.4, 4.4, 5.6, 10.1]);
+  const source = ndarray(raw_data, [2, 3]);
+
+  it('should create a copy', () => {
+    let copy = copyArray(source);
+    expect(copy.data).to.not.be(raw_data);
+    expect(copy.data).to.eql(raw_data);
+    expect(copy.shape).to.not.be(source.shape);
+    expect(copy.shape).to.eql(source.shape);
+    expect(copy.stride).to.not.be(source.stride);
+    expect(copy.stride).to.eql(source.stride);
+  });
+
+  it('should convert dtype when argument given', () => {
+    let copy = copyArray(source, 'uint8');
+    expect(copy.data).to.eql(new Uint8Array([1, 2, 3, 4, 5, 10]));
+  });
+
+  it('should give an error for buffer dtype', () => {
+    expect(copyArray).withArgs(source, 'buffer').to.throwError(/Cannot copy.*/);
+  });
+
+  it('should give an error for generic dtype', () => {
+    expect(copyArray).withArgs(source, 'generic').to.throwError(/Cannot copy.*/);
+  });
+
+  it('should give an error for array dtype', () => {
+    expect(copyArray).withArgs(source, 'array').to.throwError(/Cannot copy.*/);
+  });
+
+  it('should give an error for invalid dtype', () => {
+    expect(copyArray).withArgs(source, 'invalid').to.throwError();
+  });
+
 });

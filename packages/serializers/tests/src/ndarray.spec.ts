@@ -8,7 +8,8 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  arrayToJSON, JSONToArray, IReceivedSerializedArray
+  arrayToJSON, JSONToArray, IReceivedSerializedArray,
+  ensureSerializableDtype, typesToArray
 } from '../../src'
 
 import ndarray = require('ndarray');
@@ -59,6 +60,38 @@ describe('ndarray', () => {
     it('should serialize null to null', () => {
       let output = arrayToJSON(null);
       expect(output).to.be(null);
+    });
+
+  });
+
+  describe('ensureSerializableDtype', () => {
+
+    it('should raise an error for array dtype', () => {
+      expect(ensureSerializableDtype)
+        .withArgs('array').to.throwException(/Cannot serialize.*/);
+    });
+
+    it('should raise an error for buffer dtype', () => {
+      expect(ensureSerializableDtype)
+        .withArgs('buffer').to.throwException(/Cannot serialize.*/);
+    });
+
+    it('should raise an error for generic dtype', () => {
+      expect(ensureSerializableDtype)
+        .withArgs('generic').to.throwException(/Cannot serialize.*/);
+    });
+
+    it('should return uint8 for uint8_clamped', () => {
+      expect(ensureSerializableDtype('uint8_clamped')).to.be('uint8');
+    });
+
+    it('should return uchanged value for everything else', () => {
+      for (let k in typesToArray) {
+        if (k === 'uint8_clamped') {
+          continue;
+        }
+        expect(ensureSerializableDtype(k as any)).to.be(k);
+      }
     });
 
   });

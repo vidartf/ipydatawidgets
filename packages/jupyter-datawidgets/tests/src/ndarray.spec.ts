@@ -40,6 +40,27 @@ describe('NDArray', () => {
       expect(array.data.length).to.be(0);
     });
 
+    describe('getNDArray', () => {
+
+      let widget_manager = new DummyManager();
+      let modelOptions = {
+        widget_manager: widget_manager,
+        model_id: uuid(),
+      }
+      let serializedState = {};
+      let model = new NDArrayModel(serializedState, modelOptions);
+
+      it('should return the inner array', () => {
+        expect(model.getNDArray()).to.eql(model.get('array'));
+        expect(model.getNDArray('array')).to.eql(model.get('array'));
+      });
+
+      it('should fail for an incorrcet key', () => {
+        expect(model.getNDArray).withArgs('invalid_key').to.throwError();
+      });
+
+    });
+
   });
 
   describe('serializers', () => {
