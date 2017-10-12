@@ -6,8 +6,8 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  DataModel, ISerializers
-} from './base';
+  ISerializers
+} from './common';
 
 import ndarray = require('ndarray');
 
@@ -82,21 +82,4 @@ const typesToArray = {
     uint32: Uint32Array,
     float32: Float32Array,
     float64: Float64Array
-}
-
-export
-class NDArrayModel extends DataModel {
-  defaults() {
-    return {...super.defaults(), ...{
-      array: ndarray([]),
-      _model_name: NDArrayModel.model_name,
-    }} as any;
-  }
-
-  static serializers = {
-      ...DataModel.serializers,
-      array: array_serialization,
-    } as ISerializers;
-
-  static model_name = 'NDArrayModel';
 }

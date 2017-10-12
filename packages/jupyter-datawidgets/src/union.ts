@@ -6,12 +6,22 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  NDArrayModel, IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
-} from './ndarray';
+  IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
+} from './array-serializers';
+
+// This is OK, as long as we only use it for type declarations
+import {
+  NDArrayModel
+} from './widgets/ndarray';
 
 import ndarray = require('ndarray');
 
-export type DataUnion = NDArrayModel | ndarray.NDArray
+
+/**
+ * Union type declaration of an NDArrayModel and a raw ndarray.
+ */
+export
+type DataUnion = NDArrayModel | ndarray.NDArray
 
 
 /**
@@ -47,22 +57,11 @@ function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager
  */
 export
 function unionToJSON(obj: DataUnion | null, widget?: WidgetModel): ISendSerializedArray | string | null {
-  if (obj instanceof NDArrayModel) {
+  if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
-    return arrayToJSON(obj, widget);
+    return arrayToJSON(obj as ndarray.NDArray | null, widget);
   }
-}
-
-/**
- * Gets the array of a union.
- */
-export
-function getArrayFromUnion(union: DataUnion | null): ndarray.NDArray | null {
-  if (union instanceof NDArrayModel) {
-    return union.get('array') as ndarray.NDArray;
-  }
-  return union;
 }
 
 /**
@@ -84,24 +83,24 @@ function listenToUnion(model: Backbone.Model,
                        allChanges?: boolean
                       ): () => void {
 
-  function listenToWidgetChanges(union: NDArrayModel) {
-    if (union instanceof NDArrayModel) {
+  function listenToWidgetChanges(union: DataUnion) {
+    if (union instanceof WidgetModel) {
       // listen to changes in current model
       model.listenTo(union, 'change', callback);
     }
   }
 
-  function onUnionChange(unionModel: Backbone.Model, value: any, subOptions: any) {
+  function onUnionChange(unionModel: WidgetModel, value: any, subOptions: any) {
     var prev = model.previous(unionName) || [];
     var curr = value || [];
 
-    if (prev instanceof NDArrayModel) {
+    if (prev instanceof WidgetModel) {
       model.stopListening(prev);
-    } else if (allChanges && !(curr instanceof NDArrayModel)) {
+    } else if (allChanges && !(curr instanceof WidgetModel)) {
       // The union was an array, and has changed to a new array
       callback(unionModel, subOptions);
     }
-    if (allChanges && (prev instanceof NDArrayModel) !== (curr instanceof NDArrayModel)) {
+    if (allChanges && (prev instanceof WidgetModel) !== (curr instanceof WidgetModel)) {
       // Union type has changed, call out
       callback(unionModel, subOptions);
     }
@@ -115,7 +114,7 @@ function listenToUnion(model: Backbone.Model,
 
   function stopListening() {
     let curr = model.get(unionName);
-    if (curr instanceof NDArrayModel) {
+    if (curr instanceof WidgetModel) {
       model.stopListening(curr);
     }
     model.off('change:' + unionName, onUnionChange);

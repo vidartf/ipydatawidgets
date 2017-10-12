@@ -14,16 +14,20 @@ import {
 } from 'jupyter-scales';
 
 import {
-  ISerializers
-} from './base';
+  ISerializers, getArray
+} from '../common';
 
 import {
-  NDArrayModel, TypedArray, typesToArray, IArrayLookup
+  NDArrayModel
 } from './ndarray';
 
 import {
-  data_union_serialization, listenToUnion, getArrayFromUnion
-} from './union';
+  TypedArray, typesToArray, IArrayLookup
+} from '../array-serializers';
+
+import {
+  data_union_serialization, listenToUnion
+} from '../union';
 
 
 import ndarray = require('ndarray');
@@ -85,7 +89,7 @@ class ScaledArrayModel extends NDArrayModel {
    * @memberof ScaledArrayModel
    */
   computeScaledData(): void {
-    let array = getArrayFromUnion(this.get('array'));
+    let array = getArray(this.get('array'));
     let scale = this.get('scale') as LinearScaleModel | null;
     // Handle null case immediately:
     if (array === null || scale === null) {
@@ -142,6 +146,17 @@ class ScaledArrayModel extends NDArrayModel {
     this.listenTo(this.get('scale'), 'change', this.onChange);
   }
 
+  getNDArray(key='scaledData'): ndarray.NDArray | null {
+    if (key === 'scaledData') {
+      if (this.scaledData === null) {
+        this.computeScaledData();
+      }
+      return this.scaledData;
+    } else {
+      return super.getNDArray(key);
+    }
+  }
+
   /**
    * Callback for when the source data changes.
    *
@@ -160,7 +175,7 @@ class ScaledArrayModel extends NDArrayModel {
    * @memberof ScaledArrayModel
    */
   protected arrayMismatch(): boolean {
-    let array = getArrayFromUnion(this.get('array'));
+    let array = getArray(this.get('array'));
     if (array === null && this.scaledData === null) {
       return false;
     }
@@ -170,7 +185,7 @@ class ScaledArrayModel extends NDArrayModel {
   }
 
   protected scaledDtype(): keyof IArrayLookup | undefined {
-    let array = getArrayFromUnion(this.get('array'));
+    let array = getArray(this.get('array'));
     if (array === null) {
       return undefined;
     }
@@ -193,11 +208,11 @@ class ScaledArrayModel extends NDArrayModel {
    */
   initPromise: Promise<void>;
 
-  static serializers = {
+  static serializers: ISerializers = {
       ...NDArrayModel.serializers,
       array: data_union_serialization,
       scale: { deserialize: unpack_models },
-    } as ISerializers;
+    };
 
   static model_name = 'ScaledArrayModel';
 }

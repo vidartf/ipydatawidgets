@@ -17,7 +17,7 @@ import {
 
 import {
   copyArray
-} from '../../src/scaled';
+} from '../../src/widgets/scaled';
 
 import {
   DummyManager

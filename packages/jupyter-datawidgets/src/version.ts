@@ -7,3 +7,10 @@
  */
 export
 const JUPYTER_DATAWIDGETS_VERSION = '1.0.0';
+
+
+/**
+ * The current package version.
+ */
+export
+const version = (require('../package.json') as any).version;

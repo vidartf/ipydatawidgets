@@ -2,7 +2,7 @@
 
 import {
   NDArrayModel
-} from '../../src/ndarray';
+} from '../../src/widgets/ndarray';
 
 import {
   DataUnion
@@ -10,7 +10,7 @@ import {
 
 import {
   ScaledArrayModel
-} from '../../src/scaled';
+} from '../../src/widgets/scaled';
 
 import {
   LinearScaleModel

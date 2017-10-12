@@ -1,27 +1,27 @@
 
 export {
-  NDArrayModel, JSONToArray, arrayToJSON, array_serialization,
+  JSONToArray, arrayToJSON, array_serialization,
   IReceivedSerializedArray, ISendSerializedArray
-} from './ndarray';
+} from './array-serializers';
+
+export {
+  getArray, ISerializers
+} from './common';
+
+export {
+  NDArrayModel
+} from './widgets/ndarray';
 
 export {
   JSONToUnion, JSONToUnionArray, unionToJSON, data_union_serialization,
-  data_union_array_serialization, getArrayFromUnion, listenToUnion,
+  data_union_array_serialization, listenToUnion,
   DataUnion
 } from './union';
 
 export {
   ScaledArrayModel
-} from './scaled';
+} from './widgets/scaled';
 
 export {
-  getArray
-} from './common';
-
-export {
-  JUPYTER_DATAWIDGETS_VERSION
+  version, JUPYTER_DATAWIDGETS_VERSION
 } from './version';
-
-export
-const version = (require('../package.json') as any).version;
-

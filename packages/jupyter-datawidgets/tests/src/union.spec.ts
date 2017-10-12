@@ -19,7 +19,7 @@ import {
 
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray, ISendSerializedArray,
-  NDArrayModel, getArrayFromUnion, listenToUnion
+  NDArrayModel, listenToUnion
 } from '../../src/'
 
 
@@ -206,24 +206,7 @@ describe('Union Serializers', () => {
 
   });
 
-  describe('getArrayFromUnion', () => {
-
-    it('should return the array when given an array', () => {
-      let array = ndarray(new Float32Array([1, 2, 3, 4, 5, 10]));
-      let output = getArrayFromUnion(array);
-      expect(output).to.be(array);
-    });
-
-    it('should return the inner array when given a model', () => {
-      let model = createWidgetModel();
-      let output = getArrayFromUnion(model);
-      expect(output).to.be(model.get('array'));
-    });
-
-  });
-
-
-   describe('listenToUnion', () => {
+  describe('listenToUnion', () => {
 
     it('should listen to widget changes', () => {
       let parent = createWidgetModel();
@@ -356,6 +339,6 @@ describe('Union Serializers', () => {
       expect(numCalled).to.be(2);
     });
 
-   });
+  });
 
 });

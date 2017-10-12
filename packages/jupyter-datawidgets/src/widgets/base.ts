@@ -6,26 +6,25 @@ import {
 } from 'backbone';
 
 import {
-  WidgetModel, ManagerBase
+  WidgetModel
 } from '@jupyter-widgets/base';
 
+import {
+  ISerializers, IDataSource
+} from '../common';
+
+import {
+  version
+} from '../version';
+
+import ndarray = require('ndarray');
+
+
+
 
 export
-const version = (require('../package.json') as any).version;
-
-
-export
-interface ISerializers {
-  [key: string]: {
-    deserialize?: (value?: any, manager?: ManagerBase<any>) => any;
-    serialize?: (value?: any, widget?: WidgetModel) => any;
-  }
-}
-
-
-export
-class DataModel extends WidgetModel {
-  defaults() {
+abstract class DataModel extends WidgetModel implements IDataSource {
+  defaults(): any {
     return {...super.defaults(), ...{
       _model_module: DataModel.model_module,
       _model_module_version: DataModel.model_module_version,
@@ -35,7 +34,9 @@ class DataModel extends WidgetModel {
     }};
   }
 
-  static serializers = {
+  abstract getNDArray(key?: string): ndarray.NDArray | null;
+
+  static serializers: ISerializers = {
     ...WidgetModel.serializers,
   }
 
