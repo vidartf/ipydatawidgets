@@ -116,8 +116,12 @@ class NDArrayWidget(DataWidget):
                     self._segments_to_send.clear()
 
 
-def ConstrainedNDArrayWidget(*validators, dtype=None):
-    """Returns a subclass of NDArrayWidget with a constrained array."""
+def ConstrainedNDArrayWidget(*validators, **kwargs):
+    """Returns a subclass of NDArrayWidget with a constrained array.
+
+    Accepts keyword argument 'dtype' in addition to any valdiators.
+    """
+    dtype = kwargs.pop('dtype', None)
     return type('ConstrainedNDArrayWidget', (NDArrayWidget,), {
         'array': NDArray(dtype=dtype).tag(sync=True, **array_serialization).valid(*validators)
     })

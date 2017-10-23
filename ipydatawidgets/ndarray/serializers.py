@@ -76,7 +76,8 @@ def array_from_json(value, widget):
     if value is None:
         return None
     # may need to copy the array if the underlying buffer is readonly
-    n = np.frombuffer(value['buffer'], dtype=value['dtype'])
+    n = np.array(value['buffer'], dtype=value['dtype'], copy=False)
+    #n = np.frombuffer(value['buffer'], dtype=value['dtype'])
     n.shape = value['shape']
     return n
 

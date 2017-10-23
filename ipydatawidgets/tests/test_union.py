@@ -10,9 +10,9 @@ import numpy as np
 from traitlets import HasTraits, TraitError, observe
 from ipywidgets import Widget
 
-from ..ndarray.traits import shape_constraints, validate_dtype
+from ..ndarray.traits import shape_constraints
 from ..ndarray.union import DataUnion, get_union_array
-from ..ndarray.widgets import NDArrayWidget, ConstrainedNDArrayWidget
+from ..ndarray.widgets import NDArrayWidget
 
 
 def test_dataunion_mixed_use():
@@ -96,14 +96,13 @@ def test_dataunion_constricts_widget_data():
 
 
 def test_dataunion_widget_change_notified(mock_comm):
-    counter = 0
+    ns = {'counter': 0}
     class Foo(Widget):
         bar = DataUnion().tag(sync=True)
 
         @observe('bar')
         def on_bar_change(self, change):
-            nonlocal counter
-            counter += 1
+            ns['counter'] += 1
 
     raw_data = np.ones((4, 4))
     raw_data2 = np.ones((4, 4, 2))
@@ -111,18 +110,18 @@ def test_dataunion_widget_change_notified(mock_comm):
 
     foo = Foo(bar=w)
     foo.comm = mock_comm
-    assert counter == 1
+    assert ns['counter'] == 1
     w.array = raw_data2
-    assert counter == 2
+    assert ns['counter'] == 2
     foo.bar = raw_data
-    assert counter == 3
+    assert ns['counter'] == 3
     # Check that it did not send state for widget array update:
     assert len(mock_comm.log_send) == 2
 
     foo = Foo(bar=raw_data)
-    assert counter == 4
+    assert ns['counter'] == 4
     foo.bar = w
-    assert counter == 5
+    assert ns['counter'] == 5
 
 
 def test_get_union_array_with_array():
