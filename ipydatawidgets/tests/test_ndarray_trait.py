@@ -4,8 +4,9 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-import pytest
+import re
 
+import pytest
 import numpy as np
 
 from traitlets import HasTraits, TraitError, Undefined
@@ -41,6 +42,9 @@ def test_create_with_coersion_default():
     np.testing.assert_equal(foo.bar, np.array([[1, 2, 3], [4, 5, 6]]))
 
 
+_re_dtype_warning = re.compile(
+    r'Given trait value dtype "int\d\d" does not match required type "float32".*')
+
 def test_create_with_coersion_dtype_default():
     class Foo(HasTraits):
         bar = NDArray([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
@@ -49,7 +53,7 @@ def test_create_with_coersion_dtype_default():
         foo = Foo()
         foo.bar   # Access to trigger creation from defualt
         assert len(warnings) == 1
-        assert 'Given trait value dtype "int64" does not match required type "float32"' in str(warnings[0].message)
+        assert _re_dtype_warning.match(str(warnings[0].message))
     np.testing.assert_equal(foo.bar, np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32))
 
 
