@@ -95,6 +95,7 @@ install_requires = setuptools_args['install_requires'] = [
     'ipywidgets>=7.0.0',
     'ipyscales>=0.1.1',
     'numpy',
+    'six',
 ]
 
 extras_require = setuptools_args['extras_require'] = {

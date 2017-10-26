@@ -13,6 +13,7 @@ from contextlib import contextmanager
 from ipywidgets import register
 from traitlets import Unicode, Set, Undefined, validate
 import numpy as np
+import six
 
 from ..widgets import DataWidget
 from .traits import NDArray
@@ -116,6 +117,9 @@ class NDArrayWidget(DataWidget):
                     self._segments_to_send.clear()
 
 
+# Signature SHOULD be ConstrainedNDArrayWidget(*validators, dtype=None),
+# but this is not supported by Python 2.7. For Python 3, we try to be
+# helpful by overriding the signature below.
 def ConstrainedNDArrayWidget(*validators, **kwargs):
     """Returns a subclass of NDArrayWidget with a constrained array.
 
@@ -125,3 +129,11 @@ def ConstrainedNDArrayWidget(*validators, **kwargs):
     return type('ConstrainedNDArrayWidget', (NDArrayWidget,), {
         'array': NDArray(dtype=dtype).tag(sync=True, **array_serialization).valid(*validators)
     })
+
+
+if six.PY3:
+    from inspect import Signature, Parameter
+    ConstrainedNDArrayWidget.__signature__ = Signature(parameters=(
+        Parameter('validators', Parameter.VAR_POSITIONAL),
+        Parameter('dtype', Parameter.KEYWORD_ONLY, default=None),
+    ))
