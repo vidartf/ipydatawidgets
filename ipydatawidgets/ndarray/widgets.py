@@ -117,10 +117,10 @@ class NDArrayWidget(DataWidget):
                     self._segments_to_send.clear()
 
 
-# Signature SHOULD be ConstrainedNDArrayWidget(*validators, dtype=None),
+# Signature SHOULD be create_constrained_arraywidget(*validators, dtype=None),
 # but this is not supported by Python 2.7. For Python 3, we try to be
 # helpful by overriding the signature below.
-def ConstrainedNDArrayWidget(*validators, **kwargs):
+def create_constrained_arraywidget(*validators, **kwargs):
     """Returns a subclass of NDArrayWidget with a constrained array.
 
     Accepts keyword argument 'dtype' in addition to any valdiators.
@@ -131,9 +131,17 @@ def ConstrainedNDArrayWidget(*validators, **kwargs):
     })
 
 
+
+
 if six.PY3:
     from inspect import Signature, Parameter
-    ConstrainedNDArrayWidget.__signature__ = Signature(parameters=(
+    create_constrained_arraywidget.__signature__ = Signature(parameters=(
         Parameter('validators', Parameter.VAR_POSITIONAL),
         Parameter('dtype', Parameter.KEYWORD_ONLY, default=None),
     ))
+
+
+def ConstrainedNDArrayWidget(*validators, **kwargs):
+    import warnings
+    warnings.warn('ConstrainedNDArrayWidget is deprecated, use create_constrained_arraywidget instead')
+    return create_constrained_arraywidget(*validators, **kwargs)

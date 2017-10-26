@@ -10,7 +10,7 @@ import numpy as np
 from traitlets import TraitError, Undefined
 
 from ..ndarray.traits import shape_constraints
-from ..ndarray.widgets import NDArrayWidget, ConstrainedNDArrayWidget
+from ..ndarray.widgets import NDArrayWidget, create_constrained_arraywidget
 
 
 def test_datawidget_creation_blank():
@@ -30,7 +30,7 @@ def test_datawidget_creation():
 
 
 def test_constrained_datawidget():
-    ColorImage = ConstrainedNDArrayWidget(shape_constraints(None, None, 3), dtype=np.uint8)
+    ColorImage = create_constrained_arraywidget(shape_constraints(None, None, 3), dtype=np.uint8)
     with pytest.warns(UserWarning) as warnings:
         with pytest.raises(TraitError):
             ColorImage(np.zeros((4, 4)))
