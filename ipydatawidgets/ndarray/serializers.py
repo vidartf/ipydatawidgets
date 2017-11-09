@@ -41,6 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import warnings
 
 import numpy as np
+import six
 
 from traitlets import Undefined, TraitError
 from ipywidgets import widget_serialization, Widget
@@ -76,8 +77,13 @@ def array_from_json(value, widget):
     if value is None:
         return None
     # may need to copy the array if the underlying buffer is readonly
-    n = np.array(value['buffer'], dtype=value['dtype'], copy=False)
-    #n = np.frombuffer(value['buffer'], dtype=value['dtype'])
+    if six.PY2:
+        # Numpy does not support frombuffer with memoryview
+        # on Python 2:
+        buffer = value['buffer'].tobytes()
+        n = np.frombuffer(buffer, dtype=value['dtype'])
+    else:
+        n = np.frombuffer(value['buffer'], dtype=value['dtype'])
     n.shape = value['shape']
     return n
 
