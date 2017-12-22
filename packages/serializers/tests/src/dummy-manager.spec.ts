@@ -8,7 +8,7 @@ import * as Backbone from 'backbone';
 let numComms = 0;
 
 export
-class MockComm {
+class MockComm implements widgets.IClassicComm {
     constructor() {
         this.comm_id = `mock-comm-id-${numComms}`;
         numComms += 1;
@@ -26,15 +26,26 @@ class MockComm {
             return Promise.resolve();
         }
     }
-    close() {
+    open(data?: any, metadata?: any, buffers?: ArrayBuffer[] | ArrayBufferView[]): string {
+        if (this._on_open) {
+            this._on_open();
+        }
+        return '';
+    }
+    close(data?: any, metadata?: any, buffers?: ArrayBuffer[] | ArrayBufferView[]): string {
         if (this._on_close) {
             this._on_close();
         }
+        return '';
     }
-    send() {}
+    send(data?: any, metadata?: any, buffers?: ArrayBuffer[] | ArrayBufferView[]): string {
+        return '';
+    }
     comm_id: string;
+    target_name: string;
     _on_msg: Function | null = null;
     _on_close: Function | null = null;
+    _on_open: Function | null = null;
 }
 
 export

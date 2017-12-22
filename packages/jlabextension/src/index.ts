@@ -2,8 +2,12 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  JupyterLabPlugin, JupyterLab
-} from '@jupyterlab/application';
+  Application, IPlugin
+} from '@phosphor/application';
+
+import {
+  Widget
+} from '@phosphor/widgets';
 
 import {
   Token
@@ -12,8 +16,8 @@ import {
 import * as dataWidgets from 'jupyter-datawidgets';
 
 import {
-  INBWidgetExtension
- } from "@jupyter-widgets/jupyterlab-manager";
+  IJupyterWidgetRegistry, ExportMap
+ } from "@jupyter-widgets/base";
 
 
 const EXTENSION_ID = 'jupyter.extensions.datawidgets'
@@ -36,9 +40,9 @@ interface IDataWidgetsExtension {
 /**
  * The notebook diff provider.
  */
-const dataWidgetsProvider: JupyterLabPlugin<IDataWidgetsExtension> = {
+const dataWidgetsProvider: IPlugin<Application<Widget>, IDataWidgetsExtension> = {
   id: EXTENSION_ID,
-  requires: [INBWidgetExtension],
+  requires: [IJupyterWidgetRegistry],
   activate: activateWidgetExtension,
   autoStart: true
 };
@@ -49,11 +53,11 @@ export default dataWidgetsProvider;
 /**
  * Activate the widget extension.
  */
-function activateWidgetExtension(app: JupyterLab, widgetsManager: INBWidgetExtension): IDataWidgetsExtension {
+function activateWidgetExtension(app: Application<Widget>, widgetsManager: IJupyterWidgetRegistry): IDataWidgetsExtension {
   widgetsManager.registerWidget({
       name: 'jupyter-datawidgets',
       version: dataWidgets.JUPYTER_DATAWIDGETS_VERSION,
-      exports: dataWidgets
+      exports: dataWidgets as any as ExportMap
     });
   return {};
 }
