@@ -76,10 +76,7 @@ class DataUnion(Union):
                 raise TraitError('dtypes must match exactly when passing a NDArrayWidget to '
                                  'a dtype constrained DataUnion')
         if self.shape_constraint:
-            if isinstance(value, NDArrayWidget):
-                self.shape_constraint(self, value.array)
-            else:
-                self.shape_constraint(self, value)
+            self.shape_constraint(self, get_union_array(value))
         return value
 
 
