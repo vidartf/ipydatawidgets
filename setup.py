@@ -70,12 +70,6 @@ cmdclass['js'] = combine_commands(
     ensure_targets(jstargets),
 )
 
-package_data = {
-    name: [
-        'nbextension/static/*.*',
-    ]
-}
-
 
 setup_args = dict(
     name            = name,
@@ -84,7 +78,6 @@ setup_args = dict(
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(here),
-    package_data    = package_data,
     author          = 'Jupyter Development Team',
     author_email    = 'jupyter@googlegroups.com',
     url             = 'https://github.com/vidartf/ipydatawidgets',
