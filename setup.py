@@ -49,8 +49,23 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(('jsdeps',))
-cmdclass['jsdeps'] = combine_commands(
+cmdclass = create_cmdclass(
+    'js',
+    data_files_spec=[
+        ('share/jupyter/nbextensions/jupyter-datawidgets',
+         name + '/static',
+         '*.js'),
+        ('share/jupyter/nbextensions/jupyter-datawidgets',
+         name + '/static',
+         '*.js.map'),
+        ('share/jupyter/lab/extensions',
+         'packages/jlabextension/dist',
+         'jupyterlab-datawidgets-*.tgz'),
+        ('etc/jupyter/nbconfig',
+         'jupyter-config',
+         '**/*.json'),
+    ],)
+cmdclass['js'] = combine_commands(
     install_npm(here),
     ensure_targets(jstargets),
 )

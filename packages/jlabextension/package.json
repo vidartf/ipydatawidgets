@@ -26,8 +26,10 @@
     "extension": true
   },
   "scripts": {
-    "clean": "rimraf build",
-    "build": "tsc --project src",
+    "clean": "rimraf build && rimraf dist",
+    "build": "npm run build:lib && npm run build:labextension",
+    "build:lib": "tsc --project src",
+    "build:labextension": "rimraf dist && mkdirp dist && cd dist && npm pack .."
   },
   "repository": {
     "type": "git",
