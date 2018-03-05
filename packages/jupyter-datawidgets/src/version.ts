@@ -6,7 +6,7 @@
  * implements.
  */
 export
-const JUPYTER_DATAWIDGETS_VERSION = '1.0.0';
+const EXTENSION_SPEC_VERSION = '4.0.0';
 
 
 /**

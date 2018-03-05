@@ -56,7 +56,7 @@ export default dataWidgetsProvider;
 function activateWidgetExtension(app: Application<Widget>, widgetsManager: IJupyterWidgetRegistry): IDataWidgetsExtension {
   widgetsManager.registerWidget({
       name: 'jupyter-datawidgets',
-      version: dataWidgets.JUPYTER_DATAWIDGETS_VERSION,
+      version: dataWidgets.EXTENSION_SPEC_VERSION,
       exports: dataWidgets as any as ExportMap
     });
   return {};

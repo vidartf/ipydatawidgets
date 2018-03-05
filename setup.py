@@ -49,17 +49,26 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(('jsdeps',))
-cmdclass['jsdeps'] = combine_commands(
+cmdclass = create_cmdclass(
+    'js',
+    data_files_spec=[
+        ('share/jupyter/nbextensions/jupyter-datawidgets',
+         name + '/static',
+         '*.js'),
+        ('share/jupyter/nbextensions/jupyter-datawidgets',
+         name + '/static',
+         '*.js.map'),
+        ('share/jupyter/lab/extensions',
+         'packages/jlabextension/dist',
+         'jupyterlab-datawidgets-*.tgz'),
+        ('etc/jupyter/nbconfig',
+         'jupyter-config',
+         '**/*.json'),
+    ],)
+cmdclass['js'] = combine_commands(
     install_npm(here),
     ensure_targets(jstargets),
 )
-
-package_data = {
-    name: [
-        'nbextension/static/*.*',
-    ]
-}
 
 
 setup_args = dict(
@@ -69,7 +78,6 @@ setup_args = dict(
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(here),
-    package_data    = package_data,
     author          = 'Jupyter Development Team',
     author_email    = 'jupyter@googlegroups.com',
     url             = 'https://github.com/vidartf/ipydatawidgets',
