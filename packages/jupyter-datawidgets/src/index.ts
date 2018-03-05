@@ -8,5 +8,5 @@ export {
 } from './scaled';
 
 export {
-  version, JUPYTER_DATAWIDGETS_VERSION
+  version, EXTENSION_SPEC_VERSION
 } from './version';
