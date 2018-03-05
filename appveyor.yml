@@ -35,7 +35,7 @@ install:
   # Install coverage utilities:
   - 'pip install codecov'
   # Install our package:
-  - 'pip install --upgrade ".[test]" -v'
+  - 'pip install --upgrade -e ".[test]" -v'
 
 build: off
 
