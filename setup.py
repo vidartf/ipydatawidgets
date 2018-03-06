@@ -53,10 +53,10 @@ cmdclass = create_cmdclass(
     'js',
     data_files_spec=[
         ('share/jupyter/nbextensions/jupyter-datawidgets',
-         name + '/static',
+         name + '/nbextension/static',
          '*.js'),
         ('share/jupyter/nbextensions/jupyter-datawidgets',
-         name + '/static',
+         name + '/nbextension/static',
          '*.js.map'),
         ('share/jupyter/lab/extensions',
          'packages/jlabextension/dist',
