@@ -105,6 +105,7 @@ install_requires = setuptools_args['install_requires'] = [
     'ipyscales>=0.1.1',
     'numpy',
     'six',
+    'traittypes>=0.2.0',
 ]
 
 extras_require = setuptools_args['extras_require'] = {

@@ -63,7 +63,7 @@ def test_array_to_json_int64_warning():
     with pytest.warns(UserWarning) as captured_warnings:
         json_data = array_to_json(data, None)
         assert len(captured_warnings) == 1
-        assert 'Cannot serialize (u)int64 data' in str(captured_warnings[0])
+        assert 'Cannot serialize (u)int64 data' in str(captured_warnings[0].message)
 
     reinterpreted_data = array_from_json(json_data, None)
     np.testing.assert_equal(data, reinterpreted_data)

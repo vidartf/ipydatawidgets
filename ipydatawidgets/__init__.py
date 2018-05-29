@@ -5,7 +5,6 @@
 # Distributed under the terms of the Modified BSD License.
 
 from .ndarray import *
-from .trait_types import Validators
 from .widgets import DataWidget
 from .scaled import ScaledArrayWidget
 from ._version import __version__, version_info

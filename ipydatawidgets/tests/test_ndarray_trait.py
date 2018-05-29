@@ -49,11 +49,7 @@ def test_create_with_coersion_dtype_default():
     class Foo(HasTraits):
         bar = NDArray([[1, 2, 3], [4, 5, 6]], dtype=np.float32)
 
-    with pytest.warns(UserWarning) as warnings:
-        foo = Foo()
-        foo.bar   # Access to trigger creation from defualt
-        assert len(warnings) == 1
-        assert _re_dtype_warning.match(str(warnings[0].message))
+    foo = Foo()
     np.testing.assert_equal(foo.bar, np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float32))
 
 
