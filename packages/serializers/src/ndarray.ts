@@ -87,6 +87,14 @@ function ensureSerializableDtype(dtype: ndarray.DataType): keyof IArrayLookup {
 }
 
 
+/**
+ * Deserialize from JSON to an ndarray object.
+ *
+ * @param obj The deserialized JSON to convert
+ * @param manager The owning widget manager
+ *
+ * @returns A new ndarray object.
+ */
 export
 function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
   if (obj === null) {
@@ -97,6 +105,15 @@ function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase
   return ndarray(new typesToArray[obj.dtype](obj.buffer.buffer), obj.shape);
 }
 
+
+/**
+ * Serialize to JSON from an ndarray object.
+ *
+ * @param obj The ndarray object to convert
+ * @param manager The owning widget model
+ *
+ * @returns The JSON object representing the ndarray.
+ */
 export
 function arrayToJSON(obj: ndarray | null, widget?: WidgetModel): ISendSerializedArray | null {
   if (obj === null) {
@@ -107,6 +124,9 @@ function arrayToJSON(obj: ndarray | null, widget?: WidgetModel): ISendSerialized
   return { shape: obj.shape, dtype, buffer: obj.data as TypedArray };
 }
 
+/**
+ * Serializers for to/from ndarrays
+ */
 export
 const array_serialization = { deserialize: JSONToArray, serialize: arrayToJSON };
 
