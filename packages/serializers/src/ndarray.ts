@@ -185,3 +185,125 @@ const compressed_array_serialization = {
   deserialize: compressedJSONToArray,
   serialize: arrayToCompressedJSON
 };
+
+
+export
+function typedArrayToType(array: TypedArray): keyof IArrayLookup {
+  if (array instanceof Int8Array) {
+    return 'int8';
+  } else if (array instanceof Int16Array) {
+    return 'int16';
+  } else if (array instanceof Int32Array) {
+    return 'int32';
+  } else if (array instanceof Uint8Array) {
+    return 'uint8';
+  } else if (array instanceof Uint8ClampedArray) {
+    return 'uint8';
+  } else if (array instanceof Uint16Array) {
+    return 'uint16';
+  } else if (array instanceof Uint32Array) {
+    return 'uint32';
+  } else if (array instanceof Float32Array) {
+    return 'float32';
+  } else if (array instanceof Float64Array) {
+    return 'float64';
+  } else {
+    throw new Error(`Unknown TypedArray type: ${array}`);
+  }
+};
+
+
+
+/**
+ * Deserialize from JSON to a typed array. Discards shape information.
+ *
+ * @param obj The deserialized JSON to convert
+ * @param manager The owning widget manager
+ *
+ * @returns A new typed array.
+ */
+export
+function JSONToTypedArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): TypedArray | null {
+  if (obj === null) {
+    return null;
+  }
+  // obj is {shape: list, dtype: string, array: DataView}
+  return new typesToArray[obj.dtype](obj.buffer.buffer);
+}
+
+
+/**
+ * Serialize to JSON from a typed array.
+ *
+ * @param obj The typed array to convert
+ * @param manager The owning widget model
+ *
+ * @returns The JSON object representing the typed array.
+ */
+export
+function typedArrayToJSON(obj: TypedArray | null, widget?: WidgetModel): ISendSerializedArray | null {
+  if (obj === null) {
+    return null;
+  }
+  // serialize to {shape: list, dtype: string, array: buffer}
+  return { shape: [obj.length], dtype: typedArrayToType(obj), buffer: obj };
+}
+
+
+/**
+ * Serializers for to/from 1D typed array
+ */
+export
+const typedarray_serialization = { deserialize: JSONToTypedArray, serialize: typedArrayToJSON };
+
+
+
+export
+interface ISimpleObject {
+  array: TypedArray;
+  shape: number[];
+}
+
+
+/**
+ * Deserialize from JSON to a simple object with shape and typed array.
+ *
+ * @param obj The deserialized JSON to convert
+ * @param manager The owning widget manager
+ *
+ * @returns A new object containg the data.
+ */
+export
+function JSONToSimple(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ISimpleObject | null {
+  if (obj === null) {
+    return null;
+  }
+  // obj is {shape: list, dtype: string, array: DataView}
+  return { array: new typesToArray[obj.dtype](obj.buffer.buffer), shape: obj.shape};
+}
+
+
+/**
+ * Serialize to JSON from a simple object.
+ *
+ * @param obj The simple object to convert
+ * @param manager The owning widget model
+ *
+ * @returns The JSON object representing the simple object.
+ */
+export
+function simpleToJSON(obj: ISimpleObject | null, widget?: WidgetModel): ISendSerializedArray | null {
+  if (obj === null) {
+    return null;
+  }
+  // serialize to {shape: list, dtype: string, array: buffer}
+  return { shape: obj.shape, dtype: typedArrayToType(obj.array), buffer: obj.array };
+}
+
+
+/**
+ * Serializers for to/from 1D simple object containing array and metadata.
+ */
+export
+const simplearray_serialization = { deserialize: JSONToSimple, serialize: simpleToJSON };
+

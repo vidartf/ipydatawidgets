@@ -47,7 +47,7 @@ function isDataSource(data: any): data is IDataSource {
  * Gets the array of any array source.
  */
 export
-function getArray(data: DataUnion | IDataSource | null): ndarray | null {
+function getArray(data: DataUnion | null): ndarray | null {
   if (isDataSource(data)) {
     return data.getNDArray();
   }
