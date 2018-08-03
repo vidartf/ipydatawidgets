@@ -95,10 +95,15 @@ def array_to_compressed_json(value, widget):
     """Compressed array JSON serializer."""
     state = array_to_json(value, widget)
     compression = getattr(widget, 'compression_level', 0)
+    buffer = state.pop('buffer')
+    if six.PY2:
+        buffer = buffer.tobytes()
     state['compressed_buffer'] = zlib.compress(
-        state.pop('buffer'),
+        buffer,
         compression
     )
+    if six.PY2:
+        state['compressed_buffer'] = memoryview(state['compressed_buffer'])
     return state
 
 
@@ -106,7 +111,11 @@ def array_from_compressed_json(value, widget):
     """Compressed array JSON de-serializer."""
     comp = value.pop('compressed_buffer', None)
     if comp is not None:
+        if six.PY2:
+            comp = comp.tobytes()
         value['buffer'] = zlib.decompress(comp)
+        if six.PY2:
+            value['buffer'] = memoryview(value['buffer'])
     return array_from_json(value, widget)
 
 
