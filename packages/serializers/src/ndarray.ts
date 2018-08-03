@@ -11,6 +11,8 @@ import {
 
 import ndarray = require('ndarray');
 
+import pako = require("pako");
+
 
 export
 type TypedArray = Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array;
@@ -40,14 +42,38 @@ interface IReceivedSerializedArray {
 }
 
 /**
+ * The serialized representation of a received, compressed array
+ */
+export
+interface IReceivedCompressedSerializedArray {
+  shape: number[];
+  dtype: keyof IArrayLookup;
+  buffer?: DataView;
+  compressed_buffer?: DataView;
+}
+
+/**
  * The serialized representation of an array for sending
  */
 export
 interface ISendSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
-  buffer: ArrayBuffer;
+  buffer: TypedArray | DataView;
 }
+
+/**
+ * The serialized representation of a compressed array for sending
+ */
+export
+interface ISendCompressedSerializedArray {
+  shape: number[];
+  dtype: keyof IArrayLookup;
+  buffer?: TypedArray | DataView;
+  compressed_buffer?: TypedArray | DataView;
+}
+
+export type SendSerializedArray = ISendSerializedArray | ISendCompressedSerializedArray;
 
 
 export
@@ -96,3 +122,46 @@ const typesToArray = {
     float32: Float32Array,
     float64: Float64Array
 }
+
+
+export
+function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
+  if (obj === null) {
+    return null;
+  }
+  let buffer;
+  if (obj.compressed_buffer !== undefined) {
+    buffer = pako.inflate(new Uint8Array(obj.compressed_buffer.buffer)).buffer;
+  } else {
+    buffer = obj.buffer!.buffer;
+  }
+  // obj is {shape: list, dtype: string, array: DataView}
+  // return an ndarray object
+  return ndarray(new typesToArray[obj.dtype](buffer), obj.shape);
+}
+
+export
+function arrayToCompressedJSON(obj: ndarray | null, widget?: WidgetModel): SendSerializedArray | null {
+  if (obj === null) {
+    return null;
+  }
+  let dtype = ensureSerializableDtype(obj.dtype);
+  const level = widget ? widget.get('compression_level') : 0;
+  if (level !== undefined && level > 0) {
+    const compressed_buffer = pako.deflate(
+      new Uint8Array((obj.data as TypedArray).buffer),
+      { level }
+    );
+    // serialize to {shape: list, dtype: string, array: buffer}
+    return { shape: obj.shape, dtype, compressed_buffer };
+  }
+  // serialize to {shape: list, dtype: string, array: buffer}
+  return { shape: obj.shape, dtype, buffer: obj.data as TypedArray };
+
+}
+
+export
+const compressed_array_serialization = {
+  deserialize: compressedJSONToArray,
+  serialize: arrayToCompressedJSON
+};
