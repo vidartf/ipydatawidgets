@@ -11,7 +11,7 @@ import {
 
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
-  ISendSerializedArray, listenToUnion, IDataSource
+  ISendSerializedArray, listenToUnion
 } from '../../src';
 
 import {
@@ -19,24 +19,8 @@ import {
 } from './dummy-manager.spec';
 
 import {
-  createTestModel
+  createTestModel, TestModel
 } from './util.spec';
-
-
-class TestModel extends WidgetModel implements IDataSource {
-  initialize(attributes: any, options: any) {
-    super.initialize(attributes, options);
-    this.raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-    this.array = ndarray(this.raw_data, [2, 3]);
-  }
-
-  getNDArray(key?: string): ndarray {
-    return this.array;
-  }
-
-  raw_data: Float32Array;
-  array: ndarray;
-}
 
 
 describe('Union Serializers', () => {

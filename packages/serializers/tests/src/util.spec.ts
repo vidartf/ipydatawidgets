@@ -9,10 +9,42 @@ import {
   DummyManager
 } from './dummy-manager.spec';
 
+import {
+  IDataSource
+} from '../../src';
+
+import ndarray = require('ndarray');
+
+
 export
 interface ModelConstructor<T> {
     new (attributes?: any, options?: any): T;
 }
+
+
+export
+class TestModel extends WidgetModel implements IDataSource {
+  initialize(attributes: any, options: any) {
+    super.initialize(attributes, options);
+    this.raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
+    this.array = ndarray(this.raw_data, [2, 3]);
+  }
+
+  defaults() {
+    return {
+      ...super.defaults(),
+      compression_level: 0,
+    }
+  }
+
+  getNDArray(key?: string): ndarray {
+    return this.array;
+  }
+
+  raw_data: Float32Array;
+  array: ndarray;
+}
+
 
 export
 function createTestModel<T extends WidgetModel>(
