@@ -151,10 +151,14 @@ def test_compressed_to_json_none():
 
 def test_compressed_to_compressed_json():
     data = np.zeros((4, 3), dtype=np.float32)
-    json_data = array_to_compressed_json(data, None)
+    dummy = Widget()
+    dummy.compression_level = 6
+    json_data = array_to_compressed_json(data, dummy)
 
-    assert json_data == {
-        'buffer': memoryview(data),
-        'dtype': str(data.dtype),
-        'shape': (4, 3),
-    }
+    assert tuple(sorted(json_data.keys())) == (
+        'compressed_buffer', 'dtype', 'shape')
+    assert json_data['shape'] == (4, 3)
+    assert json_data['dtype'] == str(data.dtype)
+    # Test that decompress doesn't raise:
+    zlib.decompress(json_data['compressed_buffer'])
+    # TODO: Test content of compressed buffer?
