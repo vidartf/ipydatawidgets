@@ -23,6 +23,14 @@ interface ModelConstructor<T> {
 
 
 export
+class NullTestModel extends WidgetModel implements IDataSource {
+  getNDArray(key?: string): ndarray | null {
+    return null;
+  }
+}
+
+
+export
 class TestModel extends WidgetModel implements IDataSource {
   initialize(attributes: any, options: any) {
     super.initialize(attributes, options);
@@ -37,7 +45,7 @@ class TestModel extends WidgetModel implements IDataSource {
     }
   }
 
-  getNDArray(key?: string): ndarray {
+  getNDArray(key?: string): ndarray | null {
     return this.array;
   }
 

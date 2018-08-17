@@ -6,12 +6,14 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON
+  IReceivedSerializedArray, ISendSerializedArray, JSONToArray, arrayToJSON,
+  JSONToTypedArray, typedArrayToJSON, JSONToSimple, simpleToJSON, TypedArray,
+  ISimpleObject
 } from './ndarray';
 
 // This is OK, as long as we only use it for type declarations
 import {
-  IDataSource
+  IDataSource, isDataSource
 } from './common';
 
 import ndarray = require('ndarray');
@@ -127,3 +129,81 @@ const data_union_array_serialization = { deserialize: JSONToUnionArray, serializ
 
 export
 const data_union_serialization = { deserialize: JSONToUnion, serialize: unionToJSON };
+
+
+/**
+ * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
+ */
+export
+function JSONToUnionTypedArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<TypedArray | null> {
+  if (typeof obj === 'string') {
+    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
+    return modelPromise.then((model) => {
+      const array = model.getNDArray();
+      if (array === null) {
+        return array;
+      }
+      return array.data as TypedArray;
+    });
+  } else {
+    return Promise.resolve(JSONToTypedArray(obj, manager));
+  }
+}
+
+/**
+ * Serializes a union to JSON.
+ */
+export
+function unionTypedArrayToJSON(obj: IDataSource | TypedArray | null, widget?: WidgetModel): ISendSerializedArray | string | null {
+  if (obj instanceof WidgetModel) {
+    return obj.toJSON(undefined);
+  } else {
+    return typedArrayToJSON(obj as TypedArray | null, widget);
+  }
+}
+
+
+export
+const data_union_typedarray_serialization = {
+  deserialize: JSONToUnionTypedArray,
+  serialize: unionTypedArrayToJSON
+};
+
+
+/**
+ * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
+ */
+export
+function JSONToSimpleUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ISimpleObject | null> {
+  if (typeof obj === 'string') {
+    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
+    return modelPromise.then((model) => {
+      const array = model.getNDArray();
+      if (array === null) {
+        return null;
+      }
+      return {array: array.data as TypedArray, shape: array.shape};
+    });
+  } else {
+    return Promise.resolve(JSONToSimple(obj, manager));
+  }
+}
+
+/**
+ * Serializes a union to JSON.
+ */
+export
+function simpleUnionToJSON(obj: IDataSource | ISimpleObject | null, widget?: WidgetModel): ISendSerializedArray | string | null {
+  if (obj instanceof WidgetModel) {
+    return obj.toJSON(undefined);
+  } else {
+    return simpleToJSON(obj as ISimpleObject | null, widget);
+  }
+}
+
+
+export
+const data_union_simple_serialization = {
+  deserialize: JSONToSimpleUnion,
+  serialize: simpleUnionToJSON
+};
