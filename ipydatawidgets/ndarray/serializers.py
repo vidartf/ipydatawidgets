@@ -94,7 +94,11 @@ array_serialization = dict(to_json=array_to_json, from_json=array_from_json)
 def array_to_compressed_json(value, widget):
     """Compressed array JSON serializer."""
     state = array_to_json(value, widget)
+    if state is None:
+        return state
     compression = getattr(widget, 'compression_level', 0)
+    if compression == 0:
+        return state
     buffer = state.pop('buffer')
     if six.PY2:
         buffer = buffer.tobytes()
@@ -109,7 +113,7 @@ def array_to_compressed_json(value, widget):
 
 def array_from_compressed_json(value, widget):
     """Compressed array JSON de-serializer."""
-    comp = value.pop('compressed_buffer', None)
+    comp = value.pop('compressed_buffer', None) if value is not None else None
     if comp is not None:
         if six.PY2:
             comp = comp.tobytes()

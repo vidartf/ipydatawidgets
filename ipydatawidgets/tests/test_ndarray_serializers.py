@@ -7,6 +7,7 @@
 import pytest
 
 import numpy as np
+import zlib
 
 from traitlets import HasTraits, Instance, Undefined
 from ipywidgets import Widget, widget_serialization
@@ -14,7 +15,8 @@ from ipywidgets import Widget, widget_serialization
 from ..ndarray.union import DataUnion
 from ..ndarray.serializers import (
     data_union_from_json, data_union_to_json,
-    array_from_json, array_to_json
+    array_from_json, array_to_json,
+    array_to_compressed_json, array_from_compressed_json
 )
 
 
@@ -112,3 +114,47 @@ def test_union_to_json_correct_widget_data():
 
 def test_union_to_json_none():
     assert data_union_to_json(None, None) is None
+
+
+def test_compressed_from_json_correct_data():
+    orig_data = np.zeros((4, 3), dtype=np.float32)
+    raw_data = memoryview(zlib.compress(orig_data, 6))
+    json_data = {
+        'compressed_buffer': raw_data,
+        'dtype': 'float32',
+        'shape': [4, 3],
+    }
+    data = array_from_compressed_json(json_data, None)
+    # Note: We simply use None for the widget parameter since
+    # we currently don't use it. Tests should be updated in the
+    # future if it is later needed.
+
+    np.testing.assert_equal(orig_data, data)
+
+def test_compressed_from_json_none():
+    assert array_from_compressed_json(None, None) is None
+
+
+def test_compressed_to_uncompressed_json():
+    data = np.zeros((4, 3), dtype=np.float32)
+    json_data = array_to_compressed_json(data, None)
+
+    assert json_data == {
+        'buffer': memoryview(data),
+        'dtype': str(data.dtype),
+        'shape': (4, 3),
+    }
+
+def test_compressed_to_json_none():
+    assert array_to_compressed_json(None, None) is None
+
+
+def test_compressed_to_compressed_json():
+    data = np.zeros((4, 3), dtype=np.float32)
+    json_data = array_to_compressed_json(data, None)
+
+    assert json_data == {
+        'buffer': memoryview(data),
+        'dtype': str(data.dtype),
+        'shape': (4, 3),
+    }
