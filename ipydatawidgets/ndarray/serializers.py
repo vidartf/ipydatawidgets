@@ -42,6 +42,7 @@ import warnings
 
 import numpy as np
 import six
+import zlib
 
 from traitlets import Undefined, TraitError
 from ipywidgets import widget_serialization, Widget
@@ -90,6 +91,39 @@ def array_from_json(value, widget):
 array_serialization = dict(to_json=array_to_json, from_json=array_from_json)
 
 
+def array_to_compressed_json(value, widget):
+    """Compressed array JSON serializer."""
+    state = array_to_json(value, widget)
+    compression = getattr(widget, 'compression_level', 0)
+    buffer = state.pop('buffer')
+    if six.PY2:
+        buffer = buffer.tobytes()
+    state['compressed_buffer'] = zlib.compress(
+        buffer,
+        compression
+    )
+    if six.PY2:
+        state['compressed_buffer'] = memoryview(state['compressed_buffer'])
+    return state
+
+
+def array_from_compressed_json(value, widget):
+    """Compressed array JSON de-serializer."""
+    comp = value.pop('compressed_buffer', None)
+    if comp is not None:
+        if six.PY2:
+            comp = comp.tobytes()
+        value['buffer'] = zlib.decompress(comp)
+        if six.PY2:
+            value['buffer'] = memoryview(value['buffer'])
+    return array_from_json(value, widget)
+
+
+compressed_array_serialization = dict(
+    to_json=array_to_compressed_json,
+    from_json=array_from_compressed_json)
+
+
 #  Serializers for union type [ndarray | ndarraywidget]:
 
 def data_union_to_json(value, widget):
@@ -105,4 +139,7 @@ def data_union_from_json(value, widget):
         return widget_serialization['from_json'](value, widget)
     return array_from_json(value, widget)
 
-data_union_serialization = dict(to_json=data_union_to_json, from_json=data_union_from_json)
+
+data_union_serialization = dict(
+    to_json=data_union_to_json,
+    from_json=data_union_from_json)

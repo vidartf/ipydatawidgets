@@ -10,7 +10,7 @@ import {
 } from './base';
 
 import {
-  ISerializers, array_serialization
+  ISerializers, compressed_array_serialization
 } from 'jupyter-dataserializers';
 
 import ndarray = require('ndarray');
@@ -21,6 +21,7 @@ class NDArrayModel extends DataModel {
   defaults() {
     return {...super.defaults(), ...{
       array: ndarray([]),
+      compression_level: 0,
       _model_name: NDArrayModel.model_name,
     }} as any;
   }
@@ -31,7 +32,7 @@ class NDArrayModel extends DataModel {
 
   static serializers: ISerializers = {
       ...DataModel.serializers,
-      array: array_serialization,
+      array: compressed_array_serialization,
     };
 
   static model_name = 'NDArrayModel';

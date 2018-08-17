@@ -11,13 +11,13 @@ Data widgets for numpy arrays.
 from contextlib import contextmanager
 
 from ipywidgets import register
-from traitlets import Unicode, Set, Undefined, validate
+from traitlets import Unicode, Set, Undefined, Int, validate
 import numpy as np
 import six
 
 from ..widgets import DataWidget
 from .traits import NDArray
-from .serializers import array_serialization
+from .serializers import compressed_array_serialization
 
 
 @register
@@ -34,7 +34,13 @@ class NDArrayWidget(DataWidget):
 
     _segments_to_send = Set()
 
-    array = NDArray().tag(sync=True, **array_serialization)
+    array = NDArray().tag(sync=True, **compressed_array_serialization)
+
+    compression_level = Int(0).tag(sync=True,
+        help='If above 0, compress the data with zlib during serialization. '
+        'Note: It is often more efficient to turn on compression on the '
+        'notebook application level than to use this option.'
+    )
 
     def __init__(self, array=Undefined, **kwargs):
         self._instance_validators = set()
@@ -127,7 +133,10 @@ def create_constrained_arraywidget(*validators, **kwargs):
     """
     dtype = kwargs.pop('dtype', None)
     return type('ConstrainedNDArrayWidget', (NDArrayWidget,), {
-        'array': NDArray(dtype=dtype).tag(sync=True, **array_serialization).valid(*validators)
+        'array': NDArray(dtype=dtype).tag(
+            sync=True,
+            **compressed_array_serialization
+        ).valid(*validators)
     })
 
 
@@ -143,5 +152,6 @@ if six.PY3:
 
 def ConstrainedNDArrayWidget(*validators, **kwargs):
     import warnings
-    warnings.warn('ConstrainedNDArrayWidget is deprecated, use create_constrained_arraywidget instead')
+    warnings.warn('ConstrainedNDArrayWidget is deprecated, '
+                  'use create_constrained_arraywidget instead')
     return create_constrained_arraywidget(*validators, **kwargs)
