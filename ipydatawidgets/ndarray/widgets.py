@@ -36,11 +36,10 @@ class NDArrayWidget(DataWidget):
 
     array = NDArray().tag(sync=True, **compressed_array_serialization)
 
-    compression_level = Int(0).tag(sync=True,
+    compression_level = Int(0,
         help='If above 0, compress the data with zlib during serialization. '
         'Note: It is often more efficient to turn on compression on the '
-        'notebook application level than to use this option.'
-    )
+        'notebook application level than to use this option.').tag(sync=True)
 
     def __init__(self, array=Undefined, **kwargs):
         self._instance_validators = set()
