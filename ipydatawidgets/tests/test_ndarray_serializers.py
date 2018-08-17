@@ -160,5 +160,8 @@ def test_compressed_to_compressed_json():
     assert json_data['shape'] == (4, 3)
     assert json_data['dtype'] == str(data.dtype)
     # Test that decompress doesn't raise:
-    zlib.decompress(json_data['compressed_buffer'])
+    comp = json_data['compressed_buffer']
+    if six.PY2:
+        comp = comp.tobytes()
+    zlib.decompress(comp)
     # TODO: Test content of compressed buffer?
