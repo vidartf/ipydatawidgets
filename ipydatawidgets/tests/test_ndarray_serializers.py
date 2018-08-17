@@ -8,6 +8,7 @@ import pytest
 
 import numpy as np
 import zlib
+import six
 
 from traitlets import HasTraits, Instance, Undefined
 from ipywidgets import Widget, widget_serialization
