@@ -24,7 +24,7 @@ from ..ndarray.serializers import (
 def test_array_from_json_correct_data():
     raw_data = memoryview(np.zeros((4, 3), dtype=np.float32))
     json_data = {
-        'buffer': raw_data,
+        'data': raw_data,
         'dtype': 'float32',
         'shape': [4, 3],
     }
@@ -44,7 +44,7 @@ def test_array_to_json_correct_data():
     json_data = array_to_json(data, None)
 
     assert json_data == {
-        'buffer': memoryview(data),
+        'data': memoryview(data),
         'dtype': str(data.dtype),
         'shape': (4, 3),
     }
@@ -77,7 +77,7 @@ def test_array_to_json_int64_warning():
 def test_union_from_json_correct_array_data():
     raw_data = memoryview(np.zeros((4, 3), dtype=np.float32))
     json_data = {
-        'buffer': raw_data,
+        'data': raw_data,
         'dtype': 'float32',
         'shape': [4, 3],
     }
@@ -102,7 +102,7 @@ def test_union_to_json_correct_array_data():
     json_data = data_union_to_json(data, None)
 
     assert json_data == {
-        'buffer': memoryview(data),
+        'data': memoryview(data),
         'dtype': str(data.dtype),
         'shape': (4, 3),
     }
@@ -121,7 +121,7 @@ def test_compressed_from_json_correct_data():
     orig_data = np.zeros((4, 3), dtype=np.float32)
     raw_data = memoryview(zlib.compress(orig_data, 6))
     json_data = {
-        'compressed_buffer': raw_data,
+        'compressed_data': raw_data,
         'dtype': 'float32',
         'shape': [4, 3],
     }
@@ -141,7 +141,7 @@ def test_compressed_to_uncompressed_json():
     json_data = array_to_compressed_json(data, None)
 
     assert json_data == {
-        'buffer': memoryview(data),
+        'data': memoryview(data),
         'dtype': str(data.dtype),
         'shape': (4, 3),
     }
@@ -157,11 +157,11 @@ def test_compressed_to_compressed_json():
     json_data = array_to_compressed_json(data, dummy)
 
     assert tuple(sorted(json_data.keys())) == (
-        'compressed_buffer', 'dtype', 'shape')
+        'compressed_data', 'dtype', 'shape')
     assert json_data['shape'] == (4, 3)
     assert json_data['dtype'] == str(data.dtype)
     # Test that decompress doesn't raise:
-    comp = json_data['compressed_buffer']
+    comp = json_data['compressed_data']
     if six.PY2:
         comp = comp.tobytes()
     zlib.decompress(comp)

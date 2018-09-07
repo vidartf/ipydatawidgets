@@ -58,7 +58,7 @@ function createWidgetModel(): ScaledArrayModel {
   let attributes = {
     scale,
     array: JSONToArray({
-      buffer: view,
+      data: view,
       shape: [2, 3],
       dtype: 'float32',
     }, widget_manager)

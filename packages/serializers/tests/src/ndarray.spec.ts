@@ -34,7 +34,7 @@ describe('ndarray', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -60,8 +60,8 @@ describe('ndarray', () => {
 
       let jsonData = arrayToJSON(array)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -82,7 +82,7 @@ describe('ndarray', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -102,7 +102,7 @@ describe('ndarray', () => {
       const level = 6;
       let view = new DataView(pako.deflate(raw_data.buffer as any, { level }).buffer);
       let jsonData = {
-        compressed_buffer: view,
+        compressed_data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedCompressedSerializedArray;
@@ -134,8 +134,8 @@ describe('ndarray', () => {
 
       let jsonData = arrayToCompressedJSON(model.array, model)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(model.raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(model.raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -152,11 +152,11 @@ describe('ndarray', () => {
 
       let jsonData = arrayToCompressedJSON(model.array, model) as ISendCompressedSerializedArray;
 
-      expect(jsonData.buffer).to.be(undefined);
-      expect(jsonData.compressed_buffer).to.be.a(Uint8Array);
+      expect(jsonData.data).to.be(undefined);
+      expect(jsonData.compressed_data).to.be.a(Uint8Array);
       // Not .to.be here, as run through compression loop:
-      expect(jsonData.compressed_buffer!.buffer).to.not.be(model.raw_data.buffer);
-      expect(jsonData.compressed_buffer).to.not.eql(
+      expect(jsonData.compressed_data!.buffer).to.not.be(model.raw_data.buffer);
+      expect(jsonData.compressed_data).to.not.eql(
         new Uint8Array(model.raw_data.buffer));
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
@@ -175,8 +175,8 @@ describe('ndarray', () => {
 
       let jsonData = arrayToCompressedJSON(array)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -193,8 +193,8 @@ describe('ndarray', () => {
 
       let jsonData = arrayToCompressedJSON(model.array, model)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(model.raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(model.raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -208,7 +208,7 @@ describe('ndarray', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -232,8 +232,8 @@ describe('ndarray', () => {
 
       let jsonData = typedArrayToJSON(raw_data)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([6]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -253,7 +253,7 @@ describe('ndarray', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -278,8 +278,8 @@ describe('ndarray', () => {
 
       let jsonData = simpleToJSON(obj)!;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 

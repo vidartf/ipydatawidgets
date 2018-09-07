@@ -38,7 +38,7 @@ export
 interface IReceivedSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
-  buffer: DataView;
+  data: DataView;
 }
 
 /**
@@ -48,8 +48,8 @@ export
 interface IReceivedCompressedSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
-  buffer?: DataView;
-  compressed_buffer?: DataView;
+  data?: DataView;
+  compressed_data?: DataView;
 }
 
 /**
@@ -59,7 +59,7 @@ export
 interface ISendSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
-  buffer: TypedArray | DataView;
+  data: TypedArray | DataView;
 }
 
 /**
@@ -69,8 +69,8 @@ export
 interface ISendCompressedSerializedArray {
   shape: number[];
   dtype: keyof IArrayLookup;
-  buffer?: TypedArray | DataView;
-  compressed_buffer?: TypedArray | DataView;
+  data?: TypedArray | DataView;
+  compressed_data?: TypedArray | DataView;
 }
 
 export type SendSerializedArray = ISendSerializedArray | ISendCompressedSerializedArray;
@@ -102,7 +102,7 @@ function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase
   }
   // obj is {shape: list, dtype: string, array: DataView}
   // return an ndarray object
-  return ndarray(new typesToArray[obj.dtype](obj.buffer.buffer), obj.shape);
+  return ndarray(new typesToArray[obj.dtype](obj.data.buffer), obj.shape);
 }
 
 
@@ -121,7 +121,7 @@ function arrayToJSON(obj: ndarray | null, widget?: WidgetModel): ISendSerialized
   }
   let dtype = ensureSerializableDtype(obj.dtype);
   // serialize to {shape: list, dtype: string, array: buffer}
-  return { shape: obj.shape, dtype, buffer: obj.data as TypedArray };
+  return { shape: obj.shape, dtype, data: obj.data as TypedArray };
 }
 
 /**
@@ -150,10 +150,10 @@ function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, m
     return null;
   }
   let buffer;
-  if (obj.compressed_buffer !== undefined) {
-    buffer = pako.inflate(new Uint8Array(obj.compressed_buffer.buffer)).buffer;
+  if (obj.compressed_data !== undefined) {
+    buffer = pako.inflate(new Uint8Array(obj.compressed_data.buffer)).buffer;
   } else {
-    buffer = obj.buffer!.buffer;
+    buffer = obj.data!.buffer;
   }
   // obj is {shape: list, dtype: string, array: DataView}
   // return an ndarray object
@@ -168,15 +168,15 @@ function arrayToCompressedJSON(obj: ndarray | null, widget?: WidgetModel): SendS
   let dtype = ensureSerializableDtype(obj.dtype);
   const level = widget ? widget.get('compression_level') : 0;
   if (level !== undefined && level > 0) {
-    const compressed_buffer = pako.deflate(
+    const compressed_data = pako.deflate(
       new Uint8Array((obj.data as TypedArray).buffer),
       { level }
     );
     // serialize to {shape: list, dtype: string, array: buffer}
-    return { shape: obj.shape, dtype, compressed_buffer };
+    return { shape: obj.shape, dtype, compressed_data };
   }
   // serialize to {shape: list, dtype: string, array: buffer}
-  return { shape: obj.shape, dtype, buffer: obj.data as TypedArray };
+  return { shape: obj.shape, dtype, data: obj.data as TypedArray };
 
 }
 
@@ -228,7 +228,7 @@ function JSONToTypedArray(obj: IReceivedSerializedArray | null, manager?: Manage
     return null;
   }
   // obj is {shape: list, dtype: string, array: DataView}
-  return new typesToArray[obj.dtype](obj.buffer.buffer);
+  return new typesToArray[obj.dtype](obj.data.buffer);
 }
 
 
@@ -246,7 +246,7 @@ function typedArrayToJSON(obj: TypedArray | null, widget?: WidgetModel): ISendSe
     return null;
   }
   // serialize to {shape: list, dtype: string, array: buffer}
-  return { shape: [obj.length], dtype: typedArrayToType(obj), buffer: obj };
+  return { shape: [obj.length], dtype: typedArrayToType(obj), data: obj };
 }
 
 
@@ -279,7 +279,7 @@ function JSONToSimple(obj: IReceivedSerializedArray | null, manager?: ManagerBas
     return null;
   }
   // obj is {shape: list, dtype: string, array: DataView}
-  return { array: new typesToArray[obj.dtype](obj.buffer.buffer), shape: obj.shape};
+  return { array: new typesToArray[obj.dtype](obj.data.buffer), shape: obj.shape};
 }
 
 
@@ -297,7 +297,7 @@ function simpleToJSON(obj: ISimpleObject | null, widget?: WidgetModel): ISendSer
     return null;
   }
   // serialize to {shape: list, dtype: string, array: buffer}
-  return { shape: obj.shape, dtype: typedArrayToType(obj.array), buffer: obj.array };
+  return { shape: obj.shape, dtype: typedArrayToType(obj.array), data: obj.array };
 }
 
 

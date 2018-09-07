@@ -33,7 +33,7 @@ describe('Union Serializers', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -84,7 +84,7 @@ describe('Union Serializers', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -142,8 +142,8 @@ describe('Union Serializers', () => {
 
       let jsonData = unionToJSON(array) as ISendSerializedArray;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -170,7 +170,7 @@ describe('Union Serializers', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -237,8 +237,8 @@ describe('Union Serializers', () => {
 
       let jsonData = unionTypedArrayToJSON(raw_data) as ISendSerializedArray;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([6]);
       expect(jsonData.dtype).to.be('float32');
 
@@ -265,7 +265,7 @@ describe('Union Serializers', () => {
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
       let jsonData = {
-        buffer: view,
+        data: view,
         shape: [2, 3],
         dtype: 'float32',
       } as IReceivedSerializedArray;
@@ -333,8 +333,8 @@ describe('Union Serializers', () => {
 
       let jsonData = simpleUnionToJSON(obj) as ISendSerializedArray;
 
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.data).to.be.a(Float32Array);
+      expect((jsonData.data as Float32Array).buffer).to.be(raw_data.buffer);
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
