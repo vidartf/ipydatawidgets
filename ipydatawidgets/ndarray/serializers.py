@@ -68,8 +68,8 @@ def array_to_json(value, widget):
     return {
         'shape': value.shape,
         'dtype': str(value.dtype),
-        #'buffer': memoryview(value) # maybe should do array.tobytes(order='C') to copy
-        'buffer': memoryview(value)
+        #'data': memoryview(value) # maybe should do array.tobytes(order='C') to copy
+        'data': memoryview(value)
     }
 
 
@@ -81,10 +81,10 @@ def array_from_json(value, widget):
     if six.PY2:
         # Numpy does not support frombuffer with memoryview
         # on Python 2:
-        buffer = value['buffer'].tobytes()
+        buffer = value['data'].tobytes()
         n = np.frombuffer(buffer, dtype=value['dtype'])
     else:
-        n = np.frombuffer(value['buffer'], dtype=value['dtype'])
+        n = np.frombuffer(value['data'], dtype=value['dtype'])
     n.shape = value['shape']
     return n
 
@@ -99,27 +99,27 @@ def array_to_compressed_json(value, widget):
     compression = getattr(widget, 'compression_level', 0)
     if compression == 0:
         return state
-    buffer = state.pop('buffer')
+    buffer = state.pop('data')
     if six.PY2:
         buffer = buffer.tobytes()
-    state['compressed_buffer'] = zlib.compress(
+    state['compressed_data'] = zlib.compress(
         buffer,
         compression
     )
     if six.PY2:
-        state['compressed_buffer'] = memoryview(state['compressed_buffer'])
+        state['compressed_data'] = memoryview(state['compressed_data'])
     return state
 
 
 def array_from_compressed_json(value, widget):
     """Compressed array JSON de-serializer."""
-    comp = value.pop('compressed_buffer', None) if value is not None else None
+    comp = value.pop('compressed_data', None) if value is not None else None
     if comp is not None:
         if six.PY2:
             comp = comp.tobytes()
-        value['buffer'] = zlib.decompress(comp)
+        value['data'] = zlib.decompress(comp)
         if six.PY2:
-            value['buffer'] = memoryview(value['buffer'])
+            value['data'] = memoryview(value['data'])
     return array_from_json(value, widget)
 
 

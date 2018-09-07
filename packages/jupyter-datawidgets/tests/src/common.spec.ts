@@ -31,9 +31,9 @@ function createArrayModel(): NDArrayModel {
   let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
   let view = new DataView(raw_data.buffer);
   let serializedState = { array: {
-      buffer: view,
-      shape: [2, 3],
-      dtype: 'float32',
+    data: view,
+    shape: [2, 3],
+    dtype: 'float32',
   }};
   let attributes = NDArrayModel._deserialize_state(serializedState, manager);
   return createTestModel(NDArrayModel, attributes);
@@ -53,7 +53,7 @@ function createScaledModel(): Promise<NDArrayModel> {
   let view = new DataView(raw_data.buffer);
   let serializedState = {
     array: {
-      buffer: view,
+      data: view,
       shape: [2, 3],
       dtype: 'float32',
     },
