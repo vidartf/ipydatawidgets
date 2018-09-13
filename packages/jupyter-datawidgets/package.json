@@ -38,6 +38,7 @@
     "@types/ndarray": "^1.0.5",
     "@types/node": "^9.4.6",
     "expect.js": "^0.3.1",
+    "jupyter-scales": "^1.1.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.1.0",
@@ -55,7 +56,6 @@
   "dependencies": {
     "@jupyter-widgets/base": "^1.1.8",
     "jupyter-dataserializers": "^1.1.2",
-    "jupyter-scales": "^1.1.0",
     "ndarray": "^1.0.18"
   }
 }

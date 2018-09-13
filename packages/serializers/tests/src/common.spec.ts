@@ -1,10 +1,6 @@
 
 import {
-  LinearScaleModel
-} from 'jupyter-scales';
-
-import {
-  DataUnion, getArray, IDataSource
+  getArray, IDataSource
 } from '../../src';
 
 import ndarray = require('ndarray');

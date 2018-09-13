@@ -6,7 +6,7 @@ const rules = [
   { test: /\.js$/, loader: "source-map-loader" },
 ];
 
-const externals = ['@jupyter-widgets/base', 'jupyter-scales'];
+const externals = ['@jupyter-widgets/base'];
 
 module.exports = [
   {
