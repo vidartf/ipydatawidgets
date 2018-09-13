@@ -112,6 +112,7 @@ extras_require = setuptools_args['extras_require'] = {
         'pytest',
         'pytest-cov',
         'nbval',
+        'ipyscales'
     ],
     'docs': [
         'sphinx',
