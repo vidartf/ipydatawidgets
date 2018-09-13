@@ -14,7 +14,7 @@ import {
 } from 'jupyter-dataserializers';
 
 import {
-  EXTENSION_SPEC_VERSION
+  version
 } from './version';
 
 import ndarray = require('ndarray');
@@ -40,7 +40,7 @@ abstract class DataModel extends WidgetModel implements IDataSource {
   }
 
   static model_module = 'jupyter-datawidgets';
-  static model_module_version = EXTENSION_SPEC_VERSION;
+  static model_module_version = version;
   static view_name = null;
   static view_module = null;
   static view_module_version = '';
