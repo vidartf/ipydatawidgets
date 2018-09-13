@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase, unpack_models
+  WidgetModel, unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -15,8 +15,8 @@ import {
 
 import {
   data_union_serialization, listenToUnion,
-  TypedArray, typesToArray, IArrayLookup, TypedArrayConstructor,
-  ISerializers, getArray, ensureSerializableDtype
+  TypedArray, typesToArray, TypedArrayConstructor,
+  ISerializers, getArray
 } from 'jupyter-dataserializers';
 
 import {

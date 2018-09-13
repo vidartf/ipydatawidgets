@@ -4,6 +4,14 @@
   "description": "A set of widgets to help facilitate reuse of large datasets across widgets",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
+  "files": [
+    "lib/**/*.js",
+    "lib/**/*.js.map",
+    "lib/**/*.d.ts",
+    "dist/*.js",
+    "dist/*.js.map",
+    "dist/*.d.ts"
+  ],
   "scripts": {
     "clean:lib": "rimraf lib",
     "clean:nbextension": "rimraf ../../ipydatawidgets/nbextension/static/index.js",
