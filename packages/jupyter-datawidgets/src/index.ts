@@ -8,5 +8,5 @@ export {
 } from './scaled';
 
 export {
-  version, EXTENSION_SPEC_VERSION
+  version
 } from './version';
