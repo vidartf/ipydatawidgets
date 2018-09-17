@@ -13,7 +13,7 @@ import {
 
 // This is OK, as long as we only use it for type declarations
 import {
-  IDataSource, isDataSource
+  IDataSource, getArray
 } from './common';
 
 import ndarray = require('ndarray');
@@ -23,14 +23,13 @@ import ndarray = require('ndarray');
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
 export
-type DataUnion = IDataSource | ndarray
+type DataUnion = IDataSource | ndarray;
 
 
 /**
  * Deserializes union JSON to an ndarray or a NDArrayModel, as appropriate.
  */
-export
-function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | IDataSource | null> {
+export async function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | IDataSource | null> {
   if (typeof obj === 'string') {
     var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
     return modelPromise;
@@ -42,16 +41,8 @@ function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: Ma
 /**
  * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
  */
-export
-function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | null> {
-  if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
-    return modelPromise.then((model) => {
-      return model.getNDArray();
-    });
-  } else {
-    return Promise.resolve(JSONToArray(obj, manager));
-  }
+export async function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | null> {
+  return getArray(await JSONToUnion(obj, manager));
 }
 
 /**

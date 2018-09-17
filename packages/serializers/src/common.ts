@@ -12,10 +12,9 @@ import ndarray = require('ndarray');
 
 
 /**
- * An interface for a datasource.
+ * An interface for a data source.
  */
-export
-interface IDataSource {
+export interface IDataSource {
   getNDArray(key?: string): ndarray | null;
 }
 
@@ -37,19 +36,17 @@ interface ISerializers {
 /**
  * Whether an object implements the data source interface.
  */
-export
-function isDataSource(data: any): data is IDataSource {
-  return data && typeof data.getNDArray === 'function';
+export function isDataSource(candidate: any): candidate is IDataSource {
+  return candidate && typeof candidate.getNDArray === 'function';
 }
 
 
 /**
  * Gets the array of any array source.
  */
-export
-function getArray(data: DataUnion | null): ndarray | null {
-  if (isDataSource(data)) {
-    return data.getNDArray();
+export function getArray(source: DataUnion | null): ndarray | null {
+  if (isDataSource(source)) {
+    return source.getNDArray();
   }
-  return data;
+  return source;
 }
