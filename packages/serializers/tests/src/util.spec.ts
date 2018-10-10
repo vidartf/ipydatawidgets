@@ -1,70 +1,40 @@
-// Copyright (c) Jupyter Development Team.
-// Distributed under the terms of the Modified BSD License.
-
 import {
-  uuid, WidgetModel
-} from '@jupyter-widgets/base';
-
-import {
-  DummyManager
-} from './dummy-manager.spec';
-
-import {
-  IDataSource
-} from '../../src';
-
-import ndarray = require('ndarray');
+  arraysEqual
+} from '../../src/util';
 
 
-export
-interface ModelConstructor<T> {
-    new (attributes?: any, options?: any): T;
-}
+describe('arraysEqual', () => {
 
+  it('should equal for two nulls', () => {
+    expect(arraysEqual(null, null)).to.be(true);
+  });
 
-export
-class NullTestModel extends WidgetModel implements IDataSource {
-  getNDArray(key?: string): ndarray | null {
-    return null;
-  }
-}
+  it('should equal for two undefined', () => {
+    expect(arraysEqual(undefined, undefined)).to.be(true);
+  });
 
+  it('should equal for two small arrays', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3])).to.be(true);
+  });
 
-export
-class TestModel extends WidgetModel implements IDataSource {
-  initialize(attributes: any, options: any) {
-    super.initialize(attributes, options);
-    this.raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-    this.array = ndarray(this.raw_data, [2, 3]);
-  }
+  it('should equal when passing same instance', () => {
+    const a = [1, 2, 3];
+    expect(arraysEqual(a, a)).to.be(true);
+  });
 
-  defaults() {
-    return {
-      ...super.defaults(),
-      compression_level: 0,
-    }
-  }
+  it('should not equal for two different arrays of same length', () => {
+    expect(arraysEqual([1, 4, 6], [1, 2, 3])).to.be(false);
+    expect(arraysEqual([1, 2, 3], [1, 4, 6])).to.be(false);
+  });
 
-  getNDArray(key?: string): ndarray | null {
-    return this.array;
-  }
+  it('should not equal for two similar arrays of different length', () => {
+    expect(arraysEqual([1, 2, 3], [1, 2, 3, 4, 5])).to.be(false);
+    expect(arraysEqual([1, 2, 3, 4, 5], [1, 2, 3])).to.be(false);
+  });
 
-  raw_data: Float32Array;
-  array: ndarray;
-}
+  it('should not equal for null and undefined', () => {
+    expect(arraysEqual(null, undefined)).to.be(false);
+    expect(arraysEqual(undefined, null)).to.be(false);
+  });
 
-
-export
-function createTestModel<T extends WidgetModel>(
-    constructor: ModelConstructor<T>,
-    attributes?: any,
-    widget_manager?: DummyManager,
-    ): T {
-  let id = uuid();
-  let modelOptions = {
-      widget_manager: widget_manager || new DummyManager(),
-      model_id: id,
-  }
-
-  return new constructor(attributes, modelOptions);
-}
+});

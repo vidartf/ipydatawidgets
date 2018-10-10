@@ -9,7 +9,7 @@ import {
 
 import {
   createTestModel, TestModel
-} from './util.spec';
+} from './util';
 
 import {
   arrayToJSON, JSONToArray, IReceivedSerializedArray,
@@ -17,7 +17,7 @@ import {
   ensureSerializableDtype, typesToArray,
   arrayToCompressedJSON, compressedJSONToArray, ISendCompressedSerializedArray,
   JSONToTypedArray, typedArrayToJSON, JSONToSimple,
-  simpleToJSON, typedArrayToType
+  simpleToJSON, typedArrayToType, fixed_shape_serialization
 } from '../../src'
 
 import ndarray = require('ndarray');
@@ -288,6 +288,74 @@ describe('ndarray', () => {
     it('should serialize null to null', () => {
       let output = simpleToJSON(null);
       expect(output).to.be(null);
+    });
+
+  });
+
+  describe('fixed shape serializers', () => {
+
+    const serializer = fixed_shape_serialization([3, 2]);
+
+    it('should deserialize an array', () => {
+
+      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
+      let view = new DataView(raw_data.buffer);
+      let jsonData = {
+        buffer: view,
+        shape: [3, 2],
+        dtype: 'float32',
+      } as IReceivedSerializedArray;
+
+      let obj = serializer.deserialize(jsonData)!;
+
+      expect(obj).to.be.a(Float32Array);
+      expect(obj.buffer).to.be(raw_data.buffer);
+
+    });
+
+    it('should deserialize null to null', () => {
+      let output = serializer.deserialize(null);
+      expect(output).to.be(null);
+    });
+
+    it('should throw an error for invalid shape on deserialize', () => {
+
+      let raw_data = new Float32Array([1, 2, 3, 4]);
+      let view = new DataView(raw_data.buffer);
+      let jsonData = {
+        buffer: view,
+        shape: [2, 2],
+        dtype: 'float32',
+      } as IReceivedSerializedArray;
+
+      expect(serializer.deserialize).withArgs(jsonData).to.throwError(
+        /^Incoming data unexpected shape.*/);
+    });
+
+    it('should serialize an ndarray', () => {
+
+      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
+
+      let jsonData = serializer.serialize(raw_data)!;
+
+      expect(jsonData.buffer).to.be.a(Float32Array);
+      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
+      expect(jsonData.shape).to.eql([3, 2]);
+      expect(jsonData.dtype).to.be('float32');
+
+    });
+
+    it('should serialize null to null', () => {
+      let output = serializer.serialize(null);
+      expect(output).to.be(null);
+    });
+
+    it('should throw an error for invalid shape on serialize', () => {
+
+      let raw_data = new Float32Array([1, 2, 3, 4]);
+
+      expect(serializer.serialize).withArgs(raw_data).to.throwError(
+        /^Data has wrong size for fixed shape serialization!.*/);
     });
 
   });
