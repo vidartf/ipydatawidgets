@@ -11,8 +11,6 @@ import {
 
 import ndarray = require('ndarray');
 
-import pako = require("pako");
-
 
 export
 type TypedArray = Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array;
@@ -146,6 +144,8 @@ const typesToArray = {
 
 export
 function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
+  const pako = require("pako");
+
   if (obj === null) {
     return null;
   }
@@ -162,6 +162,8 @@ function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, m
 
 export
 function arrayToCompressedJSON(obj: ndarray | null, widget?: WidgetModel): SendSerializedArray | null {
+  const pako = require("pako");
+
   if (obj === null) {
     return null;
   }
