@@ -61,6 +61,27 @@ describe('NDArray', () => {
 
     });
 
+    describe('change', () => {
+
+      it('should detect a change to the array', () => {
+        let widget_manager = new DummyManager();
+        let modelOptions = {
+          widget_manager: widget_manager,
+          model_id: uuid(),
+        }
+        const origData = new Float32Array([1, 2, 3, 4, 5, 10]);
+        let serializedState = {myAttr: origData};
+        let model = new NDArrayModel(serializedState, modelOptions);
+
+        const newData = new Float32Array([6, 4, 2])
+        model.set({myAttr: newData});
+
+        expect(model.changed).to.eql({'myAttr': newData});
+
+      });
+
+    });
+
   });
 
   describe('serializers', () => {
