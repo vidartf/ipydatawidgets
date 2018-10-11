@@ -4,15 +4,18 @@
 // Only used for typing, will be removed in transpile step
 import * as PakoModuleType from 'pako';
 
-let pakoReady: Promise<typeof PakoModuleType>;
+// Polyfill webpack require.ensure.
+if (typeof require.ensure !== 'function') require.ensure = (d, c) => c(require);    
+
+let _pakoReady: Promise<typeof PakoModuleType>;
 let _pako: typeof PakoModuleType;
 
 function ensurePako(): Promise<typeof PakoModuleType> {
-  if (pakoReady) {
-    return pakoReady;
+  if (_pakoReady) {
+    return _pakoReady;
   }
 
-  pakoReady = new Promise((resolve, reject) => {
+  _pakoReady = new Promise((resolve, reject) => {
     require.ensure(
       ['pako'],
       // see https://webpack.js.org/api/module-methods/#require-ensure
@@ -29,7 +32,7 @@ function ensurePako(): Promise<typeof PakoModuleType> {
     );
   });
 
-  return pakoReady;
+  return _pakoReady;
 }
 
 /**
