@@ -1,6 +1,9 @@
 const path = require('path');
 const version = require('./package.json').version;
 
+const extStaticPath = path.resolve(
+  __dirname, '..', '..', 'ipydatawidgets', 'nbextension', 'static');
+
 const rules = [
   { test: /\.ts$/, loader: 'ts-loader' },
   { test: /\.js$/, loader: "source-map-loader" },
@@ -8,12 +11,18 @@ const rules = [
 
 const externals = ['@jupyter-widgets/base'];
 
+const resolve = {
+  // Add '.ts' as resolvable extensions.
+  extensions: [".webpack.js", ".web.js", ".ts", ".js"]
+}
+
 module.exports = [
   {
-    entry: './src/index.ts',
+    // Notebook extension
+    entry: './src/extension.ts',
     output: {
       filename: 'index.js',
-      path: __dirname + '/../../ipydatawidgets/nbextension/static',
+      path: extStaticPath,
       libraryTarget: 'amd'
     },
     module: {
@@ -21,10 +30,7 @@ module.exports = [
     },
     devtool: 'source-map',
     externals,
-    resolve: {
-      // Add '.ts' as resolvable extensions.
-      extensions: [".webpack.js", ".web.js", ".ts", ".js"]
-    }
+    resolve,
   },
   {// Embeddable jupyter-datawidgets bundle
     //
@@ -53,9 +59,6 @@ module.exports = [
         rules: rules
     },
     externals,
-    resolve: {
-      // Add '.ts' as resolvable extensions.
-      extensions: [".webpack.js", ".web.js", ".ts", ".js"]
-    },
+    resolve,
   }
 ];

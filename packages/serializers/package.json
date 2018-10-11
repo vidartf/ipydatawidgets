@@ -26,6 +26,7 @@
     "@types/ndarray": "^1.0.5",
     "@types/node": "^9.4.6",
     "@types/pako": "^1.0.0",
+    "@types/webpack-env": "^1.13.6",
     "expect.js": "^0.3.1",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
