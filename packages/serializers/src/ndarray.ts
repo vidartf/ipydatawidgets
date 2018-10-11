@@ -9,6 +9,10 @@ import {
   arraysEqual
 } from './util';
 
+import {
+  compress, decompress
+} from './compression';
+
 import ndarray = require('ndarray');
 
 
@@ -142,16 +146,16 @@ const typesToArray = {
 }
 
 
-export
-function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
-  const pako = require("pako");
-
+export async function compressedJSONToArray(
+  obj: IReceivedCompressedSerializedArray | null,
+  manager?: ManagerBase<any>
+): Promise<ndarray | null> {
   if (obj === null) {
     return null;
   }
-  let buffer;
+  let buffer: ArrayBuffer;
   if (obj.compressed_buffer !== undefined) {
-    buffer = pako.inflate(new Uint8Array(obj.compressed_buffer.buffer)).buffer;
+    buffer = await decompress(obj.compressed_buffer.buffer);
   } else {
     buffer = obj.buffer!.buffer;
   }
@@ -160,19 +164,19 @@ function compressedJSONToArray(obj: IReceivedCompressedSerializedArray | null, m
   return ndarray(new typesToArray[obj.dtype](buffer), obj.shape);
 }
 
-export
-function arrayToCompressedJSON(obj: ndarray | null, widget?: WidgetModel): SendSerializedArray | null {
-  const pako = require("pako");
-
+export async function arrayToCompressedJSON(
+  obj: ndarray | null,
+  widget?: WidgetModel
+): Promise<SendSerializedArray | null> {
   if (obj === null) {
     return null;
   }
   let dtype = ensureSerializableDtype(obj.dtype);
-  const level = widget ? widget.get('compression_level') : 0;
+  const level = widget ? widget.get('compression_level') as number | undefined : 0;
   if (level !== undefined && level > 0) {
-    const compressed_buffer = pako.deflate(
-      new Uint8Array((obj.data as TypedArray).buffer),
-      { level }
+    const compressed_buffer = await compress(
+      (obj.data as TypedArray).buffer,
+      level
     );
     // serialize to {shape: list, dtype: string, array: buffer}
     return { shape: obj.shape, dtype, compressed_buffer };

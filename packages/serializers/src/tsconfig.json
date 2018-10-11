@@ -8,6 +8,7 @@
       "module": "commonjs",
       "moduleResolution": "node",
       "target": "ES5",
+      "types": ["webpack-env"],
       "outDir": "../lib",
       "skipLibCheck": true,
       "sourceMap": true
