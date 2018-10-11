@@ -18,7 +18,8 @@ const resolve = {
 
 module.exports = [
   {
-    entry: './src/index.ts',
+    // Notebook extension
+    entry: './src/extension.ts',
     output: {
       filename: 'index.js',
       path: extStaticPath,
