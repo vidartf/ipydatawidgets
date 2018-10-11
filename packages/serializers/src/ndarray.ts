@@ -6,8 +6,8 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  ISerializers
-} from './common';
+  arraysEqual
+} from './util';
 
 import ndarray = require('ndarray');
 
@@ -307,3 +307,40 @@ function simpleToJSON(obj: ISimpleObject | null, widget?: WidgetModel): ISendSer
 export
 const simplearray_serialization = { deserialize: JSONToSimple, serialize: simpleToJSON };
 
+
+/**
+ * Factory for serialziers to/from a typed array with fixed shape.
+ */
+export function fixed_shape_serialization(shape: number[]) {
+
+  let fixedLength = 1;
+  for (let dim of shape) {
+    fixedLength *= dim;
+  }
+
+  function JSONToFixedShape(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): TypedArray | null {
+    if (obj === null) {
+      return null;
+    }
+    if (!arraysEqual(obj.shape, shape)) {
+      throw new Error(`Incoming data unexpected shape: ${obj.shape}, expected ${shape}`);
+    }
+    // obj is {shape: list, dtype: string, array: DataView}
+    return new typesToArray[obj.dtype](obj.buffer.buffer);
+  }
+
+  function fixedShapeToJSON(obj: TypedArray | null, widget?: WidgetModel): ISendSerializedArray | null {
+    if (obj === null) {
+      return null;
+    }
+    if (obj.length !== fixedLength) {
+      throw new Error(
+        `Data has wrong size for fixed shape serialization! Expected ${
+          fixedLength
+        } elements, got ${obj.length}.`);
+    }
+    // serialize to {shape: list, dtype: string, array: buffer}
+    return { shape, dtype: typedArrayToType(obj), buffer: obj };
+  }
+  return { deserialize: JSONToFixedShape, serialize: fixedShapeToJSON };
+}

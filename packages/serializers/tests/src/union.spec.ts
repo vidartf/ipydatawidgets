@@ -6,10 +6,6 @@ import expect = require('expect.js');
 import ndarray = require('ndarray');
 
 import {
-  uuid, WidgetModel
-} from '@jupyter-widgets/base';
-
-import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
   ISendSerializedArray, listenToUnion, JSONToUnionTypedArray,
   unionTypedArrayToJSON, JSONToSimpleUnion, simpleUnionToJSON
@@ -21,7 +17,7 @@ import {
 
 import {
   createTestModel, TestModel, NullTestModel
-} from './util.spec';
+} from './util';
 
 
 describe('Union Serializers', () => {
