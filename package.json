@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "install": "lerna bootstrap --hoist",
+    "install": "lerna bootstrap --hoist --no-ci",
     "clean": "lerna run clean",
     "build": "lerna run build",
     "build:dev": "tsc --build",
