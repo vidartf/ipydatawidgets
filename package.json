@@ -11,6 +11,6 @@
     "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
-    "lerna": "^2.0.0"
+    "lerna": "^3.4.3"
   }
 }
