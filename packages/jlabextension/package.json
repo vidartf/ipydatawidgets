@@ -1,12 +1,12 @@
 {
   "name": "jupyterlab-datawidgets",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "description": "A JupyterLab extension providing a set of widgets to help facilitate reuse of large datasets across widgets.",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "dependencies": {
     "@jupyter-widgets/base": "^1.1.8",
-    "jupyter-datawidgets": "^4.1.0"
+    "jupyter-datawidgets": "^4.2.0"
   },
   "devDependencies": {
     "@phosphor/application": "^1.5.0",
