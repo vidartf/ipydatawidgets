@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declarationMap": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "strictPropertyInitialization": false
+  },
+  "references": [
+    { "path": "../serializers" },
+  ],
+  "include": [
+    "src/**/*.ts"
+  ]
+}
