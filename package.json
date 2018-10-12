@@ -3,7 +3,7 @@
   "scripts": {
     "install": "lerna bootstrap --hoist",
     "clean": "lerna run clean",
-    "build": "lerna run build",
+    "build": "tsc --build",
     "updated": "lerna updated",
     "test": "lerna run test",
     "publish": "npm run clean && npm run build && lerna publish -m \"Publish npm packages\""

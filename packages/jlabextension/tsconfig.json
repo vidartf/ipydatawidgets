@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "build",
+    "rootDir": "src",
+  },
+  "references": [
+    { "path": "../jupyter-datawidgets" },
+  ],
+  "include": [
+    "src/**/*.ts"
+  ]
+}
