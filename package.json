@@ -3,10 +3,12 @@
   "scripts": {
     "install": "lerna bootstrap --hoist",
     "clean": "lerna run clean",
-    "build": "tsc --build",
+    "build": "lerna run build",
+    "build:dev": "tsc --build",
     "updated": "lerna updated",
     "test": "lerna run test",
-    "publish": "npm run clean && npm run build && lerna publish -m \"Publish npm packages\""
+    "publish": "npm run clean && npm run build && lerna publish -m \"Publish npm packages\"",
+    "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
     "lerna": "^2.0.0"
