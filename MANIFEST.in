@@ -8,6 +8,8 @@ include .coverage.rc
 include package.json
 include lerna.json
 include package-lock.json
+include tsconfig.json
+include tsconfig-base.json
 
 # Documentation
 graft docs

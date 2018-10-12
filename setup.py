@@ -41,6 +41,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Representative files that should exist after a successful build
 jstargets = [
     os.path.join(here, name, 'nbextension', 'static', 'extension.js'),
+    os.path.join(here, name, 'nbextension', 'static', 'index.js'),
     os.path.join(here, 'packages', 'jlabextension', 'build', 'index.js'),
 ]
 
