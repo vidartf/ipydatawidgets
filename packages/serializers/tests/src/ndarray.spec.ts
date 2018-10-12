@@ -25,11 +25,6 @@ import ndarray = require('ndarray');
 import pako = require("pako");
 
 
-if (!require.ensure) {
-  require.ensure = (deps, cb) => cb(require);
-}
-
-
 describe('ndarray', () => {
 
   describe('standard serializers', () => {
