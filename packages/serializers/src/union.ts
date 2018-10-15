@@ -13,7 +13,7 @@ import {
 
 // This is OK, as long as we only use it for type declarations
 import {
-  IDataSource, getArray
+  DataWidget, getArray
 } from './common';
 
 import ndarray = require('ndarray');
@@ -22,16 +22,19 @@ import ndarray = require('ndarray');
 /**
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
-export
-type DataUnion = IDataSource | ndarray;
+export type DataUnion = DataWidget | ndarray;
 
 
 /**
  * Deserializes union JSON to an ndarray or a NDArrayModel, as appropriate.
  */
-export async function JSONToUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | IDataSource | null> {
+export async function JSONToUnion(
+  obj: IReceivedSerializedArray | string | null,
+  manager?: ManagerBase<any>
+): Promise<ndarray | DataWidget | null> {
+
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
+    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
     return modelPromise;
   } else {
     return Promise.resolve(JSONToArray(obj, manager));
