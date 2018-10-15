@@ -16,7 +16,7 @@ import {
 import {
   data_union_serialization, listenToUnion,
   TypedArray, typesToArray, TypedArrayConstructor,
-  ISerializers, getArray
+  ISerializers, getArray, IDataWriteBack, setArray
 } from 'jupyter-dataserializers';
 
 import {
@@ -82,7 +82,7 @@ function arrayShapesDiffer(a: ndarray | null, b: ndarray | null) {
  * @class ScaledArrayModel
  * @extends {DataModel}
  */
-export class ScaledArrayModel extends NDArrayBaseModel {
+export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack {
   defaults() {
     return {...super.defaults(), ...{
       array: ndarray([]),
@@ -163,6 +163,46 @@ export class ScaledArrayModel extends NDArrayBaseModel {
       return this.scaledData;
     } else {
       return super.getNDArray(key);
+    }
+  }
+
+  canWriteBack(key='scaledData'): boolean {
+    if (key === 'array') {
+      return true;
+    }
+    if (key !== 'scaledData') {
+      return false;
+    }
+    const scale = this.get('scale') as LinearScaleModel | null;
+    return !scale || typeof scale.obj.invert === 'function';
+  }
+
+  setNDArray(array: ndarray | null, key='scaledData', options?: any): void {
+    if (key === 'scaledData') {
+      // Writing back, we need to feed the data through scale.invert()
+
+      const current = getArray(this.get('array'));
+      const scale = this.get('scale') as LinearScaleModel | null;
+      // Handle null case immediately:
+      if (array === null || scale === null) {
+        setArray(this, 'array', null, options);
+        return;
+      }
+      // Allocate new array
+      const newArray = copyArray(array, this.scaledDtype());
+
+      let data = array.data as TypedArray;
+      let target = newArray.data as TypedArray;
+
+      // Set values:
+      for (let i = 0; i < data.length; ++i) {
+        target[i] = scale.obj.invert(data[i])
+      }
+
+      setArray(this, 'array', newArray, options);
+
+    } else {
+      setArray(this, key, array, options);
     }
   }
 
