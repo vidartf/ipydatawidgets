@@ -20,7 +20,7 @@ import {
 } from 'jupyter-dataserializers';
 
 import {
-  NDArrayModel
+  NDArrayBaseModel
 } from './ndarray';
 
 
@@ -33,8 +33,7 @@ import ndarray = require('ndarray');
  * @param {ndarray.NDArray} array
  * @returns {ndarray.NDArray}
  */
-export
-function copyArray(array: ndarray, dtype?: ndarray.DataType): ndarray {
+export function copyArray(array: ndarray, dtype?: ndarray.DataType): ndarray {
   if (dtype === undefined) {
     return ndarray((array.data as TypedArray).slice(),
                    array.shape,
@@ -49,6 +48,19 @@ function copyArray(array: ndarray, dtype?: ndarray.DataType): ndarray {
                  array.shape,
                  array.stride,
                  array.offset)
+}
+
+
+/**
+ * Whether two ndarrays differ in shape.
+ */
+function arrayShapesDiffer(a: ndarray | null, b: ndarray | null) {
+  if (a === null && b === null) {
+    return false;
+  }
+  return a === null || b === null ||
+    JSON.stringify(a.shape) !== JSON.stringify(b.shape) ||
+    a.dtype !== b.dtype;
 }
 
 
@@ -70,8 +82,7 @@ function copyArray(array: ndarray, dtype?: ndarray.DataType): ndarray {
  * @class ScaledArrayModel
  * @extends {DataModel}
  */
-export
-class ScaledArrayModel extends NDArrayModel {
+export class ScaledArrayModel extends NDArrayBaseModel {
   defaults() {
     return {...super.defaults(), ...{
       array: ndarray([]),
@@ -174,12 +185,7 @@ class ScaledArrayModel extends NDArrayModel {
    */
   protected arrayMismatch(): boolean {
     let array = getArray(this.get('array'));
-    if (array === null && this.scaledData === null) {
-      return false;
-    }
-    return array === null || this.scaledData === null ||
-      JSON.stringify(array.shape) !== JSON.stringify(this.scaledData.shape) ||
-      array.dtype !== this.scaledData.dtype;
+    return arrayShapesDiffer(array, this.scaledData);
   }
 
   protected scaledDtype(): ndarray.DataType | undefined {
@@ -207,7 +213,7 @@ class ScaledArrayModel extends NDArrayModel {
   initPromise: Promise<void>;
 
   static serializers: ISerializers = {
-      ...NDArrayModel.serializers,
+      ...NDArrayBaseModel.serializers,
       array: data_union_serialization,
       scale: { deserialize: unpack_models },
     };
