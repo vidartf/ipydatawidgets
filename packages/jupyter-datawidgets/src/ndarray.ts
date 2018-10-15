@@ -38,6 +38,10 @@ export class NDArrayModel extends NDArrayBaseModel implements IDataWriteBack {
     }} as any;
   }
 
+  canWriteBack(key='array'): boolean {
+    return true;
+  }
+
   setNDArray(array: ndarray | null, key='array', options?: any): void {
     this.set(key, array, options);
   }

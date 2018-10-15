@@ -42,6 +42,8 @@ export interface IDataSource {
  */
 export interface IDataWriteBack {
   setNDArray(array: ndarray | null, key?: string, options?: any): void;
+
+  canWriteBack(key?: string): boolean;
 }
 
 /**
@@ -70,7 +72,7 @@ export function isDataWriteBack(candidate: any): candidate is IDataWriteBack {
  * Gets the array of any array source.
  */
 export function getArray(
-  source: DataUnion | null,
+  source: ndarray<number> | IDataSource | null,
   key?: string
 ): ndarray | null {
 
@@ -100,7 +102,7 @@ export function setArray(
 ): void {
 
   const current = widget.get(key);
-  if (isDataWriteBack(current)) {
+  if (isDataWriteBack(current) && current.canWriteBack()) {
     current.setNDArray(array, key, options);
   } else {
     widget.set(key, array, options);
