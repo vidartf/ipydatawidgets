@@ -97,7 +97,7 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
    * @returns {void}
    * @memberof ScaledArrayModel
    */
-  computeScaledData(): void {
+  computeScaledData(options?: any): void {
     let array = getArray(this.get('array'));
     let scale = this.get('scale') as LinearScaleModel | null;
     // Handle null case immediately:
@@ -105,7 +105,9 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
       let changed = this.scaledData !== null;
       this.scaledData = null;
       if (changed) {
-        this.trigger('change:scaledData', {resized: true});
+        this.trigger('change:scaledData',
+          this, this.scaledData, {...options, resized: true}
+        );
       }
       return;
     }
@@ -122,7 +124,9 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
       target[i] = scale.obj(data[i])
     }
 
-    this.trigger('change:scaledData', {resized});
+    this.trigger('change:scaledData',
+      this, this.scaledData, {...options, resized}
+    );
   }
 
   /**
@@ -134,7 +138,9 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
    */
   initialize(attributes: ObjectHash, options: {model_id: string; comm?: any; widget_manager: any; }): void {
     super.initialize(attributes, options);
-    this.initPromise = Promise.resolve().then(() => {
+    const scale = (this.get('scale') as LinearScaleModel | null) || undefined;
+    // Await scale object for init:
+    this.initPromise = Promise.resolve(scale && scale.initPromise).then(() => {
       this.computeScaledData();
       this.setupListeners();
     });
@@ -174,7 +180,7 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
       return false;
     }
     const scale = this.get('scale') as LinearScaleModel | null;
-    return !scale || typeof scale.obj.invert === 'function';
+    return !!scale && typeof scale.obj.invert === 'function';
   }
 
   setNDArray(array: ndarray | null, key='scaledData', options?: any): void {
@@ -212,8 +218,8 @@ export class ScaledArrayModel extends NDArrayBaseModel implements IDataWriteBack
    * @param {WidgetModel} model
    * @memberof ScaledArrayModel
    */
-  protected onChange(model: WidgetModel): void {
-    this.computeScaledData();
+  protected onChange(model: WidgetModel, options?: any): void {
+    this.computeScaledData(options);
   }
 
   /**

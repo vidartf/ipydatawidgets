@@ -39,7 +39,7 @@ export class NDArrayModel extends NDArrayBaseModel implements IDataWriteBack {
   }
 
   canWriteBack(key='array'): boolean {
-    return true;
+    return key === 'array';
   }
 
   setNDArray(array: ndarray | null, key='array', options?: any): void {
