@@ -39,25 +39,35 @@ export async function JSONToUnion(
   } else {
     return Promise.resolve(JSONToArray(obj, manager));
   }
+
 }
 
 /**
  * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
  */
-export async function JSONToUnionArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ndarray | null> {
+export async function JSONToUnionArray(
+  obj: IReceivedSerializedArray | string | null,
+  manager?: ManagerBase<any>
+): Promise<ndarray | null> {
+
   return getArray(await JSONToUnion(obj, manager));
+
 }
 
 /**
  * Serializes a union to JSON.
  */
-export
-function unionToJSON(obj: DataUnion | null, widget?: WidgetModel): ISendSerializedArray | string | null {
+export function unionToJSON(
+  obj: DataUnion | null,
+  widget?: WidgetModel
+): ISendSerializedArray | string | null {
+
   if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
     return arrayToJSON(obj as ndarray | null, widget);
   }
+
 }
 
 /**
@@ -72,12 +82,12 @@ function unionToJSON(obj: DataUnion | null, widget?: WidgetModel): ISendSerializ
  *
  * To stop listening, call the return value.
  */
-export
-function listenToUnion(model: Backbone.Model,
-                       unionName: string,
-                       callback: (model: Backbone.Model, options: any) => any,
-                       allChanges?: boolean
-                      ): () => void {
+export function listenToUnion(
+  model: Backbone.Model,
+  unionName: string,
+  callback: (model: Backbone.Model, options: any) => any,
+  allChanges?: boolean
+): () => void {
 
   function listenToWidgetChanges(union: DataUnion) {
     if (union instanceof WidgetModel) {
@@ -115,23 +125,33 @@ function listenToUnion(model: Backbone.Model,
     }
     model.off('change:' + unionName, onUnionChange);
   }
+
   return stopListening;
+
 }
 
-export
-const data_union_array_serialization = { deserialize: JSONToUnionArray, serialize: unionToJSON };
 
-export
-const data_union_serialization = { deserialize: JSONToUnion, serialize: unionToJSON };
+export const data_union_array_serialization = {
+  deserialize: JSONToUnionArray,
+  serialize: unionToJSON
+};
+
+export const data_union_serialization = {
+  deserialize: JSONToUnion,
+  serialize: unionToJSON
+};
 
 
 /**
  * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
  */
-export
-function JSONToUnionTypedArray(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<TypedArray | null> {
+export function JSONToUnionTypedArray(
+  obj: IReceivedSerializedArray | string | null,
+  manager?: ManagerBase<any>
+): Promise<TypedArray | null> {
+
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
+    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
     return modelPromise.then((model) => {
       const array = model.getNDArray();
       if (array === null) {
@@ -142,35 +162,26 @@ function JSONToUnionTypedArray(obj: IReceivedSerializedArray | string | null, ma
   } else {
     return Promise.resolve(JSONToTypedArray(obj, manager));
   }
-}
 
-/**
- * Serializes a union to JSON.
- */
-export
-function unionTypedArrayToJSON(obj: IDataSource | TypedArray | null, widget?: WidgetModel): ISendSerializedArray | string | null {
-  if (obj instanceof WidgetModel) {
-    return obj.toJSON(undefined);
-  } else {
-    return typedArrayToJSON(obj as TypedArray | null, widget);
-  }
 }
 
 
-export
-const data_union_typedarray_serialization = {
+export const data_union_typedarray_serialization = {
   deserialize: JSONToUnionTypedArray,
-  serialize: unionTypedArrayToJSON
+  serialize: typedArrayToJSON
 };
 
 
 /**
  * Deserializes union JSON to an ndarray, regardless of whether it is a widget reference or direct data.
  */
-export
-function JSONToSimpleUnion(obj: IReceivedSerializedArray | string | null, manager?: ManagerBase<any>): Promise<ISimpleObject | null> {
+export function JSONToSimpleUnion(
+  obj: IReceivedSerializedArray | string | null,
+  manager?: ManagerBase<any>
+): Promise<ISimpleObject | null> {
+
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<IDataSource>;
+    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
     return modelPromise.then((model) => {
       const array = model.getNDArray();
       if (array === null) {
@@ -181,23 +192,11 @@ function JSONToSimpleUnion(obj: IReceivedSerializedArray | string | null, manage
   } else {
     return Promise.resolve(JSONToSimple(obj, manager));
   }
-}
 
-/**
- * Serializes a union to JSON.
- */
-export
-function simpleUnionToJSON(obj: IDataSource | ISimpleObject | null, widget?: WidgetModel): ISendSerializedArray | string | null {
-  if (obj instanceof WidgetModel) {
-    return obj.toJSON(undefined);
-  } else {
-    return simpleToJSON(obj as ISimpleObject | null, widget);
-  }
 }
 
 
-export
-const data_union_simple_serialization = {
+export const data_union_simple_serialization = {
   deserialize: JSONToSimpleUnion,
-  serialize: simpleUnionToJSON
+  serialize: simpleToJSON
 };
