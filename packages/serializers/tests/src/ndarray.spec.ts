@@ -4,12 +4,8 @@
 import expect = require('expect.js');
 
 import {
-  DummyManager
-} from './dummy-manager.spec';
-
-import {
-  createTestModel, TestModel
-} from './util';
+  createTestModel, TestModel, createModelWithSerializers
+} from './testhelper.spec';
 
 import {
   arrayToJSON, JSONToArray, IReceivedSerializedArray,
@@ -17,7 +13,9 @@ import {
   ensureSerializableDtype, typesToArray,
   arrayToCompressedJSON, compressedJSONToArray, ISendCompressedSerializedArray,
   JSONToTypedArray, typedArrayToJSON, JSONToSimple,
-  simpleToJSON, typedArrayToType, fixed_shape_serialization
+  simpleToJSON, typedArrayToType, fixed_shape_serialization,
+  array_serialization, compressed_array_serialization,
+  typedarray_serialization, simplearray_serialization
 } from '../../src'
 
 import ndarray = require('ndarray');
@@ -70,6 +68,18 @@ describe('ndarray', () => {
     it('should serialize null to null', () => {
       let output = arrayToJSON(null);
       expect(output).to.be(null);
+    });
+
+    it('should give back original when roundtripped', async () => {
+      // Round-trip through widget machienery to ensure compliance
+      const model = createModelWithSerializers({array: array_serialization});
+      model.set('array', model.array);
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
     });
 
   });
@@ -126,10 +136,7 @@ describe('ndarray', () => {
     it('should serialize an uncompressed ndarray', () => {
 
       // First set up a test NDArrayModel
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
       model.set('compression_level', 0);
 
       let jsonData = arrayToCompressedJSON(model.array, model)!;
@@ -144,10 +151,7 @@ describe('ndarray', () => {
     it('should serialize a compressed ndarray', () => {
 
       // First set up a test NDArrayModel
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
       model.set('compression_level', 6);
 
       let jsonData = arrayToCompressedJSON(model.array, model) as ISendCompressedSerializedArray;
@@ -185,10 +189,7 @@ describe('ndarray', () => {
     it('should not compress a model without compression_level', () => {
 
       // First set up a test NDArrayModel
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
       model.unset('compression_level');
 
       let jsonData = arrayToCompressedJSON(model.array, model)!;
@@ -198,6 +199,18 @@ describe('ndarray', () => {
       expect(jsonData.shape).to.eql([2, 3]);
       expect(jsonData.dtype).to.be('float32');
 
+    });
+
+    it('should give back original when roundtripped', async () => {
+      // Round-trip through widget machienery to ensure compliance
+      const model = createModelWithSerializers({array: compressed_array_serialization});
+      model.set('array', model.array);
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
     });
 
   });
@@ -244,6 +257,18 @@ describe('ndarray', () => {
       expect(output).to.be(null);
     });
 
+    it('should give back original when roundtripped', async () => {
+      // Round-trip through widget machienery to ensure compliance
+      const model = createModelWithSerializers({array: typedarray_serialization});
+      model.set('array', model.array.data);
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
+    });
+
   });
 
   describe('simple serializers', () => {
@@ -288,6 +313,18 @@ describe('ndarray', () => {
     it('should serialize null to null', () => {
       let output = simpleToJSON(null);
       expect(output).to.be(null);
+    });
+
+    it('should give back original when roundtripped', async () => {
+      // Round-trip through widget machienery to ensure compliance
+      const model = createModelWithSerializers({array: simplearray_serialization});
+      model.set('array', {array: model.array.data, shape: model.array.shape});
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
     });
 
   });
@@ -356,6 +393,18 @@ describe('ndarray', () => {
 
       expect(serializer.serialize).withArgs(raw_data).to.throwError(
         /^Data has wrong size for fixed shape serialization!.*/);
+    });
+
+    it('should give back original when roundtripped', async () => {
+      // Round-trip through widget machienery to ensure compliance
+      const model = createModelWithSerializers({array: serializer});
+      model.set('array', model.raw_data);
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
     });
 
   });
