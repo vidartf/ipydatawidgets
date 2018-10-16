@@ -10,15 +10,16 @@ import {
 } from './dummy-manager.spec';
 
 import {
-  IDataSource
+  IDataSource, ISerializers
 } from '../../src';
 
 import ndarray = require('ndarray');
+import { Widget } from '@phosphor/widgets';
 
 
 export
 interface ModelConstructor<T> {
-    new (attributes?: any, options?: any): T;
+  new (attributes?: any, options?: any): T;
 }
 
 
@@ -42,6 +43,8 @@ class TestModel extends WidgetModel implements IDataSource {
     return {
       ...super.defaults(),
       compression_level: 0,
+      _model_name: 'TestModel',
+      _model_module: 'jupyter-datawidgets',
     }
   }
 
@@ -66,5 +69,38 @@ function createTestModel<T extends WidgetModel>(
       model_id: id,
   }
 
-  return new constructor(attributes, modelOptions);
+  const model = new constructor(attributes, modelOptions);
+  model.name = model.get('_model_name');
+  model.module = model.get('_model_module');
+  model.widget_manager.register_model(model.model_id, Promise.resolve(model));
+  return model;
+}
+
+
+export function createModelWithSerializers(
+  serializers: ISerializers,
+  classes?: {[key: string]: ModelConstructor<WidgetModel>}
+): TestModel {
+  class SubModel extends TestModel {
+    defaults() {
+      return {
+        ...super.defaults(),
+        _model_name: 'SubModel',
+      };
+    }
+    static serializers = {
+      ...TestModel.serializers,
+      ...serializers,
+    }
+  }
+  const manager = new DummyManager();
+  if (classes) {
+    manager.testClasses = {
+      ...manager.testClasses,
+      ...classes,
+    };
+  }
+  manager.testClasses['SubModel'] = SubModel;
+  const model = createTestModel(SubModel, undefined, manager);
+  return model;
 }
