@@ -8,16 +8,15 @@ import ndarray = require('ndarray');
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
   ISendSerializedArray, listenToUnion, JSONToUnionTypedArray,
-  JSONToSimpleUnion
+  JSONToSimpleUnion, data_union_array_serialization,
+  data_union_serialization, data_union_simple_serialization,
+  data_union_typedarray_serialization, ISerializers
 } from '../../src';
 
 import {
-  DummyManager
-} from './dummy-manager.spec';
-
-import {
-  createTestModel, TestModel, NullTestModel
-} from './util';
+  createTestModel, TestModel, NullTestModel, createModelWithSerializers
+} from './testhelper.spec';
+import { DummyManager } from './dummy-manager.spec';
 
 
 describe('Union Serializers', () => {
@@ -54,15 +53,11 @@ describe('Union Serializers', () => {
     it('should deserialize a widget ref to an array', () => {
 
       // First set up an NDArrayModel
-
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToUnionArray(jsonData, widget_manager).then((array) => {
+      return JSONToUnionArray(jsonData, model.widget_manager).then((array) => {
         // Ensure that the ref deserializes to the inner ndarray:
         expect(array!.data).to.be.a(Float32Array);
         expect((array!.data as Float32Array).buffer).to.be(model.raw_data.buffer);
@@ -107,14 +102,11 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToUnion(jsonData, widget_manager).then((arrayModelRaw) => {
+      return JSONToUnion(jsonData, model.widget_manager).then((arrayModelRaw) => {
         let arrayModel = arrayModelRaw as TestModel;
         // Ensure that the ref deserializes to a widget:
         expect(arrayModel).to.be.a(TestModel);
@@ -191,14 +183,11 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToUnionTypedArray(jsonData, widget_manager).then((array) => {
+      return JSONToUnionTypedArray(jsonData, model.widget_manager).then((array) => {
         // Ensure that the ref deserializes to the inner typed array:
         expect(array).to.be.a(Float32Array);
         expect((array as Float32Array).buffer).to.be(model.raw_data.buffer);
@@ -210,14 +199,11 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(NullTestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(NullTestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToUnionTypedArray(jsonData, widget_manager).then((array) => {
+      return JSONToUnionTypedArray(jsonData, model.widget_manager).then((array) => {
         // Ensure that the ref deserializes to null:
         expect(array).to.be(null);
       });
@@ -257,14 +243,11 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(TestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(TestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToSimpleUnion(jsonData, widget_manager).then((obj) => {
+      return JSONToSimpleUnion(jsonData, model.widget_manager).then((obj) => {
         // Ensure that the ref deserializes to the inner ndarray:
         expect(obj!.array).to.be.a(Float32Array);
         expect((obj!.array as Float32Array).buffer).to.be(model.raw_data.buffer);
@@ -276,17 +259,67 @@ describe('Union Serializers', () => {
 
       // First set up an NDArrayModel
 
-      let widget_manager = new DummyManager();
-
-      let model = createTestModel(NullTestModel, {}, widget_manager);
-      (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
+      let model = createTestModel(NullTestModel);
 
       // Model is now set up. Try to deserialize a reference to the widget:
       let jsonData = model.toJSON(undefined);
-      return JSONToSimpleUnion(jsonData, widget_manager).then((array) => {
+      return JSONToSimpleUnion(jsonData, model.widget_manager).then((array) => {
         // Ensure that the ref deserializes to null:
         expect(array).to.be(null);
       });
+    });
+
+  });
+
+  describe('round-trips', () => {
+
+    async function roundTripModel(model: TestModel): Promise<void> {
+      // Round-trip through widget machienery to ensure compliance
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(1);
+      expect(remodels[0].attributes).to.eql(model.attributes);
+    }
+
+    it('should round-trip basic serializer with array', () => {
+      const model = createModelWithSerializers({array: data_union_serialization});
+      model.set('array', model.array);
+      return roundTripModel(model);
+    });
+
+    it('should round-trip ndarray serializer', () => {
+      const model = createModelWithSerializers({array: data_union_array_serialization});
+      model.set('array', model.array);
+      return roundTripModel(model);
+    });
+
+    it('should round-trip simple serializer', () => {
+      const model = createModelWithSerializers({array: data_union_simple_serialization});
+      model.set('array', {array: model.array.data, shape: model.array.shape});
+      return roundTripModel(model);
+    });
+
+    it('should round-trip typedarray serializer', () => {
+      const model = createModelWithSerializers({array: data_union_typedarray_serialization});
+      model.set('array', model.raw_data);
+      return roundTripModel(model);
+    });
+
+    it('should round-trip basic serializer with widget', async () => {
+      const model = createModelWithSerializers(
+        {array: data_union_serialization},
+        {TestModel}
+      );
+      const ref = createTestModel(TestModel, {}, model.widget_manager as DummyManager);
+      model.set('array', ref);
+      const manager = model.widget_manager;
+      const state = await manager.get_state();
+      await manager.clear_state();
+      const remodels = await manager.set_state(state);
+      expect(remodels.length).to.be(2);
+      expect(remodels[0].get('array')).to.eql(remodels[1]);
     });
 
   });

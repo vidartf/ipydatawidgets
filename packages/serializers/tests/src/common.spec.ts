@@ -9,7 +9,7 @@ import {
 
 import {
   createTestModel
-} from './util';
+} from './testhelper.spec';
 
 import ndarray = require('ndarray');
 

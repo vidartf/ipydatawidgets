@@ -146,16 +146,16 @@ const typesToArray = {
 }
 
 
-export async function compressedJSONToArray(
+export function compressedJSONToArray(
   obj: IReceivedCompressedSerializedArray | null,
   manager?: ManagerBase<any>
-): Promise<ndarray | null> {
+): ndarray | null {
   if (obj === null) {
     return null;
   }
   let buffer: ArrayBuffer;
   if (obj.compressed_buffer !== undefined) {
-    buffer = await decompress(obj.compressed_buffer.buffer);
+    buffer = decompress(obj.compressed_buffer.buffer);
   } else {
     buffer = obj.buffer!.buffer;
   }
@@ -164,17 +164,17 @@ export async function compressedJSONToArray(
   return ndarray(new typesToArray[obj.dtype](buffer), obj.shape);
 }
 
-export async function arrayToCompressedJSON(
+export function arrayToCompressedJSON(
   obj: ndarray | null,
   widget?: WidgetModel
-): Promise<SendSerializedArray | null> {
+): SendSerializedArray | null {
   if (obj === null) {
     return null;
   }
   let dtype = ensureSerializableDtype(obj.dtype);
   const level = widget ? widget.get('compression_level') as number | undefined : 0;
   if (level !== undefined && level > 0) {
-    const compressed_buffer = await compress(
+    const compressed_buffer = compress(
       (obj.data as TypedArray).buffer,
       level
     );
