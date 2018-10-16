@@ -1,6 +1,6 @@
 {
   "name": "jupyter-datawidgets",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "A set of widgets to help facilitate reuse of large datasets across widgets",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
