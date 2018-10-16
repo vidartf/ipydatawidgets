@@ -77,7 +77,7 @@ describe('ndarray', () => {
 
   describe('compressed serializers', () => {
 
-    it('should deserialize a non-compressed array', async () => {
+    it('should deserialize a non-compressed array', () => {
 
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let view = new DataView(raw_data.buffer);
@@ -87,7 +87,7 @@ describe('ndarray', () => {
         dtype: 'float32',
       } as IReceivedSerializedArray;
 
-      let array = (await compressedJSONToArray(jsonData))!;
+      let array = compressedJSONToArray(jsonData)!;
 
       expect(array.data).to.be.a(Float32Array);
       expect((array.data as Float32Array).buffer).to.be(raw_data.buffer);
@@ -96,7 +96,7 @@ describe('ndarray', () => {
 
     });
 
-    it('should deserialize a compressed array', async () => {
+    it('should deserialize a compressed array', () => {
 
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       const level = 6;
@@ -107,7 +107,7 @@ describe('ndarray', () => {
         dtype: 'float32',
       } as IReceivedCompressedSerializedArray;
 
-      let array = (await compressedJSONToArray(jsonData))!;
+      let array = compressedJSONToArray(jsonData)!;
 
       expect(array.data).to.be.a(Float32Array);
       // Not .to.be here, as run through compression loop:
@@ -118,12 +118,12 @@ describe('ndarray', () => {
 
     });
 
-    it('should deserialize null to null', async () => {
-      let output = await compressedJSONToArray(null);
+    it('should deserialize null to null', () => {
+      let output = compressedJSONToArray(null);
       expect(output).to.be(null);
     });
 
-    it('should serialize an uncompressed ndarray', async () => {
+    it('should serialize an uncompressed ndarray', () => {
 
       // First set up a test NDArrayModel
       let widget_manager = new DummyManager();
@@ -132,7 +132,7 @@ describe('ndarray', () => {
       (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
       model.set('compression_level', 0);
 
-      let jsonData = (await arrayToCompressedJSON(model.array, model))!;
+      let jsonData = arrayToCompressedJSON(model.array, model)!;
 
       expect(jsonData.buffer).to.be.a(Float32Array);
       expect((jsonData.buffer as Float32Array).buffer).to.be(model.raw_data.buffer);
@@ -141,7 +141,7 @@ describe('ndarray', () => {
 
     });
 
-    it('should serialize a compressed ndarray', async () => {
+    it('should serialize a compressed ndarray', () => {
 
       // First set up a test NDArrayModel
       let widget_manager = new DummyManager();
@@ -150,7 +150,7 @@ describe('ndarray', () => {
       (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
       model.set('compression_level', 6);
 
-      let jsonData = (await arrayToCompressedJSON(model.array, model)) as ISendCompressedSerializedArray;
+      let jsonData = arrayToCompressedJSON(model.array, model) as ISendCompressedSerializedArray;
 
       expect(jsonData.buffer).to.be(undefined);
       expect(jsonData.compressed_buffer).to.be.a(Uint8Array);
@@ -163,17 +163,17 @@ describe('ndarray', () => {
 
     });
 
-    it('should serialize null to null', async () => {
-      let output = await arrayToCompressedJSON(null);
+    it('should serialize null to null', () => {
+      let output = arrayToCompressedJSON(null);
       expect(output).to.be(null);
     });
 
-    it('should not compress when model not given', async () => {
+    it('should not compress when model not given', () => {
 
       let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
       let array = ndarray(raw_data, [2, 3]);
 
-      let jsonData = (await arrayToCompressedJSON(array))!;
+      let jsonData = arrayToCompressedJSON(array)!;
 
       expect(jsonData.buffer).to.be.a(Float32Array);
       expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
@@ -182,7 +182,7 @@ describe('ndarray', () => {
 
     });
 
-    it('should not compress a model without compression_level', async () => {
+    it('should not compress a model without compression_level', () => {
 
       // First set up a test NDArrayModel
       let widget_manager = new DummyManager();
@@ -191,7 +191,7 @@ describe('ndarray', () => {
       (widget_manager as any)._models[model.model_id] = Promise.resolve(model);
       model.unset('compression_level');
 
-      let jsonData = (await arrayToCompressedJSON(model.array, model))!;
+      let jsonData = arrayToCompressedJSON(model.array, model)!;
 
       expect(jsonData.buffer).to.be.a(Float32Array);
       expect((jsonData.buffer as Float32Array).buffer).to.be(model.raw_data.buffer);
