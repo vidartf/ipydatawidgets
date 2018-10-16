@@ -38,7 +38,6 @@
     "@types/ndarray": "^1.0.6",
     "@types/node": "^10.11.7",
     "expect.js": "^0.3.1",
-    "jupyter-scales": "^2.0.0",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.1.0",
