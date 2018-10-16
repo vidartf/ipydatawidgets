@@ -1,6 +1,6 @@
 
 export {
-  NDArrayModel
+  NDArrayModel, NDArrayBaseModel
 } from './ndarray';
 
 export {
