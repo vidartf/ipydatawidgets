@@ -8,7 +8,8 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  arrayToJSON, JSONToArray, IReceivedSerializedArray
+  arrayToJSON, JSONToArray, IReceivedSerializedArray,
+  isDataWriteBack
 } from 'jupyter-dataserializers'
 
 import {
@@ -57,6 +58,49 @@ describe('NDArray', () => {
 
       it('should fail for an incorrcet key', () => {
         expect(model.getNDArray).withArgs('invalid_key').to.throwError();
+      });
+
+    });
+
+    describe('IDataWriteBack', () => {
+
+      let widget_manager = new DummyManager();
+      let modelOptions = {
+        widget_manager: widget_manager,
+        model_id: uuid(),
+      }
+      let serializedState = {};
+      let model = new NDArrayModel(serializedState, modelOptions);
+
+      it('isDataWriteBack should return true', () => {
+        expect(isDataWriteBack(model)).to.be(true);
+      });
+
+      describe('canWriteBack', () => {
+
+        it('should return true for default key', () => {
+          expect(model.canWriteBack()).to.be(true);
+        });
+
+        it('should return true for key "array"', () => {
+          expect(model.canWriteBack('array')).to.be(true);
+        });
+
+        it('should return false for other keys', () => {
+          expect(model.canWriteBack('foo')).to.be(false);
+        });
+
+      });
+
+      describe('setNDArray', () => {
+
+        it('should set an array on the model', () => {
+          const model = new NDArrayModel(serializedState, modelOptions);
+          const array = ndarray(new Float32Array([]));
+          model.setNDArray(array)
+          expect(model.get('array')).to.be(array);
+        });
+
       });
 
     });

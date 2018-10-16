@@ -6,7 +6,7 @@ import expect = require('expect.js');
 import ndarray = require('ndarray');
 
 import {
-  uuid, WidgetModel
+  uuid
 } from '@jupyter-widgets/base';
 
 import {

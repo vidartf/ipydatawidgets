@@ -8,7 +8,7 @@ import ndarray = require('ndarray');
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
   ISendSerializedArray, listenToUnion, JSONToUnionTypedArray,
-  unionTypedArrayToJSON, JSONToSimpleUnion, simpleUnionToJSON
+  JSONToSimpleUnion
 } from '../../src';
 
 import {
@@ -225,35 +225,6 @@ describe('Union Serializers', () => {
 
   });
 
-  describe('unionTypedArrayToJSON', () => {
-
-    it('should serialize a TypedArray', () => {
-
-      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-
-      let jsonData = unionTypedArrayToJSON(raw_data) as ISendSerializedArray;
-
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
-      expect(jsonData.shape).to.eql([6]);
-      expect(jsonData.dtype).to.be('float32');
-
-    });
-
-    it('should serialize null to null', () => {
-      let output = unionTypedArrayToJSON(null);
-      expect(output).to.be(null);
-    });
-
-    it('should serialize a widget', () => {
-      let model = createTestModel(TestModel);
-
-      let jsonData = unionTypedArrayToJSON(model);
-      expect(jsonData).to.be(model.toJSON(undefined));
-    });
-
-  });
-
   describe('JSONToSimpleUnion', () => {
 
     it('should deserialize an array', () => {
@@ -316,36 +287,6 @@ describe('Union Serializers', () => {
         // Ensure that the ref deserializes to null:
         expect(array).to.be(null);
       });
-    });
-
-  });
-
-  describe('simpleUnionToJSON', () => {
-
-    it('should serialize a simple object', () => {
-
-      let raw_data = new Float32Array([1, 2, 3, 4, 5, 10]);
-      let obj = {array: raw_data, shape: [2, 3]}
-
-      let jsonData = simpleUnionToJSON(obj) as ISendSerializedArray;
-
-      expect(jsonData.buffer).to.be.a(Float32Array);
-      expect((jsonData.buffer as Float32Array).buffer).to.be(raw_data.buffer);
-      expect(jsonData.shape).to.eql([2, 3]);
-      expect(jsonData.dtype).to.be('float32');
-
-    });
-
-    it('should serialize null to null', () => {
-      let output = simpleUnionToJSON(null);
-      expect(output).to.be(null);
-    });
-
-    it('should serialize a widget', () => {
-      let model = createTestModel(TestModel);
-
-      let jsonData = simpleUnionToJSON(model);
-      expect(jsonData).to.be(model.toJSON(undefined));
     });
 
   });

@@ -2,27 +2,21 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase
-} from '@jupyter-widgets/base';
-
-import {
   DataModel
 } from './base';
 
 import {
-  ISerializers, compressed_array_serialization
+  ISerializers, IDataWriteBack, compressed_array_serialization
 } from 'jupyter-dataserializers';
 
 import ndarray = require('ndarray');
 
 
-export
-class NDArrayModel extends DataModel {
+export class NDArrayBaseModel extends DataModel {
   defaults() {
     return {...super.defaults(), ...{
       array: ndarray([]),
       compression_level: 0,
-      _model_name: NDArrayModel.model_name,
     }} as any;
   }
 
@@ -31,9 +25,30 @@ class NDArrayModel extends DataModel {
   }
 
   static serializers: ISerializers = {
-      ...DataModel.serializers,
-      array: compressed_array_serialization,
-    };
+    ...DataModel.serializers,
+    array: compressed_array_serialization,
+  };
+}
+
+
+export class NDArrayModel extends NDArrayBaseModel implements IDataWriteBack {
+  defaults() {
+    return {...super.defaults(), ...{
+      _model_name: NDArrayModel.model_name,
+    }} as any;
+  }
+
+  canWriteBack(key='array'): boolean {
+    return key === 'array';
+  }
+
+  setNDArray(array: ndarray | null, key='array', options?: any): void {
+    this.set(key, array, options);
+  }
+
+  static serializers: ISerializers = {
+    ...NDArrayBaseModel.serializers,
+  };
 
   static model_name = 'NDArrayModel';
 }

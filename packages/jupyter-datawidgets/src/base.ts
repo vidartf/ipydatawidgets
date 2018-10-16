@@ -2,10 +2,6 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  ObjectHash
-} from 'backbone';
-
-import {
   WidgetModel
 } from '@jupyter-widgets/base';
 
