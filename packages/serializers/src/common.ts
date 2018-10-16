@@ -96,16 +96,16 @@ export function getArray(
  */
 export function setArray(
   widget: WidgetModel,
-  key: string,
+  attrName: string,
   array: ndarray | null,
   options?: any
 ): void {
 
-  const current = widget.get(key);
+  const current = widget.get(attrName);
   if (isDataWriteBack(current) && current.canWriteBack()) {
-    current.setNDArray(array, key, options);
+    current.setNDArray(array, undefined, options);
   } else {
-    widget.set(key, array, options);
+    widget.set(attrName, array, options);
   }
 
 }
