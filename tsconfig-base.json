@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
+    "composite": true,
     "declaration": true,
+    "declarationMap": true,
     "lib": ["dom", "es5", "es2015.promise", "es2015.iterable"],
     "module": "commonjs",
     "moduleResolution": "node",
