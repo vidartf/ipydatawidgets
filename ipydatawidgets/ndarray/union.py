@@ -10,12 +10,12 @@ from traitlets import Union, Instance, Undefined, TraitError
 
 from .serializers import data_union_serialization
 from .traits import NDArray
-from .widgets import NDArrayWidget
+from .widgets import NDArrayWidget, NDArrayBase, NDArraySource
 
 
 class DataUnion(Union):
     """
-    Union trait of NDArray and NDArrayWidget for numpy arrays.
+    Union trait of NDArray and NDArrayBase for numpy arrays.
     """
 
     def __init__(self, default_value=Undefined, dtype=None, shape_constraint=None,
@@ -26,7 +26,7 @@ class DataUnion(Union):
         kw_widget = kw_widget or {}
         traits = [
             NDArray(dtype=dtype, **kw_array),
-            Instance(NDArrayWidget)
+            Instance(NDArrayBase)
         ]
 
         super(DataUnion, self).__init__(traits, default_value=default_value, **kwargs)
@@ -66,17 +66,22 @@ class DataUnion(Union):
     def _valdiate_child(self, obj, value):
         try:
             return self.validate(obj, value)
-        except TraitError as e:
+        except TraitError:
             raise TraitError('Widget data is constrained by its use in %r.' % obj)
 
     def validate(self, obj, value):
         value = super(DataUnion, self).validate(obj, value)
-        if isinstance(value, NDArrayWidget) and self.dtype is not None:
-            if value.array.dtype != self.dtype:
+        if isinstance(value, NDArrayBase) and self.dtype is not None:
+            if value.dtype != self.dtype:
                 raise TraitError('dtypes must match exactly when passing a NDArrayWidget to '
                                  'a dtype constrained DataUnion')
         if self.shape_constraint:
-            self.shape_constraint(self, get_union_array(value))
+            if isinstance(value, NDArraySource):
+                # We cannot access the array directly, so pass the source
+                # (it has dtype and shape properties)
+                self.shape_constraint(self, value)
+            else:
+                self.shape_constraint(self, get_union_array(value))
         return value
 
 
