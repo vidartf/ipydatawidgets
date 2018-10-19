@@ -10,7 +10,10 @@ import numpy as np
 from traitlets import TraitError, Undefined
 
 from ..ndarray.traits import shape_constraints
-from ..ndarray.widgets import NDArrayWidget, create_constrained_arraywidget, ConstrainedNDArrayWidget
+from ..ndarray.widgets import (
+    NDArrayWidget,  NDArraySource,
+    create_constrained_arraywidget, ConstrainedNDArrayWidget,
+)
 
 
 def test_datawidget_creation_blank():
@@ -29,6 +32,13 @@ def test_datawidget_creation():
     data = np.zeros((2, 4))
     w = NDArrayWidget(data)
     assert w.array is data
+
+
+def test_datawidget_dtype_property():
+    data = np.zeros((2, 4))
+    w = NDArrayWidget(data)
+    assert w.dtype == data.dtype
+    assert w.shape == data.shape
 
 
 def test_constrained_datawidget():
@@ -117,3 +127,11 @@ def test_hold_sync_segment(mock_comm):
     buffers = mock_comm.log_send[0][1]['buffers']
     assert len(buffers) == 1
     np.testing.assert_equal(buffers[0], memoryview(data.ravel()[:4]))
+
+
+def test_source_must_implement_shape():
+    w = NDArraySource()
+    with pytest.raises(NotImplementedError):
+        w.shape
+    with pytest.raises(NotImplementedError):
+        w.dtype

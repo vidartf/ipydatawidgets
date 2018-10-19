@@ -10,7 +10,7 @@ from traitlets import Union, Instance, Undefined, TraitError
 
 from .serializers import data_union_serialization
 from .traits import NDArray
-from .widgets import NDArrayWidget, NDArrayBase
+from .widgets import NDArrayWidget, NDArrayBase, NDArraySource
 
 
 class DataUnion(Union):
@@ -76,7 +76,12 @@ class DataUnion(Union):
                 raise TraitError('dtypes must match exactly when passing a NDArrayWidget to '
                                  'a dtype constrained DataUnion')
         if self.shape_constraint:
-            self.shape_constraint(self, get_union_array(value))
+            if isinstance(value, NDArraySource):
+                # We cannot access the array directly, so pass the source
+                # (it has dtype and shape properties)
+                self.shape_constraint(self, value)
+            else:
+                self.shape_constraint(self, get_union_array(value))
         return value
 
 

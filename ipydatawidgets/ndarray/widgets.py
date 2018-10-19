@@ -40,6 +40,13 @@ class NDArrayBase(DataWidget):
 
 
 @register
+class NDArraySource(NDArrayBase):
+    """Base class for widgets that supplies an ndarray in the front-end only.
+    """
+    pass
+
+
+@register
 class NDArrayWidget(NDArrayBase):
     """A widget representing an arbitrary array.
 

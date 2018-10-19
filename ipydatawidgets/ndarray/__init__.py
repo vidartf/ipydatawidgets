@@ -10,6 +10,7 @@ from .union import DataUnion, get_union_array
 from .widgets import (
     NDArrayWidget,
     NDArrayBase,
+    NDArraySource,
     create_constrained_arraywidget,
     ConstrainedNDArrayWidget,
 )
