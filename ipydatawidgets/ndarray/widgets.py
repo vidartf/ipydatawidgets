@@ -20,8 +20,27 @@ from .traits import NDArray
 from .serializers import compressed_array_serialization
 
 
+class NDArrayBase(DataWidget):
+    """A common base class for NDArray-based widgets
+    """
+
+    @property
+    def shape(self):
+        return self._get_shape()
+
+    @property
+    def dtype(self):
+        return self._get_dtype()
+
+    def _get_shape(self):
+        raise NotImplementedError()
+
+    def _get_dtype(self):
+        raise NotImplementedError()
+
+
 @register
-class NDArrayWidget(DataWidget):
+class NDArrayWidget(NDArrayBase):
     """A widget representing an arbitrary array.
 
     This is useful when several widgets might share the
@@ -44,6 +63,12 @@ class NDArrayWidget(DataWidget):
     def __init__(self, array=Undefined, **kwargs):
         self._instance_validators = set()
         super(NDArrayWidget, self).__init__(array=array, **kwargs)
+
+    def _get_shape(self):
+        return self.array.shape
+
+    def _get_dtype(self):
+        return self.array.dtype
 
     @validate('array')
     def _validate_array(self, proposal):
