@@ -1,2 +1,5 @@
 [run]
 omit = ipydatawidgets/tests/*
+
+[report]
+omit = ipydatawidgets/tests/*
