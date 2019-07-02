@@ -34,7 +34,7 @@ export async function JSONToUnion(
 ): Promise<ndarray | DataWidget | null> {
 
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
+    const modelPromise = unpack_models(obj, manager!) as Promise<DataWidget>;
     return modelPromise;
   } else {
     return Promise.resolve(JSONToArray(obj, manager));
@@ -97,8 +97,8 @@ export function listenToUnion(
   }
 
   function onUnionChange(unionModel: WidgetModel, value: any, subOptions: any) {
-    var prev = model.previous(unionName) || [];
-    var curr = value || [];
+    const prev = model.previous(unionName) || [];
+    const curr = value || [];
 
     if (prev instanceof WidgetModel) {
       model.stopListening(prev);
@@ -119,7 +119,7 @@ export function listenToUnion(
   model.on('change:' + unionName, onUnionChange);
 
   function stopListening() {
-    let curr = model.get(unionName);
+    const curr = model.get(unionName);
     if (curr instanceof WidgetModel) {
       model.stopListening(curr);
     }
@@ -151,7 +151,7 @@ export function JSONToUnionTypedArray(
 ): Promise<TypedArray | null> {
 
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
+    const modelPromise = unpack_models(obj, manager!) as Promise<DataWidget>;
     return modelPromise.then((model) => {
       const array = model.getNDArray();
       if (array === null) {
@@ -181,7 +181,7 @@ export function JSONToSimpleUnion(
 ): Promise<ISimpleObject | null> {
 
   if (typeof obj === 'string') {
-    var modelPromise = unpack_models(obj, manager) as Promise<DataWidget>;
+    const modelPromise = unpack_models(obj, manager!) as Promise<DataWidget>;
     return modelPromise.then((model) => {
       const array = model.getNDArray();
       if (array === null) {

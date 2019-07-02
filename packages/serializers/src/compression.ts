@@ -7,12 +7,12 @@ import pako = require('pako');
  * Compress the buffer using zlib compression.
  */
 export function compress(buffer: ArrayBuffer, level: number): Uint8Array {
-    return pako.deflate(new Uint8Array(buffer), {level});
+  return pako.deflate(new Uint8Array(buffer), {level: level as pako.DeflateOptions['level']});
 }
 
 /**
  * Decompress a zlib compressed buffer.
  */
 export function decompress(buffer: ArrayBuffer): ArrayBuffer {
-    return pako.inflate(new Uint8Array(buffer)).buffer;
+  return pako.inflate(new Uint8Array(buffer)).buffer;
 }
