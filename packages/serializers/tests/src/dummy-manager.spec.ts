@@ -19,7 +19,7 @@ class MockComm implements widgets.IClassicComm {
     on_msg(fn: Function | null) {
         this._on_msg = fn;
     }
-    _process_msg(msg: services.KernelMessage.ICommMsg) {
+    _process_msg(msg: services.KernelMessage.ICommMsgMsg) {
         if (this._on_msg) {
             return this._on_msg(msg);
         } else {
