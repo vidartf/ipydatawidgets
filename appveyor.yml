@@ -29,6 +29,7 @@ install:
   # Setup conda:
   - 'conda list'
   - 'conda update conda -y'
+  - 'activate'  # Conda issue https://github.com/conda/conda-build/issues/3220
   # If 32 bit, force conda to use it:
   - 'IF %PYTHON_ARCH% EQU 32 SET CONDA_FORCE_32BIT=1'
   - 'conda create -n test_env python=%PYTHON_VERSION% -y'
