@@ -113,7 +113,7 @@ extras_require = setuptools_args['extras_require'] = {
     'test': [
         'pytest',
         'pytest-cov',
-        'nbval',
+        'nbval>=0.9.2',
     ],
     'docs': [
         'sphinx',
