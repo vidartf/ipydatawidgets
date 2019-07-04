@@ -150,3 +150,5 @@ ipydatawidgets/nbextension/static/*index.*
 # -------------
 **/coverage/
 
+*.tsbuildinfo
+package-lock.json
