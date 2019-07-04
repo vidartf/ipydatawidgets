@@ -22,7 +22,7 @@
     "build": "npm run build:lib && npm run build:nbextension",
     "build:lib": "tsc --build",
     "build:nbextension": "webpack -p",
-    "clean": "npm run clean:lib && npm run clean:nbextension",
+    "clean": "npm run clean:lib && npm run clean:nbextension && rimraf tsconfig.tsbuildinfo",
     "clean:lib": "rimraf lib",
     "clean:nbextension": "rimraf ../../ipydatawidgets/nbextension/static/index.js",
     "test": "npm run test:firefox",

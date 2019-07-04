@@ -27,7 +27,7 @@
     "build": "npm run build:lib && npm run build:labextension",
     "build:labextension": "rimraf dist && mkdirp dist && cd dist && npm pack ..",
     "build:lib": "tsc --build",
-    "clean": "rimraf build && rimraf dist"
+    "clean": "rimraf build && rimraf dist && rimraf tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1 || ^2",

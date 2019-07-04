@@ -7,7 +7,7 @@
     "build:dev": "tsc --build",
     "updated": "lerna updated",
     "test": "lerna run test",
-    "publish": "lerna version -m \"Publish npm packages\" && npm run clean && npm run build && lerna publish from-git",
+    "publish": "lerna version --no-push -m \"Publish npm packages\" && npm run clean && npm run build && lerna publish from-git",
     "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
