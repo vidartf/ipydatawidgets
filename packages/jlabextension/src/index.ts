@@ -45,7 +45,7 @@ const dataWidgetsProvider: IPlugin<Application<Widget>, IDataWidgetsExtension> =
   requires: [IJupyterWidgetRegistry],
   activate: activateWidgetExtension,
   autoStart: true
-};
+} as any;  // TODO: Remove once we drop support for lab < 2
 
 export default dataWidgetsProvider;
 

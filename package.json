@@ -6,11 +6,16 @@
     "build": "lerna run build",
     "build:dev": "tsc --build",
     "updated": "lerna updated",
+    "update:all": "update-dependency --lerna --minimal --regex .*",
+    "update:lab": "update-dependency --lerna --minimal --regex ^@jupyterlab/",
+    "update:lab:next": "update-dependency --lerna --minimal --regex ^@jupyterlab/ ^next",
     "test": "lerna run test",
+    "test:ci": "lerna run test:ci",
     "publish": "lerna version --no-push -m \"Publish npm packages\" && npm run clean && npm run build && lerna publish from-git",
     "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
+    "@jupyterlab/buildutils": "^2.0.0",
     "lerna": "^3.4.3"
   }
 }

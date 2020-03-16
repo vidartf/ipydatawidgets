@@ -19,9 +19,16 @@ module.exports = function (config) {
     browserNoActivityTimeout: 31000, // 31 seconds - upped from 10 seconds
     port: 9876,
     colors: true,
-    singleRun: true,
+    singleRun: !config.debug,
     logLevel: config.LOG_INFO,
 
+    // you can define custom flags
+    customLaunchers: {
+      ChromeCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
 
     karmaTypescriptConfig: {
       tsconfig: 'tests/src/tsconfig.json',
@@ -34,11 +41,20 @@ module.exports = function (config) {
         }
       },
       bundlerOptions: {
+        sourceMap: true,
         acornOptions: {
           ecmaVersion: 8,
         },
         transforms: [
-          require("karma-typescript-es6-transform")()
+          require("karma-typescript-es6-transform")({
+            presets: [
+              ["env", {
+                targets: {
+                  browsers: ["last 2 Chrome versions"]
+                },
+              }]
+            ]
+          })
         ]
       }
     }
