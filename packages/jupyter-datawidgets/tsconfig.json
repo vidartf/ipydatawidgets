@@ -6,7 +6,7 @@
     "strictPropertyInitialization": false
   },
   "references": [
-    { "path": "../serializers" },
+    { "path": "../jupyter-dataserializers" },
   ],
   "include": [
     "src/**/*.ts"

@@ -2,8 +2,8 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./packages/serializers" },
+    { "path": "./packages/jupyter-dataserializers" },
     { "path": "./packages/jupyter-datawidgets" },
-    { "path": "./packages/jlabextension" }
+    { "path": "./packages/jupyterlab-datawidgets" }
   ]
 }

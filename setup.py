@@ -42,7 +42,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 jstargets = [
     os.path.join(here, name, 'nbextension', 'static', 'extension.js'),
     os.path.join(here, name, 'nbextension', 'static', 'index.js'),
-    os.path.join(here, 'packages', 'jlabextension', 'build', 'index.js'),
+    os.path.join(here, 'packages', 'jupyterlab-datawidgets', 'build', 'index.js'),
 ]
 
 version_ns = {}
@@ -60,7 +60,7 @@ cmdclass = create_cmdclass(
          name + '/nbextension/static',
          '*.js.map'),
         ('share/jupyter/lab/extensions',
-         'packages/jlabextension/dist',
+         'packages/jupyterlab-datawidgets/dist',
          'jupyterlab-datawidgets-*.tgz'),
         ('etc/jupyter/nbconfig',
          'jupyter-config',

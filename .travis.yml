@@ -64,6 +64,6 @@ script:
 before_cache:
   # Do not cache our own package
   - |
-    rm -rf packages/jlabextension/node_modules/jupyter-datawidgets
+    rm -rf packages/jupyterlab-datawidgets/node_modules/jupyter-datawidgets
 after_success:
   - codecov
