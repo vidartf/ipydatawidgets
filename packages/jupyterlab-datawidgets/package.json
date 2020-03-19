@@ -8,13 +8,13 @@
     "jupyterlab notebook",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/vidartf/jupyter-datawidgets",
+  "homepage": "https://github.com/vidartf/ipydatawidgets",
   "bugs": {
-    "url": "https://github.com/vidartf/jupyter-datawidgets/issues"
+    "url": "https://github.com/vidartf/ipydatawidgets/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidartf/jupyter-datawidgets"
+    "url": "https://github.com/vidartf/ipydatawidgets"
   },
   "license": "BSD-3-Clause",
   "author": "Project Jupyter",
