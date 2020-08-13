@@ -6,6 +6,7 @@
 
 from functools import partial
 
+import numpy as np
 from traitlets import Union, Instance, Undefined, TraitError
 
 from .serializers import data_union_serialization
@@ -36,6 +37,24 @@ class DataUnion(Union):
         self._registered_validators = {}
         self._registered_observer = {}
 
+    def set(self, obj, value):
+        new_value = self._validate(obj, value)
+        try:
+            old_value = obj._trait_values[self.name]
+        except KeyError:
+            old_value = self.default_value
+
+        obj._trait_values[self.name] = new_value
+        try:
+            silent = np.array_equal(old_value, new_value)
+        except:
+            # if there is an error in comparing, default to notify
+            silent = False
+        if silent is not True:
+            # we explicitly compare silent to True just in case the equality
+            # comparison above returns something other than True/False
+            obj._notify_trait(self.name, old_value, new_value)
+
     def instance_init(self, inst):
         inst.observe(self._on_instance_value_change, self.name)
 
@@ -51,7 +70,7 @@ class DataUnion(Union):
                 change['old'].unobserve(f)
         if isinstance(change['new'], NDArrayWidget):
             # We can validate directly, since our validator accepts arrays also:
-            f = partial(self._valdiate_child, inst)
+            f = partial(self._validate_child, inst)
             self._registered_validators[inst] = f
             change['new']._instance_validators.add(f)
 
@@ -63,7 +82,7 @@ class DataUnion(Union):
         inst = change['owner']
         union._notify_trait(self.name, inst, inst)
 
-    def _valdiate_child(self, obj, value):
+    def _validate_child(self, obj, value):
         try:
             return self.validate(obj, value)
         except TraitError:
