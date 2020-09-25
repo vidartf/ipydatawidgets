@@ -83,9 +83,9 @@ export function unionToJSON(
  * To stop listening, call the return value.
  */
 export function listenToUnion(
-  model: Backbone.Model,
+  model: WidgetModel,
   unionName: string,
-  callback: (model: Backbone.Model, options: any) => any,
+  callback: (model: WidgetModel, options: any) => any,
   allChanges?: boolean
 ): () => void {
 
