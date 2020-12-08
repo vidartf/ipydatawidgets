@@ -51,7 +51,7 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
 
 
 cmdclass = create_cmdclass(
-    'js',
+    # 'js',
     data_files_spec=[
         ('share/jupyter/nbextensions/jupyter-datawidgets',
          name + '/nbextension/static',
@@ -66,10 +66,10 @@ cmdclass = create_cmdclass(
          'jupyter-config',
          '**/*.json'),
     ],)
-cmdclass['js'] = combine_commands(
-    install_npm(here),
-    ensure_targets(jstargets),
-)
+# cmdclass['js'] = combine_commands(
+#     install_npm(here),
+#     ensure_targets(jstargets),
+# )
 
 
 setup_args = dict(
