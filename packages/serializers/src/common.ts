@@ -11,18 +11,8 @@ import {
 
 import ndarray = require('ndarray');
 
+export { ISerializers } from '@jupyter-widgets/base';
 
-/**
- * Type declaration for general widget serializers.
- *
- * Declared in lieu of proper interface in jupyter-widgets.
- */
-export interface ISerializers {
-  [key: string]: {
-    deserialize?: (value?: any, manager?: ManagerBase<any>) => any;
-    serialize?: (value?: any, widget?: WidgetModel) => any;
-  }
-}
 
 
 /**

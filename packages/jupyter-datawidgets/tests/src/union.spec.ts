@@ -92,7 +92,7 @@ describe('Union Serializers', () => {
       }};
       let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
       return attributesPromise.then((attributes) => {
-        let model = new NDArrayModel(attributes, modelOptions);
+        let model = new NDArrayModel(attributes, modelOptions as any);
         (widget_manager as any)._models[id] = Promise.resolve(model);
 
         // Model is now set up. Try to deserialize a reference to the widget:
@@ -159,7 +159,7 @@ describe('Union Serializers', () => {
       }};
       let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
       return attributesPromise.then((attributes) => {
-        let model = new NDArrayModel(attributes, modelOptions);
+        let model = new NDArrayModel(attributes, modelOptions as any);
         (widget_manager as any)._models[id] = Promise.resolve(model);
 
         // Model is now set up. Try to deserialize a reference to the widget:

@@ -34,7 +34,7 @@ describe('NDArray', () => {
         model_id: uuid(),
       }
       let serializedState = {};
-      let model = new NDArrayModel(serializedState, modelOptions);
+      let model = new NDArrayModel(serializedState, modelOptions as any);
 
       expect(model).to.be.an(NDArrayModel);
       let array = model.get('array');
@@ -49,7 +49,7 @@ describe('NDArray', () => {
         model_id: uuid(),
       }
       let serializedState = {};
-      let model = new NDArrayModel(serializedState, modelOptions);
+      let model = new NDArrayModel(serializedState, modelOptions as any);
 
       it('should return the inner array', () => {
         expect(model.getNDArray()).to.eql(model.get('array'));
@@ -70,7 +70,7 @@ describe('NDArray', () => {
         model_id: uuid(),
       }
       let serializedState = {};
-      let model = new NDArrayModel(serializedState, modelOptions);
+      let model = new NDArrayModel(serializedState, modelOptions as any);
 
       it('isDataWriteBack should return true', () => {
         expect(isDataWriteBack(model)).to.be(true);
@@ -95,7 +95,7 @@ describe('NDArray', () => {
       describe('setNDArray', () => {
 
         it('should set an array on the model', () => {
-          const model = new NDArrayModel(serializedState, modelOptions);
+          const model = new NDArrayModel(serializedState, modelOptions as any);
           const array = ndarray(new Float32Array([]));
           model.setNDArray(array)
           expect(model.get('array')).to.be(array);
@@ -115,7 +115,7 @@ describe('NDArray', () => {
         }
         const origData = new Float32Array([1, 2, 3, 4, 5, 10]);
         let serializedState = {myAttr: origData};
-        let model = new NDArrayModel(serializedState, modelOptions);
+        let model = new NDArrayModel(serializedState, modelOptions as any);
 
         const newData = new Float32Array([6, 4, 2])
         model.set({myAttr: newData});

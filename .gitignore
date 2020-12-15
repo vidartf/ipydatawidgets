@@ -145,6 +145,7 @@ $RECYCLE.BIN/
 
 **/node_modules/
 ipydatawidgets/nbextension/static/*index.*
+share/jupyter/labextensions
 
 # Coverage data
 # -------------
