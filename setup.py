@@ -32,7 +32,7 @@ from glob import glob
 
 from setuptools import setup, find_packages
 
-from setupbase import (create_cmdclass, install_npm, ensure_targets,
+from jupyter_packaging import (create_cmdclass, install_npm, ensure_targets,
     combine_commands)
 
 pjoin = os.path.join
@@ -62,6 +62,12 @@ cmdclass = create_cmdclass(
         ('share/jupyter/lab/extensions',
          'packages/jlabextension/dist',
          'jupyterlab-datawidgets-*.tgz'),
+        ('share/jupyter/labextensions/jupyterlab-datawidgets/',
+         'share/jupyter/labextensions/jupyterlab-datawidgets/',
+         '*.*'),
+        ('share/jupyter/labextensions/jupyterlab-datawidgets/static',
+         'share/jupyter/labextensions/jupyterlab-datawidgets/static/',
+         '*.*'),
         ('etc/jupyter/nbconfig',
          'jupyter-config',
          '**/*.json'),
@@ -92,10 +98,11 @@ setup_args = dict(
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Framework :: Jupyter',
     ],
 )

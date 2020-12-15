@@ -1,0 +1,61 @@
+name: Python Tests
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python_version: [3.7, 3.8, 3.9]
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup mamba
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        mamba-version: "*"
+        channels: conda-forge
+
+    - name: Create the conda environment
+      run: mamba install -q python=${{ matrix.python_version }} pip>17 pytest-cov numpy
+
+    - name: Windows binary dep upgrade
+      if: matrix.os == 'windows-latest'
+      run: mamba install -q pywin32
+
+    - name: Install dependencies
+      run: |
+        python --version
+        node --version
+        python -m pip --version
+
+        python -m pip install codecov
+
+        python -m pip install --upgrade ".[test]"
+
+    - name: Run tests
+      run: |
+        cd ${{ runner.temp }}
+        py.test -l --cov-report xml:coverage.xml --cov=ipydatawidgets --pyargs ipydatawidgets
+        py.test -l --cov-report xml:coverage.xml --cov=ipydatawidgets ${{ github.workspace }}/examples
+        cd ${{ github.workspace }}
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ${{ runner.temp }}/coverage.xml

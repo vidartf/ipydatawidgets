@@ -8,11 +8,6 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  arrayToJSON, JSONToArray, IReceivedSerializedArray,
-  isDataWriteBack
-} from 'jupyter-dataserializers'
-
-import {
   DataImageModel, DataImageView
 } from '../../src/'
 
@@ -34,7 +29,7 @@ describe('DataImage', () => {
         model_id: uuid(),
       }
       let serializedState = {};
-      let model = new DataImageModel(serializedState, modelOptions);
+      let model = new DataImageModel(serializedState, modelOptions as any);
 
       expect(model).to.be.an(DataImageModel);
       let data = model.get('data');
@@ -52,7 +47,7 @@ describe('DataImage', () => {
         model_id: uuid(),
       }
       let serializedState = {};
-      let model = new DataImageModel(serializedState, modelOptions);
+      let model = new DataImageModel(serializedState, modelOptions as any);
 
       let view = new DataImageView({model});
 
@@ -78,7 +73,7 @@ describe('DataImage', () => {
           255, 255, 255, 255,
         ]), [2, 2, 4]),
       };
-      let model = new DataImageModel(deserializedState, modelOptions);
+      let model = new DataImageModel(deserializedState, modelOptions as any);
 
       let view = new DataImageView({model});
 
@@ -105,7 +100,7 @@ describe('DataImage', () => {
           255, 255, 255, 255,
         ]), [2, 2, 4]),
       };
-      let model = new DataImageModel(deserializedState, modelOptions);
+      let model = new DataImageModel(deserializedState, modelOptions as any);
 
       let view = new DataImageView({model});
 
@@ -137,7 +132,7 @@ describe('DataImage', () => {
           255, 255, 255,
         ]), [2, 2, 3]),
       };
-      let model = new DataImageModel(deserializedState, modelOptions);
+      let model = new DataImageModel(deserializedState, modelOptions as any);
 
       let view = new DataImageView({model});
 

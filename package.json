@@ -15,7 +15,7 @@
     "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "^2.0.0",
+    "@jupyterlab/buildutils": "^3.0.0-rc.13",
     "lerna": "^3.4.3"
   }
 }
