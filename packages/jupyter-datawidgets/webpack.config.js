@@ -23,7 +23,8 @@ module.exports = [
     output: {
       filename: 'index.js',
       path: extStaticPath,
-      libraryTarget: 'amd'
+      libraryTarget: 'amd',
+      publicPath: "./"
     },
     module: {
       rules: rules

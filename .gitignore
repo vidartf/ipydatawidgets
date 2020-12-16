@@ -145,7 +145,6 @@ $RECYCLE.BIN/
 
 **/node_modules/
 ipydatawidgets/nbextension/static/*index.*
-share/jupyter/labextensions
 
 # Coverage data
 # -------------
@@ -153,3 +152,4 @@ share/jupyter/labextensions
 
 *.tsbuildinfo
 package-lock.json
+MANIFEST
