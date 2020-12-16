@@ -43,7 +43,7 @@
   },
   "jupyterlab": {
     "extension": "build/index.js",
-    "outputDir": "../../share/jupyter/labextensions/jupyterlab-datawidgets",
+    "outputDir": "dist/jupyterlab-datawidgets",
     "sharedPackages": {
       "@jupyter-widgets/base": {
         "bundled": false,
