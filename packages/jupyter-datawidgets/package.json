@@ -1,6 +1,6 @@
 {
   "name": "jupyter-datawidgets",
-  "version": "5.3.0",
+  "version": "5.4.0",
   "description": "A set of widgets to help facilitate reuse of large datasets across widgets",
   "keywords": [
     "jupyter",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4",
-    "jupyter-dataserializers": "^2.2.0",
+    "jupyter-dataserializers": "^2.3.0",
     "ndarray": "^1.0.18"
   },
   "devDependencies": {
