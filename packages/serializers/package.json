@@ -21,7 +21,7 @@
     "watch": "tsc --build --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4.0.0-alpha.2",
+    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4",
     "ndarray": "^1.0.18",
     "pako": "^1.0.6"
   },
