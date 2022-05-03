@@ -14,7 +14,6 @@ import {
 } from '../../src';
 
 import ndarray = require('ndarray');
-import { Widget } from '@phosphor/widgets';
 
 
 export
