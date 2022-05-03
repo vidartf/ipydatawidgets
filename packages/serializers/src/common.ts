@@ -5,10 +5,6 @@ import {
   WidgetModel
 } from '@jupyter-widgets/base';
 
-import {
-  DataUnion
-} from './union';
-
 import ndarray = require('ndarray');
 
 export { ISerializers } from '@jupyter-widgets/base';
