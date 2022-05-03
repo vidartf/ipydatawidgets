@@ -17,7 +17,7 @@ import ndarray = require('ndarray');
 
 
 export
-type TypedArray = Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array;
+type TypedArray = ndarray.TypedArray;
 export
 type TypedArrayConstructor = Int8ArrayConstructor | Uint8ArrayConstructor | Int16ArrayConstructor | Uint16ArrayConstructor | Int32ArrayConstructor | Uint32ArrayConstructor | Uint8ClampedArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor;
 
@@ -80,7 +80,8 @@ export type SendSerializedArray = ISendSerializedArray | ISendCompressedSerializ
 
 export
 function ensureSerializableDtype(dtype: ndarray.DataType): keyof IArrayLookup {
-  if (dtype === 'array' || dtype === 'buffer' || dtype === 'generic') {
+  if (dtype === 'array' || (dtype as string) === 'buffer' || dtype === 'generic' ||
+      dtype === "bigint64" || dtype === "biguint64") {
     throw new Error(`Cannot serialize ndarray with dtype: ${dtype}.`);
   } else if (dtype === 'uint8_clamped') {
     dtype = 'uint8';
@@ -117,7 +118,7 @@ function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase
  * @returns The JSON object representing the ndarray.
  */
 export
-function arrayToJSON(obj: ndarray | null, widget?: WidgetModel): ISendSerializedArray | null {
+function arrayToJSON(obj: ndarray.NdArray | null, widget?: WidgetModel): ISendSerializedArray | null {
   if (obj === null) {
     return null;
   }
@@ -149,7 +150,7 @@ const typesToArray = {
 export function compressedJSONToArray(
   obj: IReceivedCompressedSerializedArray | null,
   manager?: ManagerBase<any>
-): ndarray | null {
+): ndarray.NdArray | null {
   if (obj === null) {
     return null;
   }
@@ -165,7 +166,7 @@ export function compressedJSONToArray(
 }
 
 export function arrayToCompressedJSON(
-  obj: ndarray | null,
+  obj: ndarray.NdArray | null,
   widget?: WidgetModel
 ): SendSerializedArray | null {
   if (obj === null) {

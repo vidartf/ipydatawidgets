@@ -124,7 +124,7 @@ describe('Union Serializers', () => {
       let arrayPromise = JSONToUnion(jsonData);
 
       return arrayPromise.then((array) => {
-        let arr = array as ndarray;
+        let arr = array as ndarray.NdArray;
         expect(arr.data).to.be.a(Float32Array);
         expect((arr.data as Float32Array).buffer).to.be(raw_data.buffer);
         expect(arr.shape).to.eql([2, 3]);

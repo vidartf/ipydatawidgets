@@ -20,7 +20,7 @@ export class NDArrayBaseModel extends DataModel {
     }} as any;
   }
 
-  getNDArray(key='array'): ndarray | null {
+  getNDArray(key='array'): ndarray.NdArray | null {
     return this.get(key);
   }
 
@@ -42,7 +42,7 @@ export class NDArrayModel extends NDArrayBaseModel implements IDataWriteBack {
     return key === 'array';
   }
 
-  setNDArray(array: ndarray | null, key='array', options?: any): void {
+  setNDArray(array: ndarray.NdArray | null, key='array', options?: any): void {
     this.set(key, array, options);
   }
 

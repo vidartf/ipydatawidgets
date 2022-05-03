@@ -29,7 +29,7 @@ abstract class DataModel extends WidgetModel implements IDataSource {
     }};
   }
 
-  abstract getNDArray(key?: string): ndarray | null;
+  abstract getNDArray(key?: string): ndarray.NdArray | null;
 
   static serializers: ISerializers = {
     ...WidgetModel.serializers,

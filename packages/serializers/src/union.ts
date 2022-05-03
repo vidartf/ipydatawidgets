@@ -22,7 +22,7 @@ import ndarray = require('ndarray');
 /**
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
-export type DataUnion = DataWidget | ndarray;
+export type DataUnion = DataWidget | ndarray.NdArray;
 
 
 /**
@@ -31,7 +31,7 @@ export type DataUnion = DataWidget | ndarray;
 export async function JSONToUnion(
   obj: IReceivedSerializedArray | string | null,
   manager?: ManagerBase<any>
-): Promise<ndarray | DataWidget | null> {
+): Promise<ndarray.NdArray | DataWidget | null> {
 
   if (typeof obj === 'string') {
     const modelPromise = unpack_models(obj, manager!) as Promise<DataWidget>;
@@ -48,7 +48,7 @@ export async function JSONToUnion(
 export async function JSONToUnionArray(
   obj: IReceivedSerializedArray | string | null,
   manager?: ManagerBase<any>
-): Promise<ndarray | null> {
+): Promise<ndarray.NdArray | null> {
 
   return getArray(await JSONToUnion(obj, manager));
 
@@ -65,7 +65,7 @@ export function unionToJSON(
   if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
-    return arrayToJSON(obj as ndarray | null, widget);
+    return arrayToJSON(obj as ndarray.NdArray | null, widget);
   }
 
 }

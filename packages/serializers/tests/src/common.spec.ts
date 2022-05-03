@@ -19,11 +19,11 @@ class DummyDataSource implements IDataSource {
     this.array = ndarray(this.raw_data, [2, 3]);
   }
 
-  getNDArray(key?: string): ndarray | null {
+  getNDArray(key?: string): ndarray.NdArray | null {
     return this.array;
   }
 
-  array: ndarray | null;
+  array: ndarray.NdArray | null;
 }
 
 
@@ -33,7 +33,7 @@ class DummyWriteBack extends DummyDataSource implements IDataWriteBack {
     return this.canWrite;
   }
 
-  setNDArray(array: ndarray | null, key?: string): void {
+  setNDArray(array: ndarray.NdArray | null, key?: string): void {
     this.array = array;
   }
 
