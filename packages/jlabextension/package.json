@@ -18,11 +18,11 @@
   },
   "license": "BSD-3-Clause",
   "author": "Project Jupyter",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "files": [
     "build/*.js"
   ],
-  "main": "build/index.js",
-  "typings": "build/index.d.ts",
   "scripts": {
     "build": "npm run build:lib && npm run build:labextension",
     "build:labextension": "rimraf dist && mkdirp dist && cd dist && npm pack .. && cd .. && jupyter labextension build .",

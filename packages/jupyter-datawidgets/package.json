@@ -8,6 +8,8 @@
   ],
   "license": "BSD-3-Clause",
   "author": "Vidar T. Fauske",
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib/**/*.js",
     "lib/**/*.js.map",
@@ -16,8 +18,6 @@
     "dist/*.js.map",
     "dist/*.d.ts"
   ],
-  "main": "lib/index.js",
-  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
     "build:lib": "tsc --build",
@@ -26,8 +26,8 @@
     "clean:lib": "rimraf lib",
     "clean:nbextension": "rimraf ../../ipydatawidgets/nbextension/static/index.js",
     "test": "npm run test:firefox",
-    "test:ci": "karma start --browsers=ChromeCI tests/karma.conf.js",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
+    "test:ci": "karma start --browsers=ChromeCI tests/karma.conf.js",
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "watch": "webpack --mode development --watch"

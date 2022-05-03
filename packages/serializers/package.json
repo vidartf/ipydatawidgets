@@ -14,8 +14,8 @@
     "build": "tsc --build",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "test": "npm run test:firefox",
-    "test:ci": "karma start --browsers=ChromeCI tests/karma.conf.js",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
+    "test:ci": "karma start --browsers=ChromeCI tests/karma.conf.js",
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "watch": "tsc --build --watch"
