@@ -33,11 +33,12 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4",
+    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4 || ^5 || ^6.0.0-rc.0",
     "jupyter-dataserializers": "^2.3.0",
     "ndarray": "^1.0.18"
   },
   "devDependencies": {
+    "@jupyter-widgets/base": "^6.0.0-rc.0",
     "@types/expect.js": "^0.3.29",
     "@types/mocha": "^9.0.0",
     "@types/ndarray": "^1.0.6",

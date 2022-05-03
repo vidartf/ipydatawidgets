@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase
+  WidgetModel, /*IWidgetManager*/unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -14,6 +14,9 @@ import {
 } from './compression';
 
 import ndarray = require('ndarray');
+
+// Placeholder until @jupyter-widgets/base@6.0.0 final is released
+type IWidgetManager = Parameters<typeof unpack_models>[1];
 
 
 export
@@ -99,7 +102,7 @@ function ensureSerializableDtype(dtype: ndarray.DataType): keyof IArrayLookup {
  * @returns A new ndarray object.
  */
 export
-function JSONToArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ndarray | null {
+function JSONToArray(obj: IReceivedSerializedArray | null, manager?: IWidgetManager): ndarray.NdArray | null {
   if (obj === null) {
     return null;
   }
@@ -149,7 +152,7 @@ const typesToArray = {
 
 export function compressedJSONToArray(
   obj: IReceivedCompressedSerializedArray | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): ndarray.NdArray | null {
   if (obj === null) {
     return null;
@@ -230,7 +233,7 @@ function typedArrayToType(array: TypedArray): keyof IArrayLookup {
  * @returns A new typed array.
  */
 export
-function JSONToTypedArray(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): TypedArray | null {
+function JSONToTypedArray(obj: IReceivedSerializedArray | null, manager?: IWidgetManager): TypedArray | null {
   if (obj === null) {
     return null;
   }
@@ -281,7 +284,7 @@ interface ISimpleObject {
  * @returns A new object containg the data.
  */
 export
-function JSONToSimple(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): ISimpleObject | null {
+function JSONToSimple(obj: IReceivedSerializedArray | null, manager?: IWidgetManager): ISimpleObject | null {
   if (obj === null) {
     return null;
   }
@@ -325,7 +328,7 @@ export function fixed_shape_serialization(shape: number[]) {
     fixedLength *= dim;
   }
 
-  function JSONToFixedShape(obj: IReceivedSerializedArray | null, manager?: ManagerBase<any>): TypedArray | null {
+  function JSONToFixedShape(obj: IReceivedSerializedArray | null, manager?: IWidgetManager): TypedArray | null {
     if (obj === null) {
       return null;
     }

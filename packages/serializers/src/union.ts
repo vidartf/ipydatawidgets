@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase, unpack_models
+  /*IWidgetManager,*/ WidgetModel, unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -24,13 +24,16 @@ import ndarray = require('ndarray');
  */
 export type DataUnion = DataWidget | ndarray.NdArray;
 
+// Placeholder until @jupyter-widgets/base@6.0.0 final is released
+type IWidgetManager = Parameters<typeof unpack_models>[1];
+
 
 /**
  * Deserializes union JSON to an ndarray or a NDArrayModel, as appropriate.
  */
 export async function JSONToUnion(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<ndarray.NdArray | DataWidget | null> {
 
   if (typeof obj === 'string') {
@@ -47,7 +50,7 @@ export async function JSONToUnion(
  */
 export async function JSONToUnionArray(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<ndarray.NdArray | null> {
 
   return getArray(await JSONToUnion(obj, manager));
@@ -147,7 +150,7 @@ export const data_union_serialization = {
  */
 export function JSONToUnionTypedArray(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<TypedArray | null> {
 
   if (typeof obj === 'string') {
@@ -177,7 +180,7 @@ export const data_union_typedarray_serialization = {
  */
 export function JSONToSimpleUnion(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<ISimpleObject | null> {
 
   if (typeof obj === 'string') {
