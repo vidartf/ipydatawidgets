@@ -119,7 +119,7 @@ export class DataImageView extends DOMWidgetView {
     super.remove();
   }
 
-  // While we support ipywidget 7, the above TS ignore must be used.
+  // While we support ipywidget 7, the below TS ignore must be used.
   // Once we only support ipywidgets 8 and above, replace with preinitalize
 
  /**
