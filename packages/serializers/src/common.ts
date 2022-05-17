@@ -2,12 +2,8 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase
+  WidgetModel
 } from '@jupyter-widgets/base';
-
-import {
-  DataUnion
-} from './union';
 
 import ndarray = require('ndarray');
 
@@ -19,7 +15,7 @@ export { ISerializers } from '@jupyter-widgets/base';
  * An interface for a data source.
  */
 export interface IDataSource {
-  getNDArray(key?: string): ndarray | null;
+  getNDArray(key?: string): ndarray.NdArray | null;
 }
 
 
@@ -31,7 +27,7 @@ export interface IDataSource {
  * data from a process without a reverse can choose not to.
  */
 export interface IDataWriteBack {
-  setNDArray(array: ndarray | null, key?: string, options?: any): void;
+  setNDArray(array: ndarray.NdArray | null, key?: string, options?: any): void;
 
   canWriteBack(key?: string): boolean;
 }
@@ -62,9 +58,9 @@ export function isDataWriteBack(candidate: any): candidate is IDataWriteBack {
  * Gets the array of any array source.
  */
 export function getArray(
-  source: ndarray<number> | IDataSource | null,
+  source: ndarray.NdArray | IDataSource | null,
   key?: string
-): ndarray | null {
+): ndarray.NdArray | null {
 
   if (isDataSource(source)) {
     return source.getNDArray(key);
@@ -87,7 +83,7 @@ export function getArray(
 export function setArray(
   widget: WidgetModel,
   attrName: string,
-  array: ndarray | null,
+  array: ndarray.NdArray | null,
   options?: any
 ): void {
 

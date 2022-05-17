@@ -22,7 +22,7 @@ module.exports = function (config) {
     browserNoActivityTimeout: 31000, // 31 seconds - upped from 10 seconds
     port: 9876,
     colors: true,
-    singleRun: true,
+    singleRun: !config.debug,
     logLevel: config.LOG_INFO,
 
     // you can define custom flags
@@ -35,6 +35,9 @@ module.exports = function (config) {
 
     karmaTypescriptConfig: {
       tsconfig: 'tests/src/tsconfig.json',
+      coverageOptions: {
+        instrumentation: !config.debug
+      },
       reports: {
         "text-summary": "",
         "html": "coverage",

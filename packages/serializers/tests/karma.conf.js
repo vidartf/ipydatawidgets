@@ -32,6 +32,9 @@ module.exports = function (config) {
 
     karmaTypescriptConfig: {
       tsconfig: 'tests/src/tsconfig.json',
+      coverageOptions: {
+        instrumentation: !config.debug
+      },
       reports: {
         "text-summary": "",
         "html": "coverage",

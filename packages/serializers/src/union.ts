@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, ManagerBase, unpack_models
+  /*IWidgetManager,*/ WidgetModel, unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -22,7 +22,10 @@ import ndarray = require('ndarray');
 /**
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
-export type DataUnion = DataWidget | ndarray;
+export type DataUnion = DataWidget | ndarray.NdArray;
+
+// Placeholder until @jupyter-widgets/base@6.0.0 final is released
+type IWidgetManager = Parameters<typeof unpack_models>[1];
 
 
 /**
@@ -30,8 +33,8 @@ export type DataUnion = DataWidget | ndarray;
  */
 export async function JSONToUnion(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
-): Promise<ndarray | DataWidget | null> {
+  manager?: IWidgetManager
+): Promise<ndarray.NdArray | DataWidget | null> {
 
   if (typeof obj === 'string') {
     const modelPromise = unpack_models(obj, manager!) as Promise<DataWidget>;
@@ -47,8 +50,8 @@ export async function JSONToUnion(
  */
 export async function JSONToUnionArray(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
-): Promise<ndarray | null> {
+  manager?: IWidgetManager
+): Promise<ndarray.NdArray | null> {
 
   return getArray(await JSONToUnion(obj, manager));
 
@@ -65,7 +68,7 @@ export function unionToJSON(
   if (obj instanceof WidgetModel) {
     return obj.toJSON(undefined);
   } else {
-    return arrayToJSON(obj as ndarray | null, widget);
+    return arrayToJSON(obj as ndarray.NdArray | null, widget);
   }
 
 }
@@ -147,7 +150,7 @@ export const data_union_serialization = {
  */
 export function JSONToUnionTypedArray(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<TypedArray | null> {
 
   if (typeof obj === 'string') {
@@ -177,7 +180,7 @@ export const data_union_typedarray_serialization = {
  */
 export function JSONToSimpleUnion(
   obj: IReceivedSerializedArray | string | null,
-  manager?: ManagerBase<any>
+  manager?: IWidgetManager
 ): Promise<ISimpleObject | null> {
 
   if (typeof obj === 'string') {

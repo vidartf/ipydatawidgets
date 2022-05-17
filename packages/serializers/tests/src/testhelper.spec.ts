@@ -14,7 +14,6 @@ import {
 } from '../../src';
 
 import ndarray = require('ndarray');
-import { Widget } from '@phosphor/widgets';
 
 
 export
@@ -25,7 +24,7 @@ interface ModelConstructor<T> {
 
 export
 class NullTestModel extends WidgetModel implements IDataSource {
-  getNDArray(key?: string): ndarray | null {
+  getNDArray(key?: string): ndarray.NdArray | null {
     return null;
   }
 }
@@ -48,12 +47,12 @@ class TestModel extends WidgetModel implements IDataSource {
     }
   }
 
-  getNDArray(key?: string): ndarray | null {
+  getNDArray(key?: string): ndarray.NdArray | null {
     return this.array;
   }
 
   raw_data: Float32Array;
-  array: ndarray;
+  array: ndarray.NdArray;
 }
 
 

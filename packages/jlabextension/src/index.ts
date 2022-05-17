@@ -3,15 +3,15 @@
 
 import {
   Application, IPlugin
-} from '@phosphor/application';
+} from '@lumino/application';
 
 import {
   Widget
-} from '@phosphor/widgets';
+} from '@lumino/widgets';
 
 import {
   Token
-} from '@phosphor/coreutils';
+} from '@lumino/coreutils';
 
 import * as dataWidgets from 'jupyter-datawidgets';
 
