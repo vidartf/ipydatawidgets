@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "build",
     "rootDir": "src",
-    "target": "es2017",
   },
   "references": [
     { "path": "../jupyter-datawidgets" },
