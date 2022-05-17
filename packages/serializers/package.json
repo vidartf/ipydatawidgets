@@ -1,6 +1,6 @@
 {
   "name": "jupyter-dataserializers",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "A set of widget utilities for array serialization",
   "keywords": [
     "jupyter",
