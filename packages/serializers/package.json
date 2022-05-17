@@ -31,7 +31,7 @@
     "@types/mocha": "^9.0.0",
     "@types/ndarray": "^1.0.6",
     "@types/node": "^16.11.12",
-    "@types/pako": "^1.0.0",
+    "@types/pako": "^2.0.0",
     "@types/webpack-env": "^1.13.6",
     "expect.js": "^0.3.1",
     "karma": "^6.3.9",
