@@ -27,7 +27,6 @@ graft ipydatawidgets/nbextension
 graft packages
 prune packages/**/node_modules
 prune packages/**/coverage
-prune packages/**/node_modules
 prune packages/**/lib
 prune packages/**/build
 prune packages/**/test/build
