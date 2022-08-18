@@ -38,6 +38,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
+import platform
+import sys
 import warnings
 
 import numpy as np
@@ -46,7 +48,11 @@ import zlib
 
 from traitlets import Undefined, TraitError
 from ipywidgets import widget_serialization, Widget
-from ipython_genutils.py3compat import string_types
+
+if sys.version_info[0] >= 3 or platform.python_implementation() == 'IronPython':
+    string_types = (str,)
+else:
+    string_types = (str, unicode)
 
 # Format:
 # {'dtype': string, 'shape': tuple, 'array': memoryview}
