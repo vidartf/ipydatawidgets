@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  /*IWidgetManager,*/ WidgetModel, unpack_models
+  IWidgetManager, WidgetModel, unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -23,9 +23,6 @@ import ndarray = require('ndarray');
  * Union type declaration of an NDArrayModel and a raw ndarray.
  */
 export type DataUnion = DataWidget | ndarray.NdArray;
-
-// Placeholder until @jupyter-widgets/base@6.0.0 final is released
-type IWidgetManager = Parameters<typeof unpack_models>[1];
 
 
 /**

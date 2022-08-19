@@ -48,9 +48,6 @@ module.exports = function (config) {
       },
       bundlerOptions: {
         sourceMap: false,  // Disabled due to error/bug
-        acornOptions: {
-          ecmaVersion: 8,
-        },
         transforms: [
           require("karma-typescript-es6-transform")({
             presets: [

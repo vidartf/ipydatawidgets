@@ -49,7 +49,7 @@ class MockComm implements widgets.IClassicComm {
 }
 
 export
-class DummyManager extends ManagerBase<HTMLElement> {
+class DummyManager extends ManagerBase {
     constructor() {
         super();
         this.el = window.document.createElement('div');

@@ -2,6 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import expect = require('expect.js');
+import { ManagerBase } from '@jupyter-widgets/base-manager';
 
 import {
   createTestModel, TestModel, createModelWithSerializers
@@ -74,7 +75,7 @@ describe('ndarray', () => {
       // Round-trip through widget machienery to ensure compliance
       const model = createModelWithSerializers({array: array_serialization});
       model.set('array', model.array);
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
@@ -205,7 +206,7 @@ describe('ndarray', () => {
       // Round-trip through widget machienery to ensure compliance
       const model = createModelWithSerializers({array: compressed_array_serialization});
       model.set('array', model.array);
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
@@ -261,7 +262,7 @@ describe('ndarray', () => {
       // Round-trip through widget machienery to ensure compliance
       const model = createModelWithSerializers({array: typedarray_serialization});
       model.set('array', model.array.data);
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
@@ -319,7 +320,7 @@ describe('ndarray', () => {
       // Round-trip through widget machienery to ensure compliance
       const model = createModelWithSerializers({array: simplearray_serialization});
       model.set('array', {array: model.array.data, shape: model.array.shape});
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
@@ -399,7 +400,7 @@ describe('ndarray', () => {
       // Round-trip through widget machienery to ensure compliance
       const model = createModelWithSerializers({array: serializer});
       model.set('array', model.raw_data);
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
