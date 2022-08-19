@@ -8,7 +8,6 @@ import pytest
 
 import numpy as np
 import zlib
-import six
 
 from traitlets import HasTraits, Instance, Undefined
 from ipywidgets import Widget, widget_serialization
@@ -162,7 +161,5 @@ def test_compressed_to_compressed_json():
     assert json_data['dtype'] == str(data.dtype)
     # Test that decompress doesn't raise:
     comp = json_data['compressed_buffer']
-    if six.PY2:
-        comp = comp.tobytes()
     zlib.decompress(comp)
     # TODO: Test content of compressed buffer?

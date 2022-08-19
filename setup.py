@@ -4,23 +4,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-from __future__ import print_function
-
 # the name of the project
 name = 'ipydatawidgets'
-
-#-----------------------------------------------------------------------------
-# Minimal Python version sanity check
-#-----------------------------------------------------------------------------
-
-import sys
-
-v = sys.version_info
-if v[:2] < (2, 7) or (v[0] >= 3 and v[:2] < (3, 3)):
-    # Note: 3.3 is untested, but we'll still allow it
-    error = "ERROR: %s requires Python version 2.7 or 3.3 or above." % name
-    print(error, file=sys.stderr)
-    sys.exit(1)
 
 #-----------------------------------------------------------------------------
 # get on with it
@@ -88,6 +73,7 @@ setup_args = dict(
     url             = 'https://github.com/vidartf/ipydatawidgets',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X, Windows",
+    python_requires = ">=3.7",
     keywords        = ['Jupyter', 'Widgets', 'IPython'],
     classifiers     = [
         'Intended Audience :: Developers',
@@ -109,7 +95,6 @@ setuptools_args = {}
 install_requires = setuptools_args['install_requires'] = [
     'ipywidgets>=7.0.0',
     'numpy',
-    'six',
     'traittypes>=0.2.0',
 ]
 
