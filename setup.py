@@ -54,7 +54,7 @@ cmdclass = create_cmdclass(
          '**/*.json'),
     ],)
 cmdclass['js'] = combine_commands(
-    install_npm(here),
+    install_npm(here, npm="yarn"),
     ensure_targets(jstargets),
 )
 
