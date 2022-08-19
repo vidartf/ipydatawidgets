@@ -13,7 +13,6 @@ name = 'ipydatawidgets'
 
 import io
 import os
-from glob import glob
 
 from setuptools import setup, find_packages
 
@@ -64,7 +63,6 @@ setup_args = dict(
     name            = name,
     description     = "A set of widgets to help facilitate reuse of large datasets across widgets",
     version         = version_ns['__version__'],
-    scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(here),
     include_package_data = True,
@@ -75,6 +73,23 @@ setup_args = dict(
     platforms       = "Linux, Mac OS X, Windows",
     python_requires = ">=3.7",
     keywords        = ['Jupyter', 'Widgets', 'IPython'],
+    install_requires= [
+        'ipywidgets>=7.0.0',
+        'numpy',
+        'traittypes>=0.2.0',
+    ],
+    extras_require = {
+        'test': [
+            'pytest>=4',
+            'pytest-cov',
+            'nbval>=0.9.2',
+        ],
+        'docs': [
+            'sphinx',
+            'recommonmark',
+            'sphinx_rtd_theme'
+        ],
+    },
     classifiers     = [
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
@@ -90,33 +105,6 @@ setup_args = dict(
     ],
 )
 
-
-setuptools_args = {}
-install_requires = setuptools_args['install_requires'] = [
-    'ipywidgets>=7.0.0',
-    'numpy',
-    'traittypes>=0.2.0',
-]
-
-extras_require = setuptools_args['extras_require'] = {
-    'test': [
-        'pytest>=4',
-        'pytest-cov',
-        'nbval>=0.9.2',
-    ],
-    'docs': [
-        'sphinx',
-        'recommonmark',
-        'sphinx_rtd_theme'
-    ],
-}
-
-if 'setuptools' in sys.modules:
-    setup_args.update(setuptools_args)
-
-    setup_args.pop('scripts', None)
-
-    setup_args.update(setuptools_args)
 
 if __name__ == '__main__':
     setup(**setup_args)
