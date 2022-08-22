@@ -27,7 +27,7 @@ function createArrayModel(): NDArrayModel {
       shape: [2, 3],
       dtype: 'float32',
   }};
-  let attributes = NDArrayModel._deserialize_state(serializedState, manager);
+  let attributes = NDArrayModel._deserialize_state(serializedState as any, manager);
   return createTestModel(NDArrayModel, attributes);
 }
 

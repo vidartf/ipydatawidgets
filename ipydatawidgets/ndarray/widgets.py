@@ -13,7 +13,6 @@ from contextlib import contextmanager
 from ipywidgets import register
 from traitlets import Unicode, Set, Undefined, Int, validate
 import numpy as np
-import six
 
 from ..widgets import DataWidget
 from .traits import NDArray
@@ -171,14 +170,11 @@ def create_constrained_arraywidget(*validators, **kwargs):
     })
 
 
-
-
-if six.PY3:
-    from inspect import Signature, Parameter
-    create_constrained_arraywidget.__signature__ = Signature(parameters=(
-        Parameter('validators', Parameter.VAR_POSITIONAL),
-        Parameter('dtype', Parameter.KEYWORD_ONLY, default=None),
-    ))
+from inspect import Signature, Parameter
+create_constrained_arraywidget.__signature__ = Signature(parameters=(
+    Parameter('validators', Parameter.VAR_POSITIONAL),
+    Parameter('dtype', Parameter.KEYWORD_ONLY, default=None),
+))
 
 
 def ConstrainedNDArrayWidget(*validators, **kwargs):

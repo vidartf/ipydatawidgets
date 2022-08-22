@@ -36,7 +36,7 @@ function createWidgetModel(): NDArrayModel {
       shape: [2, 3],
       dtype: 'float32',
   }};
-  let attributes = NDArrayModel._deserialize_state(serializedState, manager);
+  let attributes = NDArrayModel._deserialize_state(serializedState as any, manager);
   return createTestModel(NDArrayModel, attributes);
 }
 
@@ -90,7 +90,7 @@ describe('Union Serializers', () => {
           shape: [2, 3],
           dtype: 'float32',
       }};
-      let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
+      let attributesPromise = NDArrayModel._deserialize_state(serializedState as any, widget_manager);
       return attributesPromise.then((attributes) => {
         let model = new NDArrayModel(attributes, modelOptions as any);
         (widget_manager as any)._models[id] = Promise.resolve(model);
@@ -157,7 +157,7 @@ describe('Union Serializers', () => {
           shape: [2, 3],
           dtype: 'float32',
       }};
-      let attributesPromise = NDArrayModel._deserialize_state(serializedState, widget_manager);
+      let attributesPromise = NDArrayModel._deserialize_state(serializedState as any, widget_manager);
       return attributesPromise.then((attributes) => {
         let model = new NDArrayModel(attributes, modelOptions as any);
         (widget_manager as any)._models[id] = Promise.resolve(model);

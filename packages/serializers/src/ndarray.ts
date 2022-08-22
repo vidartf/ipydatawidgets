@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  WidgetModel, /*IWidgetManager*/unpack_models
+  WidgetModel, IWidgetManager, unpack_models
 } from '@jupyter-widgets/base';
 
 import {
@@ -14,9 +14,6 @@ import {
 } from './compression';
 
 import ndarray = require('ndarray');
-
-// Placeholder until @jupyter-widgets/base@6.0.0 final is released
-type IWidgetManager = Parameters<typeof unpack_models>[1];
 
 
 export

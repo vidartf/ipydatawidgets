@@ -30,11 +30,10 @@
     "clean": "rimraf build && rimraf dist && rimraf tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4 || ^5 || ^6.0.0-rc.0",
+    "@jupyter-widgets/base": "^1 || ^2 || ^3 || ^4 || ^5 || ^6.0.0",
     "jupyter-datawidgets": "^5.5.1"
   },
   "devDependencies": {
-    "@jupyter-widgets/base": "^6.0.0-rc.0",
     "@jupyterlab/builder": "^3.0.0",
     "@lumino/application": "^1.5.0",
     "@lumino/coreutils": "^1.3.0",

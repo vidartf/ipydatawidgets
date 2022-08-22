@@ -1,10 +1,13 @@
 {
   "private": true,
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "build": "lerna run build",
     "build:dev": "tsc --build",
     "clean": "lerna run clean",
-    "install": "lerna bootstrap --hoist --no-ci",
+    "install": "lerna bootstrap --no-ci",
     "publish": "lerna version --no-push -m \"Publish npm packages\" && npm run clean && npm run build && lerna publish from-git",
     "test": "lerna run test",
     "test:ci": "lerna run test:ci",
@@ -15,7 +18,7 @@
     "watch:dev": "tsc --build --watch"
   },
   "devDependencies": {
-    "@jupyterlab/buildutils": "^3.0.0-rc.13",
-    "lerna": "^4.0.0"
+    "@jupyterlab/buildutils": "^3.4.5",
+    "lerna": "^5.4.3"
   }
 }

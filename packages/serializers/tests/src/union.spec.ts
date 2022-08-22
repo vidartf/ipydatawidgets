@@ -5,6 +5,8 @@ import expect = require('expect.js');
 
 import ndarray = require('ndarray');
 
+import { ManagerBase } from '@jupyter-widgets/base-manager';
+
 import {
   JSONToUnion, JSONToUnionArray, unionToJSON, IReceivedSerializedArray,
   ISendSerializedArray, listenToUnion, JSONToUnionTypedArray,
@@ -275,7 +277,7 @@ describe('Union Serializers', () => {
 
     async function roundTripModel(model: TestModel): Promise<void> {
       // Round-trip through widget machienery to ensure compliance
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
@@ -314,7 +316,7 @@ describe('Union Serializers', () => {
       );
       const ref = createTestModel(TestModel, {}, model.widget_manager as DummyManager);
       model.set('array', ref);
-      const manager = model.widget_manager;
+      const manager = model.widget_manager as ManagerBase;
       const state = await manager.get_state();
       await manager.clear_state();
       const remodels = await manager.set_state(state);
