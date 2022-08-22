@@ -52,8 +52,11 @@ jobs:
       run: |
         cd ${{ runner.temp }}
         py.test -l --cov-report xml:coverage.xml --cov=ipydatawidgets --pyargs ipydatawidgets
+
+    - name: Run examples tests
+      run: |
+        cd ${{ runner.temp }}
         py.test -l --cov-report xml:coverage-nbval.xml --cov=ipydatawidgets ${{ github.workspace }}/examples
-        cd ${{ github.workspace }}
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
