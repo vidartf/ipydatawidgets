@@ -36,10 +36,11 @@ undefined = object()
 def mock_comm():
     _widget_attrs['_comm_default'] = getattr(Widget, '_comm_default', undefined)
     Widget._comm_default = lambda self: DummyComm()
-    _widget_attrs['_ipython_display_'] = Widget._ipython_display_
+    display_attr = "_ipython_display_" if hasattr(Widget, "_ipython_display_") else "_repr_mimebundle_"
+    _widget_attrs[display_attr] = getattr(Widget, display_attr)
     def raise_not_implemented(*args, **kwargs):
         raise NotImplementedError()
-    Widget._ipython_display_ = raise_not_implemented
+    setattr(Widget, display_attr, raise_not_implemented)
 
     yield DummyComm()
 
