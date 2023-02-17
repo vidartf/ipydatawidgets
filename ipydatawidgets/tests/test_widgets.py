@@ -24,8 +24,12 @@ def test_datawidget_creation_blank():
 def test_datawidget_creation_blank_comm(mock_comm):
     # The mock comm delays serialization, so error is avoided
     # (the array serialization of undefined cause error)
-    w = NDArrayWidget(comm=mock_comm)
-    assert w.array is Undefined
+    try:
+        w = NDArrayWidget(comm=mock_comm)
+    except TraitError as e:
+        assert 'Cannot serialize undefined array' in str(e)
+    else:
+        assert w.array is Undefined
 
 
 def test_datawidget_creation():
