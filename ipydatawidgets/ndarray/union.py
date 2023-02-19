@@ -55,6 +55,10 @@ class DataUnion(Union):
             # comparison above returns something other than True/False
             obj._notify_trait(self.name, old_value, new_value)
 
+    def subclass_init(self, cls):
+        cls._instance_inits.append(self.instance_init)
+        return super().subclass_init(cls)
+
     def instance_init(self, inst):
         inst.observe(self._on_instance_value_change, self.name)
 
