@@ -56,7 +56,8 @@ class DataUnion(Union):
             obj._notify_trait(self.name, old_value, new_value)
 
     def subclass_init(self, cls):
-        cls._instance_inits.append(self.instance_init)
+        if hasattr(cls, "_instance_inits"):
+            cls._instance_inits.append(self.instance_init)
         return super().subclass_init(cls)
 
     def instance_init(self, inst):
