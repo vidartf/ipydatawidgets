@@ -11,6 +11,7 @@ include lerna.json
 include package-lock.json
 include tsconfig.json
 include tsconfig-base.json
+include yarn.lock
 
 # Documentation
 graft docs
